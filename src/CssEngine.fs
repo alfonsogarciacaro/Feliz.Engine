@@ -25,6 +25,22 @@ type ITransformProperty = interface end
 type IGridSpan = interface end
 type IGridTemplateItem = interface end
 
+[<AutoOpen>]
+module Units =
+    type Units =
+        | Em of float
+        | Px of float
+        | Pct of float
+        | Pt of float
+        with
+            override this.ToString() =
+                match this with
+                |Em  n -> $"{n}em"
+                |Px  n -> $"{n}px"
+                |Pct n -> $"{n}%%"
+                |Pt  n -> $"{n}pt"
+            interface ICssUnit
+
 namespace Feliz
 
 open System
@@ -35,6 +51,8 @@ type CssHelper<'Style> =
     abstract MakeStyle: key: string * value: obj -> 'Style
 
 type CssEngine<'Style>(h: CssHelper<'Style>) =
+    member _.all (value: string) = h.MakeStyle("all", value)
+
     /// The zIndex property sets or returns the stack order of a positioned element.
     ///
     /// An element with greater stack order (1) is always in front of another element with lower stack order (0).
@@ -42,7 +60,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// **Tip**: A positioned element is an element with the position property set to: relative, absolute, or fixed.
     ///
     /// **Tip**: This property is useful if you want to create overlapping elements.
-    member _.zIndex(value: int) = h.MakeStyle("zIndex", value)
+    member _.zIndex(value: int) = h.MakeStyle("z-index", value)
     /// Sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right,
     /// margin-bottom, and margin-left.
     member _.margin(value: int) = h.MakeStyle("margin", value)
@@ -141,28 +159,28 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     member _.margin(value: ICssUnit) = h.MakeStyle("margin", value)
     /// Sets the margin area on the left side of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginLeft(value: int) = h.MakeStyle("marginLeft", value)
+    member _.marginLeft(value: int) = h.MakeStyle("margin-left", value)
     /// Sets the margin area on the left side of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginLeft(value: ICssUnit) = h.MakeStyle("marginLeft", value)
+    member _.marginLeft(value: ICssUnit) = h.MakeStyle("margin-left", value)
     /// sets the margin area on the right side of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginRight(value: int) = h.MakeStyle("marginRight", value)
+    member _.marginRight(value: int) = h.MakeStyle("margin-right", value)
     /// sets the margin area on the right side of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginRight(value: ICssUnit) = h.MakeStyle("marginRight", value)
+    member _.marginRight(value: ICssUnit) = h.MakeStyle("margin-right", value)
     /// Sets the margin area on the top of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginTop(value: int) = h.MakeStyle("marginTop", value)
+    member _.marginTop(value: int) = h.MakeStyle("margin-top", value)
     /// Sets the margin area on the top of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginTop(value: ICssUnit) = h.MakeStyle("marginTop", value)
+    member _.marginTop(value: ICssUnit) = h.MakeStyle("margin-top", value)
     /// Sets the margin area on the bottom of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginBottom(value: int) = h.MakeStyle("marginBottom", value)
+    member _.marginBottom(value: int) = h.MakeStyle("margin-bottom", value)
     /// Sets the margin area on the bottom of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginBottom(value: ICssUnit) = h.MakeStyle("marginBottom", value)
+    member _.marginBottom(value: ICssUnit) = h.MakeStyle("margin-bottom", value)
     /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
     /// padding-right, padding-bottom, and padding-left.
     member _.padding(vertical: ICssUnit, horizontal: int) =
@@ -258,36 +276,36 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// padding-right, padding-bottom, and padding-left.
     member _.padding(value: ICssUnit) = h.MakeStyle("padding", value)
     /// Sets the height of the padding area on the bottom of an element.
-    member _.paddingBottom(value: int) = h.MakeStyle("paddingBottom", value)
+    member _.paddingBottom(value: int) = h.MakeStyle("padding-bottom", value)
     /// Sets the height of the padding area on the bottom of an element.
-    member _.paddingBottom(value: ICssUnit) = h.MakeStyle("paddingBottom", value)
+    member _.paddingBottom(value: ICssUnit) = h.MakeStyle("padding-bottom", value)
     /// Sets the width of the padding area to the left of an element.
-    member _.paddingLeft(value: int) = h.MakeStyle("paddingLeft", value)
+    member _.paddingLeft(value: int) = h.MakeStyle("padding-left", value)
     /// Sets the width of the padding area to the left of an element.
-    member _.paddingLeft(value: ICssUnit) = h.MakeStyle("paddingLeft", value)
+    member _.paddingLeft(value: ICssUnit) = h.MakeStyle("padding-left", value)
     /// Sets the width of the padding area on the right of an element.
-    member _.paddingRight(value: int) = h.MakeStyle("paddingRight", value)
+    member _.paddingRight(value: int) = h.MakeStyle("padding-right", value)
     /// Sets the width of the padding area on the right of an element.
-    member _.paddingRight(value: ICssUnit) = h.MakeStyle("paddingRight", value)
+    member _.paddingRight(value: ICssUnit) = h.MakeStyle("padding-right", value)
     /// Sets the height of the padding area on the top of an element.
-    member _.paddingTop(value: int) = h.MakeStyle("paddingTop", value)
+    member _.paddingTop(value: int) = h.MakeStyle("padding-top", value)
     /// Sets the height of the padding area on the top of an element.
-    member _.paddingTop(value: ICssUnit) = h.MakeStyle("paddingTop", value)
+    member _.paddingTop(value: ICssUnit) = h.MakeStyle("padding-top", value)
     /// Sets the flex shrink factor of a flex item. If the size of all flex items is larger than
     /// the flex container, items shrink to fit according to flex-shrink.
-    member _.flexShrink(value: int) = h.MakeStyle("flexShrink", value)
+    member _.flexShrink(value: int) = h.MakeStyle("flex-shrink", value)
     /// Sets the initial main size of a flex item. It sets the size of the content box unless
     /// otherwise set with box-sizing.
-    member _.flexBasis (value: int) = h.MakeStyle("flexBasis", value)
+    member _.flexBasis (value: int) = h.MakeStyle("flex-basis", value)
     /// Sets the initial main size of a flex item. It sets the size of the content box unless
     /// otherwise set with box-sizing.
-    member _.flexBasis (value: float) = h.MakeStyle("flexBasis", value)
+    member _.flexBasis (value: float) = h.MakeStyle("flex-basis", value)
     /// Sets the initial main size of a flex item. It sets the size of the content box unless
     /// otherwise set with box-sizing.
-    member _.flexBasis (value: ICssUnit) = h.MakeStyle("flexBasis", value)
+    member _.flexBasis (value: ICssUnit) = h.MakeStyle("flex-basis", value)
     /// Sets the flex grow factor of a flex item main size. It specifies how much of the remaining
     /// space in the flex container should be assigned to the item (the flex grow factor).
-    member _.flexGrow (value: int) = h.MakeStyle("flexGrow", value)
+    member _.flexGrow (value: int) = h.MakeStyle("flex-grow", value)
     /// Sets the width of each individual grid column in pixels.
     ///
     /// **CSS**
@@ -300,7 +318,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```
     member _.gridTemplateColumns(value: float list) =
         let addPixels = fun x -> x + "px"
-        h.MakeStyle("gridTemplateColumns", (List.map addPixels >> String.concat " ") (List.map string value))
+        h.MakeStyle("grid-template-columns", (List.map addPixels >> String.concat " ") (List.map string value))
     /// Sets the width of each individual grid column in pixels.
     ///
     /// **CSS**
@@ -313,7 +331,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```
     member _.gridTemplateColumns(value: float[]) =
         let addPixels = fun x -> x + "px"
-        h.MakeStyle("gridTemplateColumns", (Array.map addPixels >> String.concat " ") (Array.map string value))
+        h.MakeStyle("grid-template-columns", (Array.map addPixels >> String.concat " ") (Array.map string value))
     /// Sets the width of each individual grid column in pixels.
     ///
     /// **CSS**
@@ -326,7 +344,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```
     member _.gridTemplateColumns(value: int list) =
         let addPixels = fun x -> x + "px"
-        h.MakeStyle("gridTemplateColumns", (List.map addPixels >> String.concat " ") (List.map string value))
+        h.MakeStyle("grid-template-columns", (List.map addPixels >> String.concat " ") (List.map string value))
     /// Sets the width of each individual grid column in pixels.
     ///
     /// **CSS**
@@ -339,7 +357,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```
     member _.gridTemplateColumns(value: int[]) =
         let addPixels = fun x -> x + "px"
-        h.MakeStyle("gridTemplateColumns", (Array.map addPixels >> String.concat " ") (Array.map string value))
+        h.MakeStyle("grid-template-columns", (Array.map addPixels >> String.concat " ") (Array.map string value))
     /// Sets the width of each individual grid column.
     ///
     /// **CSS**
@@ -351,7 +369,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// gridTemplateColumns: [length.fr 1; length.fr 1; length.fr 2]
     /// ```
     member _.gridTemplateColumns(value: ICssUnit list) =
-        h.MakeStyle("gridTemplateColumns", String.concat " " (List.map string value))
+        h.MakeStyle("grid-template-columns", String.concat " " (List.map string value))
     /// Sets the width of each individual grid column.
     ///
     /// **CSS**
@@ -363,7 +381,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// gridTemplateColumns: [|length.fr 1; length.fr 1; length.fr 2|]
     /// ```
     member _.gridTemplateColumns(value: ICssUnit[]) =
-        h.MakeStyle("gridTemplateColumns", String.concat " " (Array.map string value))
+        h.MakeStyle("grid-template-columns", String.concat " " (Array.map string value))
     /// Sets the width of each individual grid column. It can also name the lines between them
     /// There can be multiple names for the same line
     ///
@@ -1707,7 +1725,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// **F#**
     /// ```f#
     /// style.gridTemplate "[header-top] 'a a a'      [header-bottom] " +
-    ///                      "[main-top] 'b b b' 1fr  [main-bottom] " +
+    ///                      main-top-b-b-b-1fr-main-bottom +
     ///                                "/ auto 1fr auto"
     /// ```
     member _.gridTemplate(value: string) =
@@ -1769,41 +1787,41 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// Sets the size of the font.
     ///
     /// This property is also used to compute the size of em, ex, and other relative <length> units.
-    member _.fontSize(size: int) = h.MakeStyle("fontSize", string size + "px")
+    member _.fontSize(size: int) = h.MakeStyle("font-size", string size + "px")
     /// Sets the size of the font.
     ///
     /// This property is also used to compute the size of em, ex, and other relative <length> units.
-    member _.fontSize(size: float) = h.MakeStyle("fontSize", string size + "px")
+    member _.fontSize(size: float) = h.MakeStyle("font-size", string size + "px")
     /// Sets the size of the font.
     ///
     /// This property is also used to compute the size of em, ex, and other relative <length> units.
-    member _.fontSize(size: ICssUnit) = h.MakeStyle("fontSize", size)
+    member _.fontSize(size: ICssUnit) = h.MakeStyle("font-size", size)
     /// Specifies the height of a text lines.
     ///
     /// This property is also used to compute the size of em, ex, and other relative <length> units.
     ///
     /// Note: Negative values are not allowed.
-    member _.lineHeight(size: int) = h.MakeStyle("lineHeight", string size + "px")
+    member _.lineHeight(size: int) = h.MakeStyle("line-height", string size + "px")
     /// Specifies the height of a text lines.
     ///
     /// This property is also used to compute the size of em, ex, and other relative <length> units.
     ///
     /// Note: Negative values are not allowed.
-    member _.lineHeight(size: float) = h.MakeStyle("lineHeight", string size + "px")
+    member _.lineHeight(size: float) = h.MakeStyle("line-height", string size + "px")
     /// Specifies the height of a text lines.
     ///
     /// This property is also used to compute the size of em, ex, and other relative <length> units.
     ///
     /// Note: Negative values are not allowed.
-    member _.lineHeight(size: ICssUnit) = h.MakeStyle("lineHeight", size)
+    member _.lineHeight(size: ICssUnit) = h.MakeStyle("line-height", size)
     /// Sets the background color of an element.
-    member _.backgroundColor (color: string) = h.MakeStyle("backgroundColor", color)
+    member _.backgroundColor (color: string) = h.MakeStyle("background-color", color)
     /// Sets the color of the insertion caret, the visible marker where the next character typed will be inserted.
     ///
     /// This is sometimes referred to as the text input cursor. The caret appears in elements such as <input> or
     /// those with the contenteditable attribute. The caret is typically a thin vertical line that flashes to
     /// help make it more noticeable. By default, it is black, but its color can be altered with this property.
-    member _.caretColor (color: string) = h.MakeStyle("caretColor", color)
+    member _.caretColor (color: string) = h.MakeStyle("caret-color", color)
     /// Sets the foreground color value of an element's text and text decorations, and sets the
     /// `currentcolor` value. `currentcolor` may be used as an indirect value on other properties
     /// and is the default for other color properties, such as border-color.
@@ -2053,11 +2071,10 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// Sets when an animation starts.
     ///
     /// The animation can start later, immediately from its beginning, or immediately and partway through the animation.
-    member _.animationDelay(seconds: int) = h.MakeStyle("animationDelay", (string seconds) + "s")
-    /// The number of times the animation runs.
+     /// The number of times the animation runs.
     member _.animationDurationCount(count: int) = h.MakeStyle("animationDurationCount", count)
     /// Sets the font family for the font specified in a @font-face rule.
-    member _.fontFamily (family: string) = h.MakeStyle("fontFamily", family)
+    member _.fontFamily (family: string) = h.MakeStyle("font-family", family)
     /// Defines from thin to thick characters. 400 is the same as normal, and 700 is the same as bold.
     /// Possible values are [100, 200, 300, 400, 500, 600, 700, 800, 900]
     member _.fontWeight (weight: int) = h.MakeStyle("fontWeight", weight)
