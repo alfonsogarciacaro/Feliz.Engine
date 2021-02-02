@@ -189,103 +189,109 @@ type CssVisibilityEngine<'Style>(h: CssHelper<'Style>) =
     /// Inherits this property from its parent element.
     member _.inheritFromParent = h.MakeStyle("visibility", "inherit")
 
-//     /// Default value. The length is equal to the length of the flexible item. If the item has
-//     /// no length specified, the length will be according to its content.
-//     member _.flexBasis_auto = h.MakeStyle("flex-basis", "auto")
-//     /// Sets this property to its default value.
-//     member _.flexBasis_initial = h.MakeStyle("flex-basis", "initial")
-//     /// Inherits this property from its parent element.
-//     member _.flexBasis_inheritFromParent = h.MakeStyle("flex-basis", "inherit")
+type CssFlexBasisEngine<'Style>(h: CssHelper<'Style>) =
+    /// Default value. The length is equal to the length of the flexible item. If the item has
+    /// no length specified, the length will be according to its content.
+    member _.auto = h.MakeStyle("flex-basis", "auto")
+    /// Sets this property to its default value.
+    member _.initial = h.MakeStyle("flex-basis", "initial")
+    /// Inherits this property from its parent element.
+    member _.inheritFromParent = h.MakeStyle("flex-basis", "inherit")
 
-//     /// Default value. The flexible items are displayed horizontally, as a row
-//     member _.flexDirection_row = h.MakeStyle("flex-direction", "row")
-//     /// Same as row, but in reverse order.
-//     member _.flexDirection_rowReverse = h.MakeStyle("flex-direction", "row-reverse")
-//     /// The flexible items are displayed vertically, as a column
-//     member _.flexDirection_column = h.MakeStyle("flex-direction", "column")
-//     /// Same as column, but in reverse order
-//     member _.flexDirection_columnReverse = h.MakeStyle("flex-direction", "column-reverse")
-//     /// Sets this property to its default value.
-//     member _.flexDirection_initial = h.MakeStyle("flex-basis", "initial")
-//     /// Inherits this property from its parent element.
-//     member _.flexDirection_inheritFromParent = h.MakeStyle("flex-basis", "inherit")
+type CssFlexDirectionEngine<'Style>(h: CssHelper<'Style>) =
+    /// Default value. The flexible items are displayed horizontally, as a row
+    member _.row = h.MakeStyle("flex-direction", "row")
+    /// Same as row, but in reverse order.
+    member _.rowReverse = h.MakeStyle("flex-direction", "row-reverse")
+    /// The flexible items are displayed vertically, as a column
+    member _.column = h.MakeStyle("flex-direction", "column")
+    /// Same as column, but in reverse order
+    member _.columnReverse = h.MakeStyle("flex-direction", "column-reverse")
+    /// Sets this property to its default value.
+    member _.initial = h.MakeStyle("flex-basis", "initial")
+    /// Inherits this property from its parent element.
+    member _.inheritFromParent = h.MakeStyle("flex-basis", "inherit")
 
-//     /// Default value. Specifies that the flexible items will not wrap.
-//     member _.flexWrap_nowrap = h.MakeStyle("flex-wrap", "nowrap")
-//     /// Specifies that the flexible items will wrap if necessary
-//     member _.flexWrap_wrap = h.MakeStyle("flex-wrap", "wrap")
-//     /// Specifies that the flexible items will wrap, if necessary, in reverse order
-//     member _.flexWrap_wrapReverse = h.MakeStyle("flex-wrap", "wrap-reverse")
-//     /// Sets this property to its default value.
-//     member _.flexWrap_initial = h.MakeStyle("flex-wrap", "initial")
-//     /// Inherits this property from its parent element.
-//     member _.flexWrap_inheritFromParent = h.MakeStyle("flex-wrap", "inherit")
+type CssFlexWrapEngine<'Style>(h: CssHelper<'Style>) =
+    /// Default value. Specifies that the flexible items will not wrap.
+    member _.nowrap = h.MakeStyle("flex-wrap", "nowrap")
+    /// Specifies that the flexible items will wrap if necessary
+    member _.wrap = h.MakeStyle("flex-wrap", "wrap")
+    /// Specifies that the flexible items will wrap, if necessary, in reverse order
+    member _.wrapReverse = h.MakeStyle("flex-wrap", "wrap-reverse")
+    /// Sets this property to its default value.
+    member _.initial = h.MakeStyle("flex-wrap", "initial")
+    /// Inherits this property from its parent element.
+    member _.inheritFromParent = h.MakeStyle("flex-wrap", "inherit")
 
-// /// Places an element on the left or right side of its container, allowing text and
-// /// inline elements to wrap around it. The element is removed from the normal flow
-// /// of the page, though still remaining a part of the flow (in contrast to absolute
-// /// positioning).
-//     /// The element must float on the left side of its containing block.
-//     member _.float_left = h.MakeStyle("float", "left")
-//     /// The element must float on the right side of its containing block.
-//     member _.float_right = h.MakeStyle("float", "right")
-//     /// The element must not float.
-//     member _.float_none = h.MakeStyle("float", "none")
+type CssFloatEngine<'Style>(h: CssHelper<'Style>) =
+    /// The element must float on the left side of its containing block.
+    member _.left = h.MakeStyle("float", "left")
+    /// The element must float on the right side of its containing block.
+    member _.right = h.MakeStyle("float", "right")
+    /// The element must not float.
+    member _.none = h.MakeStyle("float", "none")
 
-// /// Determines how a font face is displayed based on whether and when it is downloaded and ready to use.
-//     /// The font display strategy is defined by the user agent.
-//     ///
-//     /// Default value
-//     member _.fontDisplay_auto = h.MakeStyle("font-display", "auto")
-//     /// Gives the font face a short block period and an infinite swap period.
-//     member _.fontDisplay_block = h.MakeStyle("font-display", "block")
-//     /// Gives the font face an extremely small block period and an infinite swap period.
-//     member _.fontDisplay_swap = h.MakeStyle("font-display", "swap")
-//     /// Gives the font face an extremely small block period and a short swap period.
-//     member _.fontDisplay_fallback = h.MakeStyle("font-display", "fallback")
-//     /// Gives the font face an extremely small block period and no swap period.
-//     member _.fontDisplay_optional = h.MakeStyle("font-display", "optional")
+type CssFontDisplayEngine<'Style>(h: CssHelper<'Style>) =
+    /// The font display strategy is defined by the user agent.
+    ///
+    /// Default value
+    member _.auto = h.MakeStyle("font-display", "auto")
+    /// Gives the font face a short block period and an infinite swap period.
+    member _.block = h.MakeStyle("font-display", "block")
+    /// Gives the font face an extremely small block period and an infinite swap period.
+    member _.swap = h.MakeStyle("font-display", "swap")
+    /// Gives the font face an extremely small block period and a short swap period.
+    member _.fallback = h.MakeStyle("font-display", "fallback")
+    /// Gives the font face an extremely small block period and no swap period.
+    member _.optional = h.MakeStyle("font-display", "optional")
 
-//     /// Default. The browser determines whether font kerning should be applied or not
-//     member _.fontKerning_auto = h.MakeStyle("font-kerning", "auto")
-//     /// Specifies that font kerning is applied
-//     member _.fontKerning_normal = h.MakeStyle("font-kerning", "normal")
-//     /// Specifies that font kerning is not applied
-//     member _.fontKerning_none = h.MakeStyle("font-kerning", "none")
+type CssFontKerningEngine<'Style>(h: CssHelper<'Style>) =
+    /// Default. The browser determines whether font kerning should be applied or not
+    member _.auto = h.MakeStyle("font-kerning", "auto")
+    /// Specifies that font kerning is applied
+    member _.normal = h.MakeStyle("font-kerning", "normal")
+    /// Specifies that font kerning is not applied
+    member _.none = h.MakeStyle("font-kerning", "none")
 
-// /// The font-weight property sets how thick or thin characters in text should be displayed.
-//     /// Defines normal characters. This is default.
-//     member _.fontWeight_normal = h.MakeStyle("font-weight", "normal")
-//     /// Defines thick characters.
-//     member _.fontWeight_bold = h.MakeStyle("font-weight", "bold")
-//     /// Defines thicker characters
-//     member _.fontWeight_bolder = h.MakeStyle("font-weight", "bolder")
-//     /// Defines lighter characters.
-//     member _.fontWeight_lighter = h.MakeStyle("font-weight", "lighter")
-//     /// Sets this property to its default value.
-//     member _.fontWeight_initial = h.MakeStyle("font-weight", "initial")
-//     /// Inherits this property from its parent element.
-//     member _.fontWeight_inheritFromParent = h.MakeStyle("font-weight", "inherit")
+type CssFontWeightEngine<'Style>(h: CssHelper<'Style>) =
+    /// Defines from thin to thick characters. 400 is the same as normal, and 700 is the same as bold.
+    /// Possible values are [100, 200, 300, 400, 500, 600, 700, 800, 900]
+    member _.custom(weight: int) = h.MakeStyle("font-weight", asString weight)
+    /// Defines normal characters. This is default.
+    member _.normal = h.MakeStyle("font-weight", "normal")
+    /// Defines thick characters.
+    member _.bold = h.MakeStyle("font-weight", "bold")
+    /// Defines thicker characters
+    member _.bolder = h.MakeStyle("font-weight", "bolder")
+    /// Defines lighter characters.
+    member _.lighter = h.MakeStyle("font-weight", "lighter")
+    /// Sets this property to its default value.
+    member _.initial = h.MakeStyle("font-weight", "initial")
+    /// Inherits this property from its parent element.
+    member _.inheritFromParent = h.MakeStyle("font-weight", "inherit")
 
-//     /// The browser displays a normal font style. This is defaut.
-//     member _.fontStyle_normal = h.MakeStyle("font-style", "normal")
-//     /// The browser displays an italic font style.
-//     member _.fontStyle_italic = h.MakeStyle("font-style", "italic")
-//     /// The browser displays an oblique font style.
-//     member _.fontStyle_oblique = h.MakeStyle("font-style", "oblique")
-//     /// Sets this property to its default value.
-//     member _.fontStyle_initial = h.MakeStyle("font-style", "initial")
-//     /// Inherits this property from its parent element.
-//     member _.fontStyle_inheritFromParent = h.MakeStyle("font-style", "inherit")
+type CssFontStyleEngine<'Style>(h: CssHelper<'Style>) =
+    /// The browser displays a normal font style. This is defaut.
+    member _.normal = h.MakeStyle("font-style", "normal")
+    /// The browser displays an italic font style.
+    member _.italic = h.MakeStyle("font-style", "italic")
+    /// The browser displays an oblique font style.
+    member _.oblique = h.MakeStyle("font-style", "oblique")
+    /// Sets this property to its default value.
+    member _.initial = h.MakeStyle("font-style", "initial")
+    /// Inherits this property from its parent element.
+    member _.inheritFromParent = h.MakeStyle("font-style", "inherit")
 
-//     /// The browser displays a normal font. This is default
-//     member _.fontVariant_normal = h.MakeStyle("font-variant", "normal")
-//     /// The browser displays a small-caps font
-//     member _.fontVariant_smallCaps = h.MakeStyle("font-variant", "small-caps")
-//     /// Sets this property to its default value.
-//     member _.fontVariant_initial = h.MakeStyle("font-variant", "initial")
-//     /// Inherits this property from its parent element.
-//     member _.fontVariant_inheritFromParent = h.MakeStyle("font-variant", "inherit")
+type CssFontVariantEngine<'Style>(h: CssHelper<'Style>) =
+    /// The browser displays a normal font. This is default
+    member _.normal = h.MakeStyle("font-variant", "normal")
+    /// The browser displays a small-caps font
+    member _.smallCaps = h.MakeStyle("font-variant", "small-caps")
+    /// Sets this property to its default value.
+    member _.initial = h.MakeStyle("font-variant", "initial")
+    /// Inherits this property from its parent element.
+    member _.inheritFromParent = h.MakeStyle("font-variant", "inherit")
 
 //     /// Break words only at allowed break points
 //     member _.wordWrap_normal = h.MakeStyle("word-wrap", "normal")
@@ -1385,6 +1391,14 @@ type CssDisplayEngine<'Style>(h: CssHelper<'Style>) =
 type CssEngine<'Style>(h: CssHelper<'Style>) =
     let _display = CssDisplayEngine(h)
     let _boxShadow = CssBoxShadowEngine(h)
+    let _flexBasis = CssFlexBasisEngine(h)
+    let _flexDirection = CssFlexDirectionEngine(h)
+    let _flexWrap = CssFlexWrapEngine(h)
+    let _float = CssFloatEngine(h)
+    let _fontDisplay = CssFontDisplayEngine(h)
+    let _fontKerning = CssFontKerningEngine(h)
+    let _fontWeight = CssFontWeightEngine(h)
+    let _fontVariant = CssFontVariantEngine(h)
     let _height = CssHeightEngine(h, "height")
     let _minHeight = CssHeightEngine(h, "min-height")
     let _maxHeight = CssHeightEngine(h, "max-height")
@@ -1402,6 +1416,19 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// A box shadow is described by X and Y offsets relative to the element, blur and spread radii, and color.
     member _.boxShadow = _boxShadow
     member _.display = _display
+    member _.flexDirection = _flexDirection
+    member _.flexWrap = _flexWrap
+    /// Places an element on the left or right side of its container, allowing text and
+    /// inline elements to wrap around it. The element is removed from the normal flow
+    /// of the page, though still remaining a part of the flow (in contrast to absolute
+    /// positioning).
+    member _.float = _float
+    /// Determines how a font face is displayed based on whether and when it is downloaded and ready to use.
+    member _.fontDisplay = _fontDisplay
+    member _.fontKerning = _fontKerning
+    /// The font-weight property sets how thick or thin characters in text should be displayed.
+    member _.fontWeight = _fontWeight
+    member _.fontVariant = _fontVariant
     /// Set the height of an element.
     ///
     /// By default, the property defines the height of the content area.
@@ -3328,9 +3355,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     member _.animationDurationCount(count: int) = h.MakeStyle("animation-duration-count", asString count)
     /// Sets the font family for the font specified in a @font-face rule.
     member _.fontFamily (family: string) = h.MakeStyle("font-family", family)
-    /// Defines from thin to thick characters. 400 is the same as normal, and 700 is the same as bold.
-    /// Possible values are [100, 200, 300, 400, 500, 600, 700, 800, 900]
-    member _.fontWeight (weight: int) = h.MakeStyle("font-weight", asString weight)
     /// Sets the color of decorations added to text by text-decoration-line.
     member _.textDecorationColor(color: string) = h.MakeStyle("text-decoration-color", color)
     /// Sets the kind of decoration that is used on text in an element, such as an underline or overline.
