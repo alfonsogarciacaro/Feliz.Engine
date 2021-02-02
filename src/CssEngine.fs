@@ -72,55 +72,29 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// Sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right,
     /// margin-bottom, and margin-left.
     member _.margin(value: int) = h.MakeStyle("margin", asString value)
-    /// Sets the margin area on two sides of an element. It is a shorthand for margin-top and margin-right.
-    member _.margin(top: int, right: int) =
+    /// Sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right,
+    /// margin-bottom, and margin-left.
+    member _.margin(value: ICssUnit) = h.MakeStyle("margin", asString value)
+    /// Sets the margin area on the vertical and horizontal axis.
+    member _.margin(vertical: int, horizonal: int) =
+        h.MakeStyle("margin",
+            (asString vertical) + "px " +
+            (asString horizonal) + "px"
+        )
+    /// Sets the margin area on the vertical and horizontal axis.
+    member _.margin(vertical: ICssUnit, horizonal: ICssUnit) =
+        h.MakeStyle("margin",
+            (asString vertical) + " " +
+            (asString horizonal)
+        )
+    /// Sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right,
+    /// margin-bottom, and margin-left.
+    member _.margin(top: int, right: int, bottom: int, left: int) =
         h.MakeStyle("margin",
             (asString top) + "px " +
-            (asString right) + "px"
-        )
-    /// Sets the margin area on two sides of an element. It is a shorthand for margin-top and margin-right.
-    member _.margin(top: ICssUnit, right: int) =
-        h.MakeStyle("margin",
-            (asString top) + " " +
-            (asString right) + "px"
-        )
-    /// Sets the margin area on two sides of an element. It is a shorthand for margin-top and margin-right.
-    member _.margin(top: ICssUnit, right: ICssUnit) =
-        h.MakeStyle("margin",
-            (asString top) + " " +
-            (asString right)
-        )
-    /// Sets the margin area on three sides of an element. It is a shorthand for margin-top, margin-right
-    /// and margin-bottom.
-    member _.margin(top: ICssUnit, right: int, bottom: int) =
-        h.MakeStyle("margin",
-            (asString top) + " " +
             (asString right) + "px " +
-            (asString bottom) + "px"
-        )
-    /// Sets the margin area on three sides of an element. It is a shorthand for margin-top, margin-right
-    /// and margin-bottom.
-    member _.margin(top: ICssUnit, right: ICssUnit, bottom: int) =
-        h.MakeStyle("margin",
-            (asString top) + " " +
-            (asString right) + " " +
-            (asString bottom) + "px"
-        )
-    /// Sets the margin area on three sides of an element. It is a shorthand for margin-top, margin-right
-    /// and margin-bottom.
-    member _.margin(top: ICssUnit, right: ICssUnit, bottom: ICssUnit) =
-        h.MakeStyle("margin",
-            (asString top) + " " +
-            (asString right) + " " +
-            (asString bottom)
-        )
-    /// Sets the margin area on three sides of an element. It is a shorthand for margin-top, margin-right
-    /// and margin-bottom.
-    member _.margin(top: ICssUnit, right: int, bottom: ICssUnit) =
-        h.MakeStyle("margin",
-            (asString top) + " " +
-            (asString right) + "px " +
-            (asString bottom)
+            (asString bottom) + "px " +
+            (asString left) + "px"
         )
     /// Sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right,
     /// margin-bottom, and margin-left.
@@ -131,40 +105,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
             (asString bottom) + " " +
             (asString left)
         )
-    /// Sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right,
-    /// margin-bottom, and margin-left.
-    member _.margin(top: ICssUnit, right: int, bottom: int, left: int) =
-        h.MakeStyle("margin",
-            (asString top) + " " +
-            (asString right) + "px " +
-            (asString bottom) + "px " +
-            (asString left) + "px"
-        )
-    /// Sets the margin area on two sides of an element. It is a shorthand for margin-top and margin-right.
-    member _.margin(top: int, right: ICssUnit) =
-        h.MakeStyle("margin",
-            (asString top) + "px " +
-            (asString right)
-        )
-    /// Sets the margin area on three sides of an element. It is a shorthand for margin-top, margin-right
-    /// and margin-bottom.
-    member _.margin(top: int, right: int, bottom: int) =
-        h.MakeStyle("margin",
-            (asString top) + "px " +
-            (asString right) + "px " +
-            (asString bottom) + "px"
-        )
-    /// Sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right,
-    /// margin-bottom, and margin-left.
-    member _.margin(top: int, right: int, bottom: int, left: int) =
-        h.MakeStyle("margin",
-            (asString top) + "px " +
-            (asString right) + "px " +
-            (asString bottom) + "px " +
-            (asString left) + "px")
-    /// Sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right,
-    /// margin-bottom, and margin-left.
-    member _.margin(value: ICssUnit) = h.MakeStyle("margin", asString value)
     /// Sets the margin area on the left side of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
     member _.marginLeft(value: int) = h.MakeStyle("margin-left", asString value)
@@ -191,85 +131,21 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     member _.marginBottom(value: ICssUnit) = h.MakeStyle("margin-bottom", asString value)
     /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
     /// padding-right, padding-bottom, and padding-left.
-    member _.padding(vertical: ICssUnit, horizontal: int) =
-        h.MakeStyle("padding",
-            (asString vertical) + " " +
-            (asString horizontal) + "px"
-        )
-    /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
-    /// padding-right, padding-bottom, and padding-left.
-    member _.padding(top: ICssUnit, horizontal: int, bottom: int) =
-        h.MakeStyle("padding",
-            (asString top) + " " +
-            (asString horizontal) + "px " +
-            (asString bottom) + "px"
-        )
-    /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
-    /// padding-right, padding-bottom, and padding-left.
-    member _.padding(top: ICssUnit, horizontal: ICssUnit, bottom: int) =
-        h.MakeStyle("padding",
-            (asString top) + " " +
-            (asString horizontal) + " " +
-            (asString bottom) + "px"
-        )
-    /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
-    /// padding-right, padding-bottom, and padding-left.
-    member _.padding(top: ICssUnit, horizontal: ICssUnit, bottom: ICssUnit) =
-        h.MakeStyle("padding",
-            (asString top) + " " +
-            (asString horizontal) + " " +
-            (asString bottom)
-        )
-    /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
-    /// padding-right, padding-bottom, and padding-left.
-    member _.padding(top: ICssUnit, horizontal: int, bottom: ICssUnit) =
-        h.MakeStyle("padding",
-            (asString top) + " " +
-            (asString horizontal) + "px " +
-            (asString bottom)
-        )
-    /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
-    /// padding-right, padding-bottom, and padding-left.
-    member _.padding(top: ICssUnit, right: ICssUnit, bottom: ICssUnit, left: ICssUnit) =
-        h.MakeStyle("padding",
-            (asString top) + " " +
-            (asString right) + " " +
-            (asString bottom) + " " +
-            (asString left)
-        )
-    /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
-    /// padding-right, padding-bottom, and padding-left.
-    member _.padding(top: ICssUnit, right: int, bottom: int, left: int) =
-        h.MakeStyle("padding",
-            (asString top) + " " +
-            (asString right) + "px " +
-            (asString bottom) + "px " +
-            (asString left) + "px"
-        )
-    /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
-    /// padding-right, padding-bottom, and padding-left.
-    member _.padding(vertical: int, horizontal: ICssUnit) =
-        h.MakeStyle("padding",
-            (asString vertical) + "px " +
-            (asString horizontal)
-        )
-    /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
-    /// padding-right, padding-bottom, and padding-left.
     member _.padding(value: int) = h.MakeStyle("padding", asString value)
     /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
     /// padding-right, padding-bottom, and padding-left.
+    member _.padding(value: ICssUnit) = h.MakeStyle("padding", asString value)
+    /// Sets the padding area for vertical and horizontal axis.
     member _.padding(vertical: int, horizontal: int) =
         h.MakeStyle("padding",
             (asString vertical) + "px " +
             (asString horizontal) + "px"
         )
-    /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
-    /// padding-right, padding-bottom, and padding-left.
-    member _.padding(top: int, horizontal: int, bottom: int) =
+    /// Sets the padding area for vertical and horizontal axis.
+    member _.padding(vertical: ICssUnit, horizontal: ICssUnit) =
         h.MakeStyle("padding",
-            (asString top) + "px " +
-            (asString horizontal) + "px " +
-            (asString bottom) + "px"
+            (asString vertical) + " " +
+            (asString horizontal)
         )
     /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
     /// padding-right, padding-bottom, and padding-left.
@@ -282,7 +158,13 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
         )
     /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
     /// padding-right, padding-bottom, and padding-left.
-    member _.padding(value: ICssUnit) = h.MakeStyle("padding", asString value)
+    member _.padding(top: ICssUnit, right: ICssUnit, bottom: ICssUnit, left: ICssUnit) =
+        h.MakeStyle("padding",
+            (asString top) + " " +
+            (asString right) + " " +
+            (asString bottom) + " " +
+            (asString left)
+        )
     /// Sets the height of the padding area on the bottom of an element.
     member _.paddingBottom(value: int) = h.MakeStyle("padding-bottom", asString value)
     /// Sets the height of the padding area on the bottom of an element.
