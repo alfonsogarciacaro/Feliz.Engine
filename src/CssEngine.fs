@@ -173,20 +173,21 @@ type CssOverflowEngine<'Style>(h: CssHelper<'Style>, prop: string) =
     /// Inherits this property from its parent element.
     member _.overflow_inheritFromParent = h.MakeStyle(prop, "inherit")
 
-//     /// The element is hidden (but still takes up space).
-//     member _.visibility_hidden = h.MakeStyle("visibility", "hidden")
-//     /// Default value. The element is visible.
-//     member _.visibility_visible = h.MakeStyle("visibility", "visible")
-//     /// Only for table rows (`<tr> `), row groups (`<tbody> `), columns (`<col> `), column groups
-//     /// (`<colgroup> `). This value removes a row or column, but it does not affect the table layout.
-//     /// The space taken up by the row or column will be available for other content.
-//     ///
-//     /// If collapse is used on other elements, it renders as "hidden"
-//     member _.visibility_collapse = h.MakeStyle("visibility", "collapse")
-//     /// Sets this property to its default value.
-//     member _.visibility_initial = h.MakeStyle("visibility", "initial")
-//     /// Inherits this property from its parent element.
-//     member _.visibility_inheritFromParent = h.MakeStyle("visibility", "inherit")
+type CssVisibilityEngine<'Style>(h: CssHelper<'Style>) =
+    /// The element is hidden (but still takes up space).
+    member _.hidden = h.MakeStyle("visibility", "hidden")
+    /// Default value. The element is visible.
+    member _.visible = h.MakeStyle("visibility", "visible")
+    /// Only for table rows (`<tr> `), row groups (`<tbody> `), columns (`<col> `), column groups
+    /// (`<colgroup> `). This value removes a row or column, but it does not affect the table layout.
+    /// The space taken up by the row or column will be available for other content.
+    ///
+    /// If collapse is used on other elements, it renders as "hidden"
+    member _.collapse = h.MakeStyle("visibility", "collapse")
+    /// Sets this property to its default value.
+    member _.initial = h.MakeStyle("visibility", "initial")
+    /// Inherits this property from its parent element.
+    member _.inheritFromParent = h.MakeStyle("visibility", "inherit")
 
 //     /// Default value. The length is equal to the length of the flexible item. If the item has
 //     /// no length specified, the length will be according to its content.
@@ -1392,6 +1393,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     let _overflowY = CssOverflowEngine(h, "overflow-y")
     let _textAlign = CssTextAlignEngine(h)
     let _textJustify = CssTextJustifyEngine(h)
+    let _visibility = CssVisibilityEngine(h)
     let _whitespace = CssWhitespaceEngine(h)
     let _wordspace = CssWordbreakEngine(h)
 
@@ -1417,6 +1419,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     member _.overflowY = _overflowY
     member _.textAlign = _textAlign
     member _.textJustify = _textJustify
+    member _.visibility = _visibility
     member _.whitespace = _whitespace
     member _.wordspace = _wordspace
 
