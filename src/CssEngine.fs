@@ -60,7 +60,60 @@ open type Util
 type CssHelper<'Style> =
     abstract MakeStyle: key: string * value: string -> 'Style
 
+type CssDisplayEngine<'Style>(h: CssHelper<'Style>) =
+    /// Displays an element as an inline element (like `<span> `). Any height and width properties will have no effect.
+    member _.inlineElement = h.MakeStyle("display", "inline")
+    /// Displays an element as a block element (like `<p> `). It starts on a new line, and takes up the whole width.
+    member _.block = h.MakeStyle("display", "block")
+    /// Makes the container disappear, making the child elements children of the element the next level up in the DOM.
+    member _.contents = h.MakeStyle("display", "contents")
+    /// Displays an element as a block-level flex container.
+    member _.flex = h.MakeStyle("display", "flex")
+    /// Displays an element as a block container box, and lays out its contents using flow layout.
+    ///
+    /// It always establishes a new block formatting context for its contents.
+    member _.flowRoot = h.MakeStyle("display", "flow-root")
+    /// Displays an element as a block-level grid container.
+    member _.grid = h.MakeStyle("display", "grid")
+    /// Displays an element as an inline-level block container. The element itself is formatted as an inline element, but you can apply height and width values.
+    member _.inlineBlock = h.MakeStyle("display", "inline-block")
+    /// Displays an element as an inline-level flex container.
+    member _.inlineFlex = h.MakeStyle("display", "inline-flex")
+    /// Displays an element as an inline-level grid container
+    member _.inlineGrid = h.MakeStyle("display", "inline-grid")
+    /// The element is displayed as an inline-level table.
+    member _.inlineTable = h.MakeStyle("display", "inline-table")
+    /// Let the element behave like a `<li> ` element
+    member _.listItem = h.MakeStyle("display", "list-item")
+    /// Displays an element as either block or inline, depending on context.
+    member _.runIn = h.MakeStyle("display", "run-in")
+    /// Let the element behave like a `<table> ` element.
+    member _.table = h.MakeStyle("display", "table")
+    /// Let the element behave like a <caption> element.
+    member _.tableCaption = h.MakeStyle("display", "table-caption")
+    /// Let the element behave like a <colgroup> element.
+    member _.tableColumnGroup = h.MakeStyle("display", "table-column-group")
+    /// Let the element behave like a <thead> element.
+    member _.tableHeaderGroup = h.MakeStyle("display", "table-header-group")
+    /// Let the element behave like a <tfoot> element.
+    member _.tableFooterGroup = h.MakeStyle("display", "table-footer-group")
+    /// Let the element behave like a <tbody> element.
+    member _.tableRowGroup = h.MakeStyle("display", "table-row-group")
+    /// Let the element behave like a <td> element.
+    member _.tableCell = h.MakeStyle("display", "table-cell")
+    /// Let the element behave like a <col> element.
+    member _.tableColumn = h.MakeStyle("display", "table-column")
+    /// Let the element behave like a <tr> element.
+    member _.tableRow = h.MakeStyle("display", "table-row")
+    /// The element is completely removed.
+    member _.none = h.MakeStyle("display", "none")
+    /// Sets this property to its default value.
+    member _.initial = h.MakeStyle("display", "initial")
+    /// Inherits this property from its parent element.
+    member _.inheritFromParent = h.MakeStyle("display", "inherit")
+
 type CssEngine<'Style>(h: CssHelper<'Style>) =
+    let display = CssDisplayEngine(h)
     /// The zIndex property sets or returns the stack order of a positioned element.
     ///
     /// An element with greater stack order (1) is always in front of another element with lower stack order (0).
@@ -3010,56 +3063,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// Inherits this property from its parent element.
     member _.tableLayout_inheritFromParent = h.MakeStyle("table-layout", "inherit")
 
-    /// Displays an element as an inline element (like `<span> `). Any height and width properties will have no effect.
-    member _.display_inlineElement = h.MakeStyle("display", "inline")
-    /// Displays an element as a block element (like `<p> `). It starts on a new line, and takes up the whole width.
-    member _.display_block = h.MakeStyle("display", "block")
-    /// Makes the container disappear, making the child elements children of the element the next level up in the DOM.
-    member _.display_contents = h.MakeStyle("display", "contents")
-    /// Displays an element as a block-level flex container.
-    member _.display_flex = h.MakeStyle("display", "flex")
-    /// Displays an element as a block container box, and lays out its contents using flow layout.
-    ///
-    /// It always establishes a new block formatting context for its contents.
-    member _.display_flowRoot = h.MakeStyle("display", "flow-root")
-    /// Displays an element as a block-level grid container.
-    member _.display_grid = h.MakeStyle("display", "grid")
-    /// Displays an element as an inline-level block container. The element itself is formatted as an inline element, but you can apply height and width values.
-    member _.display_inlineBlock = h.MakeStyle("display", "inline-block")
-    /// Displays an element as an inline-level flex container.
-    member _.display_inlineFlex = h.MakeStyle("display", "inline-flex")
-    /// Displays an element as an inline-level grid container
-    member _.display_inlineGrid = h.MakeStyle("display", "inline-grid")
-    /// The element is displayed as an inline-level table.
-    member _.display_inlineTable = h.MakeStyle("display", "inline-table")
-    /// Let the element behave like a `<li> ` element
-    member _.display_listItem = h.MakeStyle("display", "list-item")
-    /// Displays an element as either block or inline, depending on context.
-    member _.display_runIn = h.MakeStyle("display", "run-in")
-    /// Let the element behave like a `<table> ` element.
-    member _.display_table = h.MakeStyle("display", "table")
-    /// Let the element behave like a <caption> element.
-    member _.display_tableCaption = h.MakeStyle("display", "table-caption")
-    /// Let the element behave like a <colgroup> element.
-    member _.display_tableColumnGroup = h.MakeStyle("display", "table-column-group")
-    /// Let the element behave like a <thead> element.
-    member _.display_tableHeaderGroup = h.MakeStyle("display", "table-header-group")
-    /// Let the element behave like a <tfoot> element.
-    member _.display_tableFooterGroup = h.MakeStyle("display", "table-footer-group")
-    /// Let the element behave like a <tbody> element.
-    member _.display_tableRowGroup = h.MakeStyle("display", "table-row-group")
-    /// Let the element behave like a <td> element.
-    member _.display_tableCell = h.MakeStyle("display", "table-cell")
-    /// Let the element behave like a <col> element.
-    member _.display_tableColumn = h.MakeStyle("display", "table-column")
-    /// Let the element behave like a <tr> element.
-    member _.display_tableRow = h.MakeStyle("display", "table-row")
-    /// The element is completely removed.
-    member _.display_none = h.MakeStyle("display", "none")
-    /// Sets this property to its default value.
-    member _.display_initial = h.MakeStyle("display", "initial")
-    /// Inherits this property from its parent element.
-    member _.display_inheritFromParent = h.MakeStyle("display", "inherit")
+    member _.display = display
 
 /// See documentation at https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
     /// The User Agent will determine the cursor to display based on the current context. E.g., equivalent to text when hovering text.
