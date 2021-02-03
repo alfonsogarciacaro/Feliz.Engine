@@ -55,6 +55,48 @@ type internal Util =
         { new IBorderStyle with member _.AsString = x }
 #endif
 
+    static member inline newGridSpan(x: string): IGridSpan =
+#if FABLE_COMPILER
+        unbox x
+#else
+        { new IGridSpan with member _.AsString = x }
+#endif
+
+    static member inline newGridTemplateItem(x: string): IGridTemplateItem =
+#if FABLE_COMPILER
+        unbox x
+#else
+        { new IGridTemplateItem with member _.AsString = x }
+#endif
+
+    static member inline newTextDecorationLine(x: string): ITextDecorationLine =
+#if FABLE_COMPILER
+        unbox x
+#else
+        { new ITextDecorationLine with member _.AsString = x }
+#endif
+
+    static member inline newTextDecoration(x: string): ITextDecoration =
+#if FABLE_COMPILER
+        unbox x
+#else
+        { new ITextDecoration with member _.AsString = x }
+#endif
+
+    static member inline newTransformProperty(x: string): ITransformProperty =
+#if FABLE_COMPILER
+        unbox x
+#else
+        { new ITransformProperty with member _.AsString = x }
+#endif
+
+    static member inline newTransitionProperty(x: string): ITransitionProperty =
+#if FABLE_COMPILER
+        unbox x
+#else
+        { new ITransitionProperty with member _.AsString = x }
+#endif
+
 open type Util
 
 type CssHelper<'Style> =
@@ -3452,11 +3494,11 @@ module color =
     /// Creates a color from components [hue](https://en.wikipedia.org/wiki/Hue), [saturation](https://en.wikipedia.org/wiki/Colorfulness) and [lightness](https://en.wikipedia.org/wiki/Lightness) where hue is a number that goes from 0 to 360 and both
     /// the `saturation` and `lightness` go from 0 to 100 as they are percentages.
     let hsl (hue: float, saturation: float, lightness: float) =
-        "hsl(" + (unbox<string> hue) + "," + (unbox<string> saturation) + "%," + (unbox<string> lightness) + "%)"
+        "hsl(" + (string hue) + "," + (string saturation) + "%," + (string lightness) + "%)"
     let rgb (r: int, g: int, b: int) =
-        "rgb(" + (unbox<string> r) + "," + (unbox<string> g) + "," + (unbox<string> b) + ")"
+        "rgb(" + (string r) + "," + (string g) + "," + (string b) + ")"
     let rgba (r: int, g: int, b: int, a) =
-        "rgba(" + (unbox<string> r) + "," + (unbox<string> g) + "," + (unbox<string> b) + "," + (unbox<string> a) + ")"
+        "rgba(" + (string r) + "," + (string g) + "," + (string b) + "," + (string a) + ")"
     let [<Literal>] indianRed = "#CD5C5C"
     let [<Literal>] lightCoral = "#F08080"
     let [<Literal>] salmon = "#FA8072"
@@ -3600,6 +3642,245 @@ module color =
     let [<Literal>] black = "#000000"
     let [<Literal>] transparent = "transparent"
 
+/// Contains a list of CSS Fonts from https://www.tutorialbrain.com/css_tutorial/css_font_family_list/
+module font =
+    let [<Literal>] abadiMTCondensedLight = "Abadi MT Condensed Light"
+    let [<Literal>] aharoni = "Aharoni"
+    let [<Literal>] aharoniBold = "Aharoni Bold"
+    let [<Literal>] aldhabi = "Aldhabi"
+    let [<Literal>] alternateGothic2BT = "AlternateGothic2 BT"
+    let [<Literal>] andaleMono = "Andale Mono"
+    let [<Literal>] andalus = "Andalus"
+    let [<Literal>] angsanaNew = "Angsana New"
+    let [<Literal>] angsanaUPC = "AngsanaUPC"
+    let [<Literal>] aparajita = "Aparajita"
+    let [<Literal>] appleChancery = "Apple Chancery"
+    let [<Literal>] arabicTypesetting = "Arabic Typesetting"
+    let [<Literal>] arial = "Arial"
+    let [<Literal>] arialBlack = "Arial Black"
+    let [<Literal>] arialNarrow = "Arial narrow"
+    let [<Literal>] arialNova = "Arial Nova"
+    let [<Literal>] arialRoundedMTBold = "Arial Rounded MT Bold"
+    let [<Literal>] arnoldboecklin = "Arnoldboecklin"
+    let [<Literal>] avantaGarde = "Avanta Garde"
+    let [<Literal>] bahnschrift = "Bahnschrift"
+    let [<Literal>] bahnschriftLight = "Bahnschrift Light"
+    let [<Literal>] bahnschriftSemiBold = "Bahnschrift SemiBold"
+    let [<Literal>] bahnschriftSemiLight = "Bahnschrift SemiLight"
+    let [<Literal>] baskerville = "Baskerville"
+    let [<Literal>] batang = "Batang"
+    let [<Literal>] batangChe = "BatangChe"
+    let [<Literal>] bigCaslon = "Big Caslon"
+    let [<Literal>] bizUDGothic = "BIZ UDGothic"
+    let [<Literal>] bizUDMinchoMedium = "BIZ UDMincho Medium"
+    let [<Literal>] blippo = "Blippo"
+    let [<Literal>] bodoniMT = "Bodoni MT"
+    let [<Literal>] bookAntiqua = "Book Antiqua"
+    let [<Literal>] Bookman = "Bookman"
+    let [<Literal>] bradlyHand = "Bradley Hand"
+    let [<Literal>] browalliaNew = "Browallia New"
+    let [<Literal>] browalliaUPC = "BrowalliaUPC"
+    let [<Literal>] brushScriptMT = "Brush Script MT"
+    let [<Literal>] brushScriptStd = "Brush Script Std"
+    let [<Literal>] brushStroke = "Brushstroke"
+    let [<Literal>] calibri = "Calibri"
+    let [<Literal>] calibriLight = "Calibri Light"
+    let [<Literal>] calistoMT = "Calisto MT"
+    let [<Literal>] cambodian = "Cambodian"
+    let [<Literal>] cambria = "Cambria"
+    let [<Literal>] cambriaMath = "Cambria Math"
+    let [<Literal>] candara = "Candara"
+    let [<Literal>] centuryGothic = "Century Gothic"
+    let [<Literal>] chalkDuster = "Chalkduster"
+    let [<Literal>] cherokee = "Cherokee"
+    let [<Literal>] comicSans = "Comic Sans"
+    let [<Literal>] comicSansMS = "Comic Sans MS"
+    let [<Literal>] consolas = "Consolas"
+    let [<Literal>] constantia = "Constantia"
+    let [<Literal>] copperPlate = "Copperplate"
+    let [<Literal>] copperPlateGothicLight = "Copperplate Gothic Light"
+    let [<Literal>] copperPlateGothicBold = "Copperplate Gothic Bold"
+    let [<Literal>] corbel = "Corbel"
+    let [<Literal>] cordiaNew = "Cordia New"
+    let [<Literal>] cordiaUPC = "CordiaUPC"
+    let [<Literal>] coronetScript = "Coronet script"
+    let [<Literal>] courier = "Courier"
+    let [<Literal>] courierNew = "Courier New"
+    let [<Literal>] daunPenh = "DaunPenh"
+    let [<Literal>] david = "David"
+    let [<Literal>] dengXian = "DengXian"
+    let [<Literal>] dfKaiSB = "DFKai-SB"
+    let [<Literal>] didot = "Didot"
+    let [<Literal>] dilleniaUPC = "DilleniaUPC"
+    let [<Literal>] dokChampa = "DokChampa"
+    let [<Literal>] dotum = "Dotum"
+    let [<Literal>] dotumChe = "DotumChe"
+    let [<Literal>] ebrima = "Ebrima"
+    let [<Literal>] estrangeloEdessa = "Estrangelo Edessa"
+    let [<Literal>] eucrosiaUPC = "EucrosiaUPC"
+    let [<Literal>] euphemia = "Euphemia"
+    let [<Literal>] fangSong = "FangSong"
+    let [<Literal>] florence = "Florence"
+    let [<Literal>] franklinGothicMedium = "Franklin Gothic Medium"
+    let [<Literal>] frankRuehl = "FrankRuehl"
+    let [<Literal>] fressiaUPC = "FressiaUPC"
+    let [<Literal>] futara = "Futara"
+    let [<Literal>] gabriola = "Gabriola"
+    let [<Literal>] garamond = "Garamond"
+    let [<Literal>] gautami = "Gautami"
+    let [<Literal>] geneva = "Geneva"
+    let [<Literal>] georgia = "Georgia"
+    let [<Literal>] georgiaPro = "Georgia Pro"
+    let [<Literal>] gillSans = "Gill Sans"
+    let [<Literal>] gillSansNova = "Gill Sans Nova"
+    let [<Literal>] gisha = "Gisha"
+    let [<Literal>] goudyOldStyle = "Goudy Old Style"
+    let [<Literal>] gulim = "Gulim"
+    let [<Literal>] gulimChe = "GulimChe"
+    let [<Literal>] gungsuh = "Gungsuh"
+    let [<Literal>] gungsuhChe = "GungsuhChe"
+    let [<Literal>] hebrew = "Hebrew"
+    let [<Literal>] helvetica = "Helvetica"
+    let [<Literal>] hoeflerText = "Hoefler Text"
+    let [<Literal>] holoLensMDL2Assets = "HoloLens MDL2 Assets"
+    let [<Literal>] impact = "Impact"
+    let [<Literal>] inkFree = "Ink Free"
+    let [<Literal>] irisUPC = "IrisUPC"
+    let [<Literal>] iskoolaPota = "Iskoola Pota"
+    let [<Literal>] japanese = "Japanese"
+    let [<Literal>] jasmineUPC = "JasmineUPC"
+    let [<Literal>] javaneseText = "Javanese Text"
+    let [<Literal>] jazzLET = "Jazz LET"
+    let [<Literal>] kaiTi = "KaiTi"
+    let [<Literal>] kalinga = "Kalinga"
+    let [<Literal>] kartika = "Kartika"
+    let [<Literal>] khmerUI = "Khmer UI"
+    let [<Literal>] kodchiangUPC = "KodchiangUPC"
+    let [<Literal>] kokila = "Kokila"
+    let [<Literal>] korean = "Korean"
+    let [<Literal>] lao = "Lao"
+    let [<Literal>] laoUI = "Lao UI"
+    let [<Literal>] latha = "Latha"
+    let [<Literal>] leelawadee = "Leelawadee"
+    let [<Literal>] leelawadeeUI = "Leelawadee UI"
+    let [<Literal>] leelawadeeUISemilight = "Leelawadee UI Semilight"
+    let [<Literal>] levenimMT = "Levenim MT"
+    let [<Literal>] lilyUPC = "LilyUPC"
+    let [<Literal>] lucidaBright = "Lucida Bright"
+    let [<Literal>] lucidaConsole = "Lucida Console"
+    let [<Literal>] lucidaHandwriting = "Lucida Handwriting"
+    let [<Literal>] lucidaSans = "Lucida Sans"
+    let [<Literal>] lucidaSansTypewriter = "Lucida Sans Typewriter"
+    let [<Literal>] lucidaSansUnicode = "Lucida Sans Unicode"
+    let [<Literal>] lucidaTypewriter = "Lucidatypewriter"
+    let [<Literal>] luminari = "Luminari"
+    let [<Literal>] malgunGothic = "Malgun Gothic"
+    let [<Literal>] malgunGothicSemilight = "Malgun Gothic Semilight"
+    let [<Literal>] mangal = "Mangal"
+    let [<Literal>] markerFelt = "Marker Felt"
+    let [<Literal>] marlett = "Marlett"
+    let [<Literal>] meiryo = "Meiryo"
+    let [<Literal>] meiryoUI = "Meiryo UI"
+    let [<Literal>] microsoftHimalaya = "Microsoft Himalaya"
+    let [<Literal>] microsoftJhengHei = "Microsoft JhengHei"
+    let [<Literal>] microsoftJhengHeiUI = "Microsoft JhengHei UI"
+    let [<Literal>] microsoftNewTaiLue = "Microsoft New Tai Lue"
+    let [<Literal>] microsoftPhagsPa = "Microsoft PhagsPa"
+    let [<Literal>] microsoftSansSerif = "Microsoft Sans Serif"
+    let [<Literal>] microsoftTaiLe = "Microsoft Tai Le"
+    let [<Literal>] microsoftUighur = "Microsoft Uighur"
+    let [<Literal>] microsoftYaHei = "Microsoft YaHei"
+    let [<Literal>] microsoftYaHeiUI = "Microsoft YaHei UI"
+    let [<Literal>] microsoftYiBaiti = "Microsoft Yi Baiti"
+    let [<Literal>] mingLiU = "MingLiU"
+    let [<Literal>] mingLiUHKSCS = "MingLiU_HKSCS"
+    let [<Literal>] mingLiUHKSCSExtB = "MingLiU_HKSCS-ExtB"
+    let [<Literal>] mingLiUExtB = "MingLiU-ExtB"
+    let [<Literal>] miriam = "Miriam"
+    let [<Literal>] monaco = "Monaco"
+    let [<Literal>] mongolianBaiti = "Mongolian Baiti"
+    let [<Literal>] moolBoran = "MoolBoran"
+    let [<Literal>] msGothic = "MS Gothic"
+    let [<Literal>] msMincho = "MS Mincho"
+    let [<Literal>] msPGothic = "MS PGothic"
+    let [<Literal>] msPMincho = "MS PMincho"
+    let [<Literal>] msUIGothic = "MS UI Gothic"
+    let [<Literal>] mvBoli = "MV Boli"
+    let [<Literal>] myanmarText = "Myanmar Text"
+    let [<Literal>] narkisim = "Narkisim"
+    let [<Literal>] neueHaasGroteskTextPro = "Neue Haas Grotesk Text Pro"
+    let [<Literal>] newCenturySchoolbook = "New Century Schoolbook"
+    let [<Literal>] newsGothicMT = "News Gothic MT"
+    let [<Literal>] nirmalaUI = "Nirmala UI"
+    let [<Literal>] noAutoLanguageAssoc = "No automatic language associations"
+    let [<Literal>] noto = "Noto"
+    let [<Literal>] nSimSun = "NSimSun"
+    let [<Literal>] nyala = "Nyala"
+    let [<Literal>] oldTown = "Oldtown"
+    let [<Literal>] optima = "Optima"
+    let [<Literal>] palatino = "Palatino"
+    let [<Literal>] palatinoLinotype = "Palatino Linotype"
+    let [<Literal>] papyrus = "papyrus"
+    let [<Literal>] parkAvenue = "Parkavenue"
+    let [<Literal>] perpetua = "Perpetua"
+    let [<Literal>] plantagenetCherokee = "Plantagenet Cherokee"
+    let [<Literal>] PMingLiU = "PMingLiU"
+    let [<Literal>] raavi = "Raavi"
+    let [<Literal>] rockwell = "Rockwell"
+    let [<Literal>] rockwellExtraBold = "Rockwell Extra Bold"
+    let [<Literal>] rockwellNova = "Rockwell Nova"
+    let [<Literal>] rockwellNovaCond = "Rockwell Nova Cond"
+    let [<Literal>] rockwellNovaExtraBold = "Rockwell Nova Extra Bold"
+    let [<Literal>] rod = "Rod"
+    let [<Literal>] sakkalMajalla = "Sakkal Majalla"
+    let [<Literal>] sanskritText = "Sanskrit Text"
+    let [<Literal>] segoeMDL2Assets = "segoeMDL2Assets"
+    let [<Literal>] segoePrint = "Segoe Print"
+    let [<Literal>] segoeScript = "Segoe Script"
+    let [<Literal>] segoeUI = "Segoe UI"
+    let [<Literal>] segoeUIEmoji = "Segoe UI Emoji"
+    let [<Literal>] segoeUIHistoric = "Segoe UI Historic"
+    let [<Literal>] segoeUISymbol = "Segoe UI Symbol"
+    let [<Literal>] shonarBangla = "Shonar Bangla"
+    let [<Literal>] shruti = "Shruti"
+    let [<Literal>] simHei = "SimHei"
+    let [<Literal>] simKai = "SimKai"
+    let [<Literal>] simplifiedArabic = "Simplified Arabic"
+    let [<Literal>] simplifiedChinese = "Simplified Chinese"
+    let [<Literal>] simSun = "SimSun"
+    let [<Literal>] simSunExtB = "SimSun-ExtB"
+    let [<Literal>] sitka = "Sitka"
+    let [<Literal>] snellRoundhan = "Snell Roundhan"
+    let [<Literal>] stencilStd = "Stencil Std"
+    let [<Literal>] sylfaen = "Sylfaen"
+    let [<Literal>] symbol = "Symbol"
+    let [<Literal>] tahoma = "Tahoma"
+    let [<Literal>] thai = "Thai"
+    let [<Literal>] timesNewRoman = "Times New Roman"
+    let [<Literal>] traditionalArabic = "Traditional Arabic"
+    let [<Literal>] traditionalChinese = "Traditional Chinese"
+    let [<Literal>] trattatello = "Trattatello"
+    let [<Literal>] trebuchetMS = "Trebuchet MS"
+    let [<Literal>] udDigiKyokasho = "UD Digi Kyokasho"
+    let [<Literal>] udDigiKyokashoNKR = "UD Digi Kyokasho NK-R"
+    let [<Literal>] udDigiKyokashoNPR = "UD Digi Kyokasho NP-R"
+    let [<Literal>] udDigiKyokashoNR = "UD Digi Kyokasho N-R"
+    let [<Literal>] urduTypesetting = "Urdu Typesetting"
+    let [<Literal>] urwChancery = "URW Chancery"
+    let [<Literal>] utsaah = "Utsaah"
+    let [<Literal>] vani = "Vani"
+    let [<Literal>] verdana = "Verdana"
+    let [<Literal>] verdanaPro = "Verdana Pro"
+    let [<Literal>] vijaya = "Vijaya"
+    let [<Literal>] vrinda = "Vrinda"
+    let [<Literal>] Webdings = "Webdings"
+    let [<Literal>] westminster = "Westminster"
+    let [<Literal>] wingdings = "Wingdings"
+    let [<Literal>] yuGothic = "Yu Gothic"
+    let [<Literal>] yuGothicUI = "Yu Gothic UI"
+    let [<Literal>] yuMincho = "Yu Mincho"
+    let [<Literal>] zapfChancery = "Zapf Chancery"
+
 /// Specifies a number of specialized CSS units
 type length =
     /// Pixels are (1px = 1/96th of 1in).
@@ -3736,3 +4017,390 @@ type borderStyle =
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=solid
     static member inline solid : IBorderStyle = newBorderStyle "solid"
+
+type gridColumn =
+    static member inline span(value: string) : IGridSpan = newGridSpan("span " + value)
+    static member inline span(value: string, count: int) : IGridSpan = newGridSpan("span " + value + " " + (string count))
+    static member inline span(value: int) : IGridSpan = newGridSpan("span " + (string value))
+
+type gridRow =
+    static member inline span(value: string) : IGridSpan = newGridSpan("span " + value)
+    static member inline span(value: string, count: int) : IGridSpan = newGridSpan("span " + value + " " + (string count))
+    static member inline span(value: int) : IGridSpan = newGridSpan("span " + (string value))
+
+type grid =
+    static member inline namedLine(value: string) : IGridTemplateItem = newGridTemplateItem ("[" + value + "]")
+    static member inline namedLines(value: string[]) : IGridTemplateItem = newGridTemplateItem ("[" + (String.concat " " value) + "]")
+    static member inline namedLines(value: string list) : IGridTemplateItem = newGridTemplateItem ("[" + (String.concat " " value) + "]")
+    static member inline templateWidth(value: ICssUnit) : IGridTemplateItem = newGridTemplateItem(asString value)
+    static member inline templateWidth(value: int) : IGridTemplateItem = newGridTemplateItem ((string value) + "px")
+    static member inline templateWidth(value: float) : IGridTemplateItem = newGridTemplateItem ((string value) + "px")
+
+type textDecorationLine =
+    static member inline none : ITextDecorationLine = newTextDecorationLine "none"
+    static member inline underline : ITextDecorationLine = newTextDecorationLine "underline"
+    static member inline overline : ITextDecorationLine = newTextDecorationLine "overline"
+    static member inline lineThrough : ITextDecorationLine = newTextDecorationLine "line-through"
+    static member inline initial : ITextDecorationLine = newTextDecorationLine "initial"
+    static member inline inheritFromParent : ITextDecorationLine = newTextDecorationLine "inherit"
+
+type textDecorationStyle =
+    /// Default value. The line will display as a single line.
+    ///
+    /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=solid
+    static member inline solid : ITextDecoration = newTextDecoration "solid"
+    /// The line will display as a double line.
+    ///
+    /// https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=double
+    static member inline double : ITextDecoration = newTextDecoration "double"
+    /// The line will display as a dotted line.
+    ///
+    /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=dotted
+    static member inline dotted : ITextDecoration = newTextDecoration "dotted"
+    /// The line will display as a dashed line.
+    ///
+    /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=dashed
+    static member inline dashed : ITextDecoration = newTextDecoration "dashed"
+    /// The line will display as a wavy line.
+    ///
+    /// https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=wavy
+    static member inline wavy : ITextDecoration = newTextDecoration "wavy"
+    /// Sets this property to its default value.
+    ///
+    /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=initial
+    static member inline initial : ITextDecoration = newTextDecoration "initial"
+    /// Inherits this property from its parent element.
+    static member inline inheritFromParent : ITextDecoration = newTextDecoration "inherit"
+
+/// The transform CSS property lets you rotate, scale, skew, or translate an element.
+/// It modifies the coordinate space of the CSS [visual formatting model](https://developer.mozilla.org/en-US/docs/Web/CSS/Visual_formatting_model)
+type transform =
+    /// Defines that there should be no transformation.
+    static member inline none = newTransformProperty "none"
+    /// Defines a 2D transformation, using a matrix of six values.
+    static member inline matrix(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int) =
+        newTransformProperty (
+            "matrix(" +
+            (asString x1) + "," +
+            (asString y1) + "," +
+            (asString z1) + "," +
+            (asString x2) + "," +
+            (asString y2) + "," +
+            (asString z2) + ")"
+        )
+
+    /// Defines a 2D translation.
+    static member inline translate(x: int, y: int) =
+        newTransformProperty (
+            "translate(" + (asString x) + "px," + (asString y) + "px)"
+        )
+    /// Defines a 2D translation.
+    static member inline translate(x: float, y: float) =
+        newTransformProperty (
+            "translate(" + (asString x) + "px," + (asString y) + "px)"
+        )
+    /// Defines a 2D translation.
+    static member inline translate(x: ICssUnit, y: ICssUnit) =
+        newTransformProperty (
+            "translate(" + (asString x) + "," + (asString y) + ")"
+        )
+
+    /// Defines a 3D translation.
+    static member inline translate3D(x: int, y: int, z: int) =
+        newTransformProperty (
+            "translate3d(" + (asString x) + "px," + (asString y) + "px," + (asString z) + "px)"
+        )
+    /// Defines a 3D translation.
+    static member inline translate3D(x: float, y: float, z: float) =
+        newTransformProperty (
+            "translate3d(" + (asString x) + "px," + (asString y) + "px," + (asString z) + "px)"
+        )
+    /// Defines a 3D translation.
+    static member inline translate3D(x: ICssUnit, y: ICssUnit, z: ICssUnit) =
+        newTransformProperty (
+            "translate3d(" + (asString x) + "," + (asString y) + "," + (asString z) + ")"
+        )
+
+    /// Defines a translation, using only the value for the X-axis.
+    static member inline translateX(x: int) =
+        newTransformProperty ("translateX(" + (asString x) + "px)")
+    /// Defines a translation, using only the value for the X-axis.
+    static member inline translateX(x: float) =
+        newTransformProperty ("translateX(" + (asString x) + "px)")
+    /// Defines a translation, using only the value for the X-axis.
+    static member inline translateX(x: ICssUnit) =
+        newTransformProperty ("translateX(" + (asString x) + ")")
+    /// Defines a translation, using only the value for the Y-axis
+    static member inline translateY(y: int) =
+        newTransformProperty ("translateY(" + (asString y) + "px)")
+    /// Defines a translation, using only the value for the Y-axis
+    static member inline translateY(y: float) =
+        newTransformProperty ("translateY(" + (asString y) + "px)")
+    /// Defines a translation, using only the value for the Y-axis
+    static member inline translateY(y: ICssUnit) =
+        newTransformProperty ("translateY(" + (asString y) + ")")
+    /// Defines a 3D translation, using only the value for the Z-axis
+    static member inline translateZ(z: int) =
+        newTransformProperty ("translateZ(" + (asString z) + "px)")
+    /// Defines a 3D translation, using only the value for the Z-axis
+    static member inline translateZ(z: float) =
+        newTransformProperty ("translateZ(" + (asString z) + "px)")
+    /// Defines a 3D translation, using only the value for the Z-axis
+    static member inline translateZ(z: ICssUnit) =
+        newTransformProperty ("translateZ(" + (asString z) + ")")
+
+    /// Defines a 2D scale transformation.
+    static member inline scale(x: int, y: int) =
+        newTransformProperty (
+            "scale(" + (asString x) + "," + (asString y) + ")"
+        )
+    /// Defines a 2D scale transformation.
+    static member inline scale(x: float, y: float) =
+        newTransformProperty (
+            "scale(" + (asString x) + "," + (asString y) + ")"
+        )
+
+    /// Defines a scale transformation.
+    static member inline scale(n: int) =
+        newTransformProperty (
+            "scale(" + (asString n) + ")"
+        )
+
+    /// Defines a scale transformation.
+    static member inline scale(n: float) =
+        newTransformProperty (
+            "scale(" + (asString n) + ")"
+        )
+
+    /// Defines a 3D scale transformation
+    static member inline scale3D(x: int, y: int, z: int) =
+        newTransformProperty (
+            "scale3d(" + (asString x) + "," + (asString y) + "," + (asString z) + ")"
+        )
+    /// Defines a 3D scale transformation
+    static member inline scale3D(x: float, y: float, z: float) =
+        newTransformProperty (
+            "scale3d(" + (asString x) + "," + (asString y) + "," + (asString z) + ")"
+        )
+
+    /// Defines a scale transformation by giving a value for the X-axis.
+    static member inline scaleX(x: int) =
+        newTransformProperty ("scaleX(" + (asString x) + ")")
+
+    /// Defines a scale transformation by giving a value for the X-axis.
+    static member inline scaleX(x: float) =
+        newTransformProperty ("scaleX(" + (asString x) + ")")
+    /// Defines a scale transformation by giving a value for the Y-axis.
+    static member inline scaleY(y: int) =
+        newTransformProperty ("scaleY(" + (asString y) + ")")
+    /// Defines a scale transformation by giving a value for the Y-axis.
+    static member inline scaleY(y: float) =
+        newTransformProperty ("scaleY(" + (asString y) + ")")
+    /// Defines a 3D translation, using only the value for the Z-axis
+    static member inline scaleZ(z: int) =
+        newTransformProperty ("scaleZ(" + (asString z) + ")")
+    /// Defines a 3D translation, using only the value for the Z-axis
+    static member inline scaleZ(z: float) =
+        newTransformProperty ("scaleZ(" + (asString z) + ")")
+    /// Defines a 2D rotation, the angle is specified in the parameter.
+    static member inline rotate(deg: int) =
+        newTransformProperty ("rotate(" + (asString deg) + "deg)")
+    /// Defines a 2D rotation, the angle is specified in the parameter.
+    static member inline rotate(deg: float) =
+        newTransformProperty ("rotate(" + (asString deg) + "deg)")
+    /// Defines a 3D rotation along the X-axis.
+    static member inline rotateX(deg: float) =
+        newTransformProperty ("rotateX(" + (asString deg) + "deg)")
+    /// Defines a 3D rotation along the X-axis.
+    static member inline rotateX(deg: int) =
+        newTransformProperty ("rotateX(" + (asString deg) + "deg)")
+    /// Defines a 3D rotation along the Y-axis
+    static member inline rotateY(deg: float) =
+        newTransformProperty ("rotateY(" + (asString deg) + "deg)")
+    /// Defines a 3D rotation along the Y-axis
+    static member inline rotateY(deg: int) =
+        newTransformProperty ("rotateY(" + (asString deg) + "deg)")
+    /// Defines a 3D rotation along the Z-axis
+    static member inline rotateZ(deg: float) =
+        newTransformProperty ("rotateZ(" + (asString deg) + "deg)")
+    /// Defines a 3D rotation along the Z-axis
+    static member inline rotateZ(deg: int) =
+        newTransformProperty ("rotateZ(" + (asString deg) + "deg)")
+    /// Defines a 2D skew transformation along the X- and the Y-axis.
+    static member inline skew(xAngle: int, yAngle: int) =
+        newTransformProperty ("skew(" + (asString xAngle) + "deg," + (asString yAngle) + "deg)")
+    /// Defines a 2D skew transformation along the X- and the Y-axis.
+    static member inline skew(xAngle: float, yAngle: float) =
+        newTransformProperty ("skew(" + (asString xAngle) + "deg," + (asString yAngle) + "deg)")
+    /// Defines a 2D skew transformation along the X-axis
+    static member inline skewX(xAngle: int) =
+        newTransformProperty ("skewX(" + (asString xAngle) + "deg)")
+    /// Defines a 2D skew transformation along the X-axis
+    static member inline skewX(xAngle: float) =
+        newTransformProperty ("skewX(" + (asString xAngle) + "deg)")
+    /// Defines a 2D skew transformation along the Y-axis
+    static member inline skewY(xAngle: int) =
+        newTransformProperty ("skewY(" + (asString xAngle) + "deg)")
+    /// Defines a 2D skew transformation along the Y-axis
+    static member inline skewY(xAngle: float) =
+        newTransformProperty ("skewY(" + (asString xAngle) + "deg)")
+    /// Defines a perspective view for a 3D transformed element
+    static member inline perspective(n: int) =
+        newTransformProperty ("perspective(" + (asString n) + ")")
+
+type transitionProperty =
+    static member inline all = newTransitionProperty "all"
+    static member inline backdropFilter = newTransitionProperty "backdrop-filter"
+    static member inline background = newTransitionProperty "background"
+    static member inline backgroundColor = newTransitionProperty "background-color"
+    static member inline backgroundPosition = newTransitionProperty "background-position"
+    static member inline backgroundSize = newTransitionProperty "background-size"
+    static member inline border = newTransitionProperty "border"
+    static member inline borderBottom = newTransitionProperty "border-bottom"
+    static member inline borderBottomColor = newTransitionProperty "border-bottom-color"
+    static member inline borderBottomLeftRadius = newTransitionProperty "border-bottom-left-radius"
+    static member inline borderBottomRightRadius = newTransitionProperty "border-bottom-right-radius"
+    static member inline borderBottomWidth = newTransitionProperty "border-bottom-width"
+    static member inline borderColor = newTransitionProperty "border-color"
+    static member inline borderEndEndRadius = newTransitionProperty "border-end-end-radius"
+    static member inline borderEndStartRadius = newTransitionProperty "border-end-start-radius"
+    static member inline borderLeft = newTransitionProperty "border-left"
+    static member inline borderLeftColor = newTransitionProperty "border-left-color"
+    static member inline borderLeftWidth = newTransitionProperty "border-left-width"
+    static member inline borderRadius = newTransitionProperty "border-radius"
+    static member inline borderRight = newTransitionProperty "border-right"
+    static member inline borderRightColor = newTransitionProperty "border-right-color"
+    static member inline borderRightWidth = newTransitionProperty "border-right-width"
+    static member inline borderStartEndRadius = newTransitionProperty "border-start-end-radius"
+    static member inline borderStartStartRadius = newTransitionProperty "border-start-start-radius"
+    static member inline borderTop = newTransitionProperty "border-top"
+    static member inline borderTopColor = newTransitionProperty "border-top-color"
+    static member inline borderTopLeftRadius = newTransitionProperty "border-top-left-radius"
+    static member inline borderTopRightRadius = newTransitionProperty "border-top-right-radius"
+    static member inline borderTopWidth = newTransitionProperty "border-top-width"
+    static member inline borderWidth = newTransitionProperty "border-width"
+    static member inline bottom = newTransitionProperty "bottom"
+    static member inline boxShadow = newTransitionProperty "box-shadow"
+    static member inline caretColor = newTransitionProperty "caret-color"
+    static member inline clip = newTransitionProperty "clip"
+    static member inline clipPath = newTransitionProperty "clip-path"
+    static member inline color = newTransitionProperty "color"
+    static member inline columnCount = newTransitionProperty "column-count"
+    static member inline columnGap = newTransitionProperty "column-gap"
+    static member inline columnRule = newTransitionProperty "column-rule"
+    static member inline columnRuleColor = newTransitionProperty "column-rule-color"
+    static member inline columnRuleWidth = newTransitionProperty "column-rule-width"
+    static member inline columnWidth = newTransitionProperty "column-width"
+    static member inline columns = newTransitionProperty "columns"
+    static member inline filter = newTransitionProperty "filter"
+    static member inline flex = newTransitionProperty "flex"
+    static member inline flexBasis = newTransitionProperty "flex-basis"
+    static member inline flexGrow = newTransitionProperty "flex-grow"
+    static member inline flexShrink = newTransitionProperty "flex-shrink"
+    static member inline font = newTransitionProperty "font"
+    static member inline fontSize = newTransitionProperty "font-size"
+    static member inline fontSizeAdjust = newTransitionProperty "font-size-adjust"
+    static member inline fontStretch = newTransitionProperty "font-stretch"
+    static member inline fontVariationSettings = newTransitionProperty "font-variation-settings"
+    static member inline fontWeight = newTransitionProperty "font-weight"
+    static member inline gap = newTransitionProperty "gap"
+    static member inline gridColumnGap = newTransitionProperty "grid-column-gap"
+    static member inline gridGap = newTransitionProperty "grid-gap"
+    static member inline gridRowGap = newTransitionProperty "grid-row-gap"
+    static member inline gridTemplateColumns = newTransitionProperty "grid-template-columns"
+    static member inline gridTemplateRows = newTransitionProperty "grid-template-rows"
+    static member inline height = newTransitionProperty "height"
+    static member inline inset = newTransitionProperty "inset"
+    static member inline insetBlock = newTransitionProperty "inset-block"
+    static member inline insetBlockEnd = newTransitionProperty "inset-block-end"
+    static member inline insetBlockStart = newTransitionProperty "inset-block-start"
+    static member inline insetInline = newTransitionProperty "inset-inline"
+    static member inline insetInlineEnd = newTransitionProperty "inset-inline-end"
+    static member inline insetInlineStart = newTransitionProperty "inset-inline-start"
+    static member inline left = newTransitionProperty "left"
+    static member inline letterSpacing = newTransitionProperty "letter-spacing"
+    static member inline lineClamp = newTransitionProperty "line-clamp"
+    static member inline lineHeight = newTransitionProperty "line-height"
+    static member inline margin = newTransitionProperty "margin"
+    static member inline marginBottom = newTransitionProperty "margin-bottom"
+    static member inline marginLeft = newTransitionProperty "margin-left"
+    static member inline marginRight = newTransitionProperty "margin-right"
+    static member inline marginTop = newTransitionProperty "margin-top"
+    static member inline mask = newTransitionProperty "mask"
+    static member inline maskBorder = newTransitionProperty "mask-border"
+    static member inline maskPosition = newTransitionProperty "mask-position"
+    static member inline maskSize = newTransitionProperty "mask-size"
+    static member inline maxHeight = newTransitionProperty "max-height"
+    static member inline maxLines = newTransitionProperty "max-lines"
+    static member inline maxWidth = newTransitionProperty "max-width"
+    static member inline minHeight = newTransitionProperty "min-height"
+    static member inline minWidth = newTransitionProperty "min-width"
+    static member inline objectPosition = newTransitionProperty "object-position"
+    static member inline offset = newTransitionProperty "offset"
+    static member inline offsetAnchor = newTransitionProperty "offset-anchor"
+    static member inline offsetDistance = newTransitionProperty "offset-distance"
+    static member inline offsetPath = newTransitionProperty "offset-path"
+    static member inline offsetPosition = newTransitionProperty "offset-position"
+    static member inline offsetRotate = newTransitionProperty "offset-rotate"
+    static member inline opacity = newTransitionProperty "opacity"
+    static member inline order = newTransitionProperty "order"
+    static member inline outline = newTransitionProperty "outline"
+    static member inline outlineColor = newTransitionProperty "outline-color"
+    static member inline outlineOffset = newTransitionProperty "outline-offset"
+    static member inline outlineWidth = newTransitionProperty "outline-width"
+    static member inline padding = newTransitionProperty "padding"
+    static member inline paddingBottom = newTransitionProperty "padding-bottom"
+    static member inline paddingLeft = newTransitionProperty "padding-left"
+    static member inline paddingRight = newTransitionProperty "padding-right"
+    static member inline paddingTop = newTransitionProperty "padding-top"
+    static member inline perspective = newTransitionProperty "perspective"
+    static member inline perspectiveOrigin = newTransitionProperty "perspective-origin"
+    static member inline right = newTransitionProperty "right"
+    static member inline rotate = newTransitionProperty "rotate"
+    static member inline rowGap = newTransitionProperty "row-gap"
+    static member inline scale = newTransitionProperty "scale"
+    static member inline scrollMargin = newTransitionProperty "scroll-margin"
+    static member inline scrollMarginBlock = newTransitionProperty "scroll-margin-block"
+    static member inline scrollMarginBlockEnd = newTransitionProperty "scroll-margin-block-end"
+    static member inline scrollMarginBlockStart = newTransitionProperty "scroll-margin-block-start"
+    static member inline scrollMarginBottom = newTransitionProperty "scroll-margin-bottom"
+    static member inline scrollMarginInline = newTransitionProperty "scroll-margin-inline"
+    static member inline scrollMarginInlineEnd = newTransitionProperty "scroll-margin-inline-end"
+    static member inline scrollMarginInlineStart = newTransitionProperty "scroll-margin-inline-start"
+    static member inline scrollMarginLeft = newTransitionProperty "scroll-margin-left"
+    static member inline scrollMarginRight = newTransitionProperty "scroll-margin-right"
+    static member inline scrollMarginTop = newTransitionProperty "scroll-margin-top"
+    static member inline scrollPadding = newTransitionProperty "scroll-padding"
+    static member inline scrollPaddingBlock = newTransitionProperty "scroll-padding-block"
+    static member inline scrollPaddingBlockEnd = newTransitionProperty "scroll-padding-block-end"
+    static member inline scrollPaddingBlockStart = newTransitionProperty "scroll-padding-block-start"
+    static member inline scrollPaddingBottom = newTransitionProperty "scroll-padding-bottom"
+    static member inline scrollPaddingInline = newTransitionProperty "scroll-padding-inline"
+    static member inline scrollPaddingInlineEnd = newTransitionProperty "scroll-padding-inline-end"
+    static member inline scrollPaddingInlineStart = newTransitionProperty "scroll-padding-inline-start"
+    static member inline scrollPaddingLeft = newTransitionProperty "scroll-padding-left"
+    static member inline scrollPaddingRight = newTransitionProperty "scroll-padding-right"
+    static member inline scrollPaddingTop = newTransitionProperty "scroll-padding-top"
+    static member inline scrollSnapCoordinate = newTransitionProperty "scroll-snap-coordinate"
+    static member inline scrollSnapDestination = newTransitionProperty "scroll-snap-destination"
+    static member inline scrollbarColor = newTransitionProperty "scrollbar-color"
+    static member inline shapeImageThreshold = newTransitionProperty "shape-image-threshold"
+    static member inline shapeMargin = newTransitionProperty "shape-margin"
+    static member inline shapeOutside = newTransitionProperty "shape-outside"
+    static member inline tabSize = newTransitionProperty "tab-size"
+    static member inline textDecoration = newTransitionProperty "text-decoration"
+    static member inline textDecorationColor = newTransitionProperty "text-decoration-color"
+    static member inline textEmphasis = newTransitionProperty "text-emphasis"
+    static member inline textEmphasisColor = newTransitionProperty "text-emphasis-color"
+    static member inline textIndent = newTransitionProperty "text-indent"
+    static member inline textShadow = newTransitionProperty "text-shadow"
+    static member inline top = newTransitionProperty "top"
+    static member inline transform = newTransitionProperty "transform"
+    static member inline transformOrigin = newTransitionProperty "transform-origin"
+    static member inline translate = newTransitionProperty "translate"
+    static member inline verticalAlign = newTransitionProperty "vertical-align"
+    static member inline visibility = newTransitionProperty "visibility"
+    static member inline width = newTransitionProperty "width"
+    static member inline wordSpacing = newTransitionProperty "word-spacing"
+    static member inline zIndex = newTransitionProperty "z-index"
+    static member inline zoom = newTransitionProperty "zoom"
