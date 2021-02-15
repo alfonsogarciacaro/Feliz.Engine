@@ -34,6 +34,7 @@ type internal Util =
     static member inline asString(x: string): string = x
     static member inline asString(x: int): string = string x
     static member inline asString(x: float): string = string x
+    static member inline asString(x: Guid): string = string x
     static member inline asString< ^t when ^t : (member AsString: string)> (x: ^t): string =
 #if FABLE_COMPILER
         unbox x

@@ -7,6 +7,7 @@
   <ItemGroup>
     <Compile Include="CssEngine.fs" />
     <Compile Include="HtmlEngine.fs" />
+    <Compile Include="AttrEngine.fs" />
   </ItemGroup>
 
 </Project>
