@@ -3,15 +3,12 @@
 open System
 open Feliz.Styles
 
-type AttrHelper<'El, 'Prop> =
-    abstract MakeAttr: key: string * value: string -> 'Prop
-    abstract MakeBooleanAttr: string * bool -> 'Prop
-    abstract ChildrenToProp: 'El seq -> 'Prop
-    // abstract MakeStyle: 'Style seq -> 'Prop
-    // abstract MakeInnerHtml: string -> 'Prop
-    // abstract MakeEvent: string * (Event -> unit) -> 'Prop
+type AttrHelper<'Node> =
+    abstract MakeAttr: key: string * value: string -> 'Node
+    abstract MakeBooleanAttr: string * bool -> 'Node
+    // abstract MakeEvent: string * (Event -> unit) -> 'Node
 
-type AttrEngine<'El, 'Prop>(h: AttrHelper<'El, 'Prop>) =
+type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     /// List of types the server accepts, typically a file type.
     member _.accept (value: string) = h.MakeAttr("accept", value)
 
@@ -330,11 +327,6 @@ type AttrEngine<'El, 'Prop>(h: AttrHelper<'El, 'Prop>) =
 
     /// This attribute declares the document's character encoding. Must be used in the meta tag.
     member _.charset (value: string) = h.MakeAttr("charset", value)
-
-    /// Children of this React element.
-    member _.children (value: 'El) = h.ChildrenToProp [|value|]
-    /// Children of this React element.
-    member _.children (elems: 'El seq) = h.ChildrenToProp(elems)
 
     /// A URL that designates a source document or message for the information quoted. This attribute is intended to
     /// point to information explaining the context or the reference for the quote.
@@ -1628,13 +1620,6 @@ type AttrEngine<'El, 'Prop>(h: AttrHelper<'El, 'Prop>) =
 
     /// A shorthand for using prop.custom("data-testid", value). Useful for referencing elements when testing React code.
     member _.testId(value: string) = h.MakeAttr("data-testid", value)
-
-    /// Defines the text content of the element. Alias for `children [ Html.text value ]`
-    member _.text (value: float) = h.MakeAttr("children", Util.asString value)
-    /// Defines the text content of the element. Alias for `children [ Html.text value ]`
-    member _.text (value: int) = h.MakeAttr("children", Util.asString value)
-    /// Defines the text content of the element. Alias for `children [ Html.text value ]`
-    member _.text (value: string) = h.MakeAttr("children", value)
 
     // /// Defines the text content of the element. Alias for `children [ Html.text (sprintf ...) ]`
     // member _.textf fmt = Printf.kprintf prop.text fmt

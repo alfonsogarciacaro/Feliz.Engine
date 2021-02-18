@@ -1431,6 +1431,10 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     let _wordWrap = CssWordWrapEngine(h)
     let _writingMode = CssWritingModeEngine(h)
 
+    new (f: string -> string -> 'Style) =
+        CssEngine { new CssHelper<'Style> with
+                        member _.MakeStyle(k, v) = f k v }
+
     /// The `align-content` property modifies the behavior of the `flex-wrap` property.
     /// It is similar to align-items, but instead of aligning flex items, it aligns flex lines.
     ///

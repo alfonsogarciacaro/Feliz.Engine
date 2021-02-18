@@ -1,0 +1,10 @@
+{
+    "private": true,
+    "scripts": {
+        "postinstall": "dotnet tool restore",
+        "publish": "dotnet fsi build.fsx publish"
+    },
+    "dependencies": {
+        "fable-publish-utils": "2.0.0"
+    }
+}
