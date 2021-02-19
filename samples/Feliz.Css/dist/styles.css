@@ -1,0 +1,16 @@
+.my-class {
+    background-color: #F0F8FF;
+}
+
+.my-class .child {
+    margin: 1.2em 25px;
+}
+
+.my-class > .child {
+    max-width: 40;
+}
+
+.my-class.another-class {
+    flex-direction: row-reverse;
+}
+

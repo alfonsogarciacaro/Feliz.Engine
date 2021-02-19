@@ -1,0 +1,10 @@
+{
+    "private": "true",
+    "scripts": {
+        "postinstall": "dotnet tool restore",
+        "start": "dotnet fable watch --runScript"
+    },
+    "devDependencies": {
+        "esm": "^3.2.25"
+    }
+}
