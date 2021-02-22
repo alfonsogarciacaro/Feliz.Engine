@@ -333,7 +333,7 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     member _.cite (value: string) = h.MakeAttr("cite", value)
 
     /// Specifies a CSS class for this element.
-    member _.className (value: string) = h.MakeAttr("className", value)
+    member _.className (value: string) = h.MakeAttr("class", value)
     /// Takes a `seq<string>` and joins them using a space to combine the classses into a single class property.
     ///
     /// `prop.className [ "one"; "two" ]`
@@ -341,12 +341,12 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     /// is the same as
     ///
     /// `prop.className "one two"`
-    member _.className (names: seq<string>) = h.MakeAttr("className", String.concat " " names)
+    member _.className (names: seq<string>) = h.MakeAttr("class", String.concat " " names)
 
     /// Takes a `seq<string>` and joins them using a space to combine the classses into a single class property.
     ///
     /// `prop.classes [ "one"; "two" ]` => `prop.className "one two"`
-    member _.classes (names: seq<string>) = h.MakeAttr("className", String.concat " " names)
+    member _.classes (names: seq<string>) = h.MakeAttr("class", String.concat " " names)
 
     /// Defines the number of columns in a textarea.
     member _.cols (value: int) = h.MakeAttr("cols", Util.asString value)
