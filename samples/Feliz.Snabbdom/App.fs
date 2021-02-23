@@ -63,7 +63,7 @@ let update (msg: Msg) (state: State) =
 
       { state with
           NewTodo = ""
-          TodoList = List.append state.TodoList [nextTodo] }
+          TodoList = nextTodo::state.TodoList }
 
   | DeleteTodo todoId ->
       let nextTodoList =
@@ -132,8 +132,19 @@ let inputField (state: State) (dispatch: Msg -> unit) =
    div [ "control"; "is-expanded" ] [
       Html.input [
         Attr.classes [ "input"; "is-medium" ]
-        Attr.defaultValue state.NewTodo
+        Attr.value state.NewTodo
         Ev.onTextChange (SetNewTodo >> dispatch)
+        Ev.onKeyUp (fun ev ->
+          let el = ev.target :?> Browser.Types.HTMLInputElement
+          match ev.key with
+          | "Enter" ->
+            dispatch AddNewTodo
+            el.value <- ""
+          | "Escape" ->
+            SetNewTodo "" |> dispatch
+            el.value <- ""
+            el.blur()
+          | _ -> ())
       ]
     ]
 
@@ -153,6 +164,7 @@ let renderTodo (todo: Todo) (dispatch: Msg -> unit) =
             Html.p [
               Attr.className "subtitle"
               Html.text todo.Description
+              Ev.onDblClick (fun _ -> dispatch (StartEditingTodo todo.Id))
             ]
         ]
 
@@ -168,7 +180,7 @@ let renderTodo (todo: Todo) (dispatch: Msg -> unit) =
             Html.button [
                 Css.marginRight (length.px 5)
                 Attr.classes [ "button"; "is-primary" ]
-                Ev.onClick (fun _ -> dispatch (StartEditingTodo  todo.Id))
+                Ev.onClick (fun _ -> dispatch (StartEditingTodo todo.Id))
                 Html.i [ Attr.classes [ "fa"; "fa-edit" ] ]
             ]
 
@@ -188,7 +200,7 @@ let renderEditForm (todoBeingEdited: TodoBeingEdited) (dispatch: Msg -> unit) =
       div [ "control is-expanded" ] [
         Html.input [
           Attr.classes [ "input"; "is-medium" ]
-          Attr.defaultValue todoBeingEdited.Description;
+          Attr.value todoBeingEdited.Description
           Ev.onTextChange (SetEditedDescription >> dispatch)
         ]
       ]
@@ -215,15 +227,15 @@ let todoList (state: State) (dispatch: Msg -> unit) =
         match state.TodoBeingEdited with
         | Some todoBeingEdited when todoBeingEdited.Id = todo.Id ->
             renderEditForm todoBeingEdited dispatch
-        | otherwise ->
+        | _otherwise ->
             renderTodo todo dispatch
   ]
 
 let view (state: State) (dispatch: Msg -> unit) =
   Html.div [
-    Css.margin(length.px 0, length.auto)
-    Css.maxWidth (length.px 800)
-    Css.padding (length.px 20)
+    Css.margin(length.zero, length.auto)
+    Css.maxWidth 800
+    Css.padding 20
     appTitle
     inputField state dispatch
     todoList state dispatch

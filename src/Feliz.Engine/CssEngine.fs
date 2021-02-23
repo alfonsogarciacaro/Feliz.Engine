@@ -130,7 +130,7 @@ type CssBoxShadowEngine<'Style>(h: CssHelper<'Style>) =
     member _.inheritFromParent = h.MakeStyle("box-shadow", "inherit")
 
 type CssHeightEngine<'Style>(h: CssHelper<'Style>, prop: string) =
-    member _.custom(value: int) = h.MakeStyle(prop, asString value)
+    member _.custom(value: int) = h.MakeStyle(prop, asString value + "px")
     member _.custom(value: ICssUnit) = h.MakeStyle(prop, asString value)
     /// Inherits this property from its parent element.
     member _.inheritFromParent = h.MakeStyle(prop, "inherit")
@@ -413,7 +413,7 @@ type CssJustifyContentEngine<'Style>(h: CssHelper<'Style>) =
     member _.inheritFromParent = h.MakeStyle("justify-content", "inherit")
 
 type CssOutlineWidthEngine<'Style>(h: CssHelper<'Style>) =
-    member _.custom(width: int) = h.MakeStyle("outline-width", (asString width) + "px")
+    member _.custom(width: int) = h.MakeStyle("outline-width", asString width + "px")
     member _.custom(width: ICssUnit) = h.MakeStyle("outline-width", asString width)
     /// Specifies a medium outline. This is default.
     member _.medium = h.MakeStyle("outline-width", "medium")
@@ -1578,7 +1578,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
 
     /// Sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right,
     /// margin-bottom, and margin-left.
-    member _.margin(value: int) = h.MakeStyle("margin", asString value)
+    member _.margin(value: int) = h.MakeStyle("margin", asString value + "px")
     /// Sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right,
     /// margin-bottom, and margin-left.
     member _.margin(value: ICssUnit) = h.MakeStyle("margin", asString value)
@@ -1614,32 +1614,32 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
         )
     /// Sets the margin area on the left side of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginLeft(value: int) = h.MakeStyle("margin-left", asString value)
+    member _.marginLeft(value: int) = h.MakeStyle("margin-left", asString value + "px")
     /// Sets the margin area on the left side of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
     member _.marginLeft(value: ICssUnit) = h.MakeStyle("margin-left", asString value)
     /// sets the margin area on the right side of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginRight(value: int) = h.MakeStyle("margin-right", asString value)
+    member _.marginRight(value: int) = h.MakeStyle("margin-right", asString value + "px")
     /// sets the margin area on the right side of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
     member _.marginRight(value: ICssUnit) = h.MakeStyle("margin-right", asString value)
     /// Sets the margin area on the top of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginTop(value: int) = h.MakeStyle("margin-top", asString value)
+    member _.marginTop(value: int) = h.MakeStyle("margin-top", asString value + "px")
     /// Sets the margin area on the top of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
     member _.marginTop(value: ICssUnit) = h.MakeStyle("margin-top", asString value)
     /// Sets the margin area on the bottom of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginBottom(value: int) = h.MakeStyle("margin-bottom", asString value)
+    member _.marginBottom(value: int) = h.MakeStyle("margin-bottom", asString value + "px")
     /// Sets the margin area on the bottom of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
     member _.marginBottom(value: ICssUnit) = h.MakeStyle("margin-bottom", asString value)
 
     /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
     /// padding-right, padding-bottom, and padding-left.
-    member _.padding(value: int) = h.MakeStyle("padding", asString value)
+    member _.padding(value: int) = h.MakeStyle("padding", asString value + "px")
     /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
     /// padding-right, padding-bottom, and padding-left.
     member _.padding(value: ICssUnit) = h.MakeStyle("padding", asString value)
@@ -1674,19 +1674,19 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
             (asString left)
         )
     /// Sets the height of the padding area on the bottom of an element.
-    member _.paddingBottom(value: int) = h.MakeStyle("padding-bottom", asString value)
+    member _.paddingBottom(value: int) = h.MakeStyle("padding-bottom", asString value + "px")
     /// Sets the height of the padding area on the bottom of an element.
     member _.paddingBottom(value: ICssUnit) = h.MakeStyle("padding-bottom", asString value)
     /// Sets the width of the padding area to the left of an element.
-    member _.paddingLeft(value: int) = h.MakeStyle("padding-left", asString value)
+    member _.paddingLeft(value: int) = h.MakeStyle("padding-left", asString value + "px")
     /// Sets the width of the padding area to the left of an element.
     member _.paddingLeft(value: ICssUnit) = h.MakeStyle("padding-left", asString value)
     /// Sets the width of the padding area on the right of an element.
-    member _.paddingRight(value: int) = h.MakeStyle("padding-right", asString value)
+    member _.paddingRight(value: int) = h.MakeStyle("padding-right", asString value + "px")
     /// Sets the width of the padding area on the right of an element.
     member _.paddingRight(value: ICssUnit) = h.MakeStyle("padding-right", asString value)
     /// Sets the height of the padding area on the top of an element.
-    member _.paddingTop(value: int) = h.MakeStyle("padding-top", asString value)
+    member _.paddingTop(value: int) = h.MakeStyle("padding-top", asString value + "px")
     /// Sets the height of the padding area on the top of an element.
     member _.paddingTop(value: ICssUnit) = h.MakeStyle("padding-top", asString value)
 
@@ -1695,10 +1695,10 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     member _.flexShrink(value: int) = h.MakeStyle("flex-shrink", asString value)
     /// Sets the initial main size of a flex item. It sets the size of the content box unless
     /// otherwise set with box-sizing.
-    member _.flexBasis (value: int) = h.MakeStyle("flex-basis", asString value)
+    member _.flexBasis (value: int) = h.MakeStyle("flex-basis", asString value + "px")
     /// Sets the initial main size of a flex item. It sets the size of the content box unless
     /// otherwise set with box-sizing.
-    member _.flexBasis (value: float) = h.MakeStyle("flex-basis", asString value)
+    member _.flexBasis (value: float) = h.MakeStyle("flex-basis", asString value + "px")
     /// Sets the initial main size of a flex item. It sets the size of the content box unless
     /// otherwise set with box-sizing.
     member _.flexBasis (value: ICssUnit) = h.MakeStyle("flex-basis", asString value)
@@ -3221,19 +3221,19 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// and is the default for other color properties, such as border-color.
     member _.color (color: string) = h.MakeStyle("color", color)
     /// Specifies the vertical position of a positioned element. It has no effect on non-positioned elements.
-    member _.top(value: int) = h.MakeStyle("top", asString value)
+    member _.top(value: int) = h.MakeStyle("top", asString value + "px")
     /// Specifies the vertical position of a positioned element. It has no effect on non-positioned elements.
     member _.top(value: ICssUnit) = h.MakeStyle("top", asString value)
     /// Specifies the vertical position of a positioned element. It has no effect on non-positioned elements.
-    member _.bottom(value: int) = h.MakeStyle("bottom", asString value)
+    member _.bottom(value: int) = h.MakeStyle("bottom", asString value + "px")
     /// Specifies the vertical position of a positioned element. It has no effect on non-positioned elements.
     member _.bottom(value: ICssUnit) = h.MakeStyle("bottom", asString value)
     /// Specifies the horizontal position of a positioned element. It has no effect on non-positioned elements.
-    member _.left(value: int) = h.MakeStyle("left", asString value)
+    member _.left(value: int) = h.MakeStyle("left", asString value + "px")
     /// Specifies the horizontal position of a positioned element. It has no effect on non-positioned elements.
     member _.left(value: ICssUnit) = h.MakeStyle("left", asString value)
     /// Specifies the horizontal position of a positioned element. It has no effect on non-positioned elements.
-    member _.right(value: int) = h.MakeStyle("right", asString value)
+    member _.right(value: int) = h.MakeStyle("right", asString value + "px")
     /// Specifies the horizontal position of a positioned element. It has no effect on non-positioned elements.
     member _.right(value: ICssUnit) = h.MakeStyle("right", asString value)
     /// Define a custom attribute of via key value pair
@@ -3401,7 +3401,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     member _.borderColor (color: string) = h.MakeStyle("border-color", color)
     /// Rounds the corners of an element's outer border edge. You can set a single radius to make
     /// circular corners, or two radii to make elliptical corners.
-    member _.borderRadius (radius: int) = h.MakeStyle("border-radius", asString radius)
+    member _.borderRadius (radius: int) = h.MakeStyle("border-radius", asString radius + "px")
     /// Rounds the corners of an element's outer border edge. You can set a single radius to make
     /// circular corners, or two radii to make elliptical corners.
     member _.borderRadius (radius: ICssUnit) = h.MakeStyle("border-radius", asString radius)
@@ -3412,7 +3412,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
             (asString right) + "px"
         )
     /// Sets the width of an element's border.
-    member _.borderWidth (width: int) = h.MakeStyle("border-width", asString width)
+    member _.borderWidth (width: int) = h.MakeStyle("border-width", asString width + "px")
     /// Sets the width of an element's border.
     member _.borderWidth (top: int, right: int, bottom: int) =
         h.MakeStyle("border-width",
@@ -3460,7 +3460,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// Sets the minimum width of an element.
     ///
     /// It prevents the used value of the width property from becoming smaller than the value specified for min-width.
-    member _.minWidth (value: int) = h.MakeStyle("min-width", asString value)
+    member _.minWidth (value: int) = h.MakeStyle("min-width", asString value + "px")
     /// Sets the minimum width of an element.
     ///
     /// It prevents the used value of the width property from becoming smaller than the value specified for min-width.
@@ -3472,7 +3472,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// Sets the maximum width of an element.
     ///
     /// It prevents the used value of the width property from becoming larger than the value specified by max-width.
-    member _.maxWidth (value: int) = h.MakeStyle("max-width", asString value)
+    member _.maxWidth (value: int) = h.MakeStyle("max-width", asString value + "px")
     /// Sets the maximum width of an element.
     ///
     /// It prevents the used value of the width property from becoming larger than the value specified by max-width.
@@ -3480,7 +3480,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// Sets the width of an element.
     ///
     /// By default, the property defines the width of the content area.
-    member _.width (value: int) = h.MakeStyle("width", asString value)
+    member _.width (value: int) = h.MakeStyle("width", asString value + "px")
     /// Sets the width of an element.
     ///
     /// By default, the property defines the width of the content area.
@@ -3888,6 +3888,7 @@ module font =
 
 /// Specifies a number of specialized CSS units
 type length =
+    static member inline zero : ICssUnit = newCssUnit "0"
     /// Pixels are (1px = 1/96th of 1in).
     ///
     /// **Note**: Pixels (px) are relative to the viewing device. For low-dpi devices, 1px is one device pixel (dot) of the display. For printers and high resolution screens 1px implies multiple device pixels.

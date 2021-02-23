@@ -50,7 +50,7 @@ let Css =
 let Ev =
     EventEngine
         { new EventHelper<Node> with
-            member _.MakeEvent(k, f) = Event(k, f) }
+            member _.MakeEvent(k, f) = Event(k.ToLowerInvariant(), f) }
 
 
 module Elmish =

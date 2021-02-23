@@ -13,10 +13,10 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     member _.accept (value: string) = h.MakeAttr("accept", value)
 
     /// List of supported charsets.
-    member _.acceptCharset (value: string) = h.MakeAttr("acceptCharset", value)
+    member _.acceptCharset (value: string) = h.MakeAttr("accept-charset", value)
 
     /// Defines a keyboard shortcut to activate or add focus to the element.
-    member _.accessKey (value: string) = h.MakeAttr("accessKey", value)
+    member _.accessKey (value: string) = h.MakeAttr("accesskey", value)
 
     /// The URI of a program that processes the information submitted via the form.
     member _.action (value: string) = h.MakeAttr("action", value)
@@ -269,13 +269,13 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
 
     /// Indicates whether controls in this form can by default have their values
     /// automatically completed by the browser.
-    member _.autoComplete (value: string) = h.MakeAttr("autoComplete", value)
+    member _.autoComplete (value: string) = h.MakeAttr("autocomplete", value)
 
     /// The element should be automatically focused after the page loaded.
-    member _.autoFocus (value: bool) = h.MakeBooleanAttr("autoFocus", value)
+    member _.autoFocus (value: bool) = h.MakeBooleanAttr("autofocus", value)
 
     /// The audio or video should play as soon as possible.
-    member _.autoPlay (value: bool) = h.MakeBooleanAttr("autoPlay", value)
+    member _.autoPlay (value: bool) = h.MakeBooleanAttr("autoplay", value)
 
     /// Specifies the direction angle for the light source on the XY plane (clockwise),
     /// in degrees from the x axis.
@@ -356,19 +356,19 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     member _.cols (value: int) = h.MakeAttr("cols", Util.asString value)
 
     /// Defines the number of columns a cell should span.
-    member _.colSpan (value: int) = h.MakeAttr("colSpan", Util.asString value)
+    member _.colSpan (value: int) = h.MakeAttr("colspan", Util.asString value)
 
     /// A value associated with http-equiv or name depending on the context.
     member _.content (value: string) = h.MakeAttr("content", value)
 
     /// Indicates whether the element's content is editable.
-    member _.contentEditable (value: bool) = h.MakeBooleanAttr("contentEditable", value)
+    member _.contentEditable (value: bool) = h.MakeBooleanAttr("contenteditable", value)
 
     /// If true, the browser will offer controls to allow the user to control video playback,
     /// including volume, seeking, and pause/resume playback.
     member _.controls (value: bool) = h.MakeBooleanAttr("controls", value)
 
-    /// Create a custom prop
+    /// Create a custom attribute
     ///
     /// You generally shouldn't need to use this, if you notice a core React/Html attribute missing please submit an issue.
     member _.custom (key: string, value: string) = h.MakeAttr(key, value)
@@ -416,27 +416,27 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     /// This attribute indicates the time and/or date of the element.
     member _.dateTime (value: string) = h.MakeAttr("datetime", value)
 
-    /// Sets the DOM defaultChecked value when initially rendered.
-    ///
-    /// Typically only used with uncontrolled components.
-    member _.defaultChecked (value: bool) = h.MakeBooleanAttr("defaultChecked", value)
+    // /// Sets the DOM defaultChecked value when initially rendered.
+    // ///
+    // /// Typically only used with uncontrolled components.
+    // member _.defaultChecked (value: bool) = h.MakeBooleanAttr("defaultChecked", value)
 
-    /// Sets the DOM defaultValue value when initially rendered.
-    ///
-    /// Typically only used with uncontrolled components.
-    member _.defaultValue (value: bool) = h.MakeBooleanAttr("defaultValue", value)
-    /// Sets the DOM defaultValue value when initially rendered.
-    ///
-    /// Typically only used with uncontrolled components.
-    member _.defaultValue (value: float) = h.MakeAttr("defaultValue", Util.asString value)
-    /// Sets the DOM defaultValue value when initially rendered.
-    ///
-    /// Typically only used with uncontrolled components.
-    member _.defaultValue (value: int) = h.MakeAttr("defaultValue", Util.asString value)
-    /// Sets the DOM defaultValue value when initially rendered.
-    ///
-    /// Typically only used with uncontrolled components.
-    member _.defaultValue (value: string) = h.MakeAttr("defaultValue", value)
+    // /// Sets the DOM defaultValue value when initially rendered.
+    // ///
+    // /// Typically only used with uncontrolled components.
+    // member _.defaultValue (value: bool) = h.MakeBooleanAttr("defaultValue", value)
+    // /// Sets the DOM defaultValue value when initially rendered.
+    // ///
+    // /// Typically only used with uncontrolled components.
+    // member _.defaultValue (value: float) = h.MakeAttr("defaultValue", Util.asString value)
+    // /// Sets the DOM defaultValue value when initially rendered.
+    // ///
+    // /// Typically only used with uncontrolled components.
+    // member _.defaultValue (value: int) = h.MakeAttr("defaultValue", Util.asString value)
+    // /// Sets the DOM defaultValue value when initially rendered.
+    // ///
+    // /// Typically only used with uncontrolled components.
+    // member _.defaultValue (value: string) = h.MakeAttr("defaultValue", value)
     // /// Sets the DOM defaultValue value when initially rendered.
     // ///
     // /// Typically only used with uncontrolled components.
@@ -530,16 +530,16 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     // member _.files (value: FileList) = h.MakeAttr("files", value)
 
     /// SVG attribute to define the opacity of the paint server (color, gradient, pattern, etc) applied to a shape.
-    member _.fillOpacity (value: float) = h.MakeAttr("fillOpacity", Util.asString value)
+    member _.fillOpacity (value: float) = h.MakeAttr("fill-opacity", Util.asString value)
     /// SVG attribute to define the opacity of the paint server (color, gradient, pattern, etc) applied to a shape.
-    member _.fillOpacity (value: int) = h.MakeAttr("fillOpacity", Util.asString value)
+    member _.fillOpacity (value: int) = h.MakeAttr("fill-opacity", Util.asString value)
 
     /// SVG attribute to define the size of the font from baseline to baseline when multiple
     /// lines of text are set solid in a multiline layout environment.
-    member _.fontSize (value: float) = h.MakeAttr("fontSize", Util.asString value)
+    member _.fontSize (value: float) = h.MakeAttr("font-size", Util.asString value)
     /// SVG attribute to define the size of the font from baseline to baseline when multiple
     /// lines of text are set solid in a multiline layout environment.
-    member _.fontSize (value: int) = h.MakeAttr("fontSize", Util.asString value)
+    member _.fontSize (value: int) = h.MakeAttr("font-size", Util.asString value)
 
     /// A space-separated list of other elements’ ids, indicating that those elements contributed input
     /// values to (or otherwise affected) the calculation.
@@ -694,7 +694,7 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     /// Use this attribute only if the href attribute is present.
     member _.hrefLang (value: string) = h.MakeAttr("hreflang", value)
 
-    member _.htmlFor (value: string) = h.MakeAttr("htmlFor", value)
+    member _.htmlFor (value: string) = h.MakeAttr("for", value)
 
     /// Often used with CSS to style a specific element. The value of this attribute must be unique.
     member _.id (value: int) = h.MakeAttr("id", (Util.asString value))
@@ -842,7 +842,7 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     member _.max (value: DateTime) = h.MakeAttr("max", value.ToString("yyyy-MM-dd"))
 
     /// Defines the maximum number of characters allowed in the element.
-    member _.maxLength (value: int) = h.MakeAttr("maxLength", Util.asString value)
+    member _.maxLength (value: int) = h.MakeAttr("maxlength", Util.asString value)
 
     /// This attribute specifies the media that the linked resource applies to.
     /// Its value must be a media type / media query. This attribute is mainly useful
@@ -871,7 +871,7 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     member _.min (value: DateTime) = h.MakeAttr("min", value.ToString("yyyy-MM-dd"))
 
     /// Defines the minimum number of characters allowed in the element.
-    member _.minLength (value: int) = h.MakeAttr("minLength", Util.asString value)
+    member _.minLength (value: int) = h.MakeAttr("minlength", Util.asString value)
 
     /// Indicates whether multiple values can be entered in an input of the type email or file.
     member _.multiple (value: bool) = h.MakeBooleanAttr("multiple", value)
@@ -986,7 +986,7 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     /// Indicating that the video is to be played "inline", that is within the element's playback area.
     ///
     /// Note that the absence of this attribute does not imply that the video will always be played in fullscreen.
-    member _.playsInline (value: bool) = h.MakeBooleanAttr("playsInline", value)
+    member _.playsInline (value: bool) = h.MakeBooleanAttr("playsinline", value)
 
     /// Contains a space-separated list of URLs to which, when the hyperlink is followed,
     /// POST requests with the body PING will be sent by the browser (in the background).
@@ -1112,7 +1112,7 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     member _.rows (value: int) = h.MakeAttr("rows", Util.asString value)
 
     /// Defines the number of rows a table cell should span over.
-    member _.rowSpan (value: int) = h.MakeAttr("rowSpan", Util.asString value)
+    member _.rowSpan (value: int) = h.MakeAttr("rowspan", Util.asString value)
 
     /// The SVG rx attribute defines a radius on the x-axis.
     ///
@@ -1256,12 +1256,12 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     /// The slot global attribute assigns a slot in a shadow DOM shadow tree to an element: An element with a slot attribute is assigned to the slot created by the slot element whose name attribute's value matches that slot attribute's value.
     member _.slot(value: string) = h.MakeAttr("slot", value)
     /// SVG attribute to indicate what color to use at a gradient stop.
-    member _.stopColor (value: string) = h.MakeAttr("stopColor", value)
+    member _.stopColor (value: string) = h.MakeAttr("stop-color", value)
 
     /// SVG attribute to define the opacity of a given color gradient stop.
-    member _.stopOpacity (value: float) = h.MakeAttr("stopOpacity", Util.asString value)
+    member _.stopOpacity (value: float) = h.MakeAttr("stop-opacity", Util.asString value)
     /// SVG attribute to define the opacity of a given color gradient stop.
-    member _.stopOpacity (value: int) = h.MakeAttr("stopOpacity", Util.asString value)
+    member _.stopOpacity (value: int) = h.MakeAttr("stop-opacity", Util.asString value)
 
     /// Represents the ideal vertical position of the strikethrough.
     ///
@@ -1285,11 +1285,11 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     member _.stroke (color: string) = h.MakeAttr("stroke", color)
 
     /// SVG attribute to define the width of the stroke to be applied to the shape.
-    member _.strokeWidth (value: float) = h.MakeAttr("strokeWidth", Util.asString value)
+    member _.strokeWidth (value: float) = h.MakeAttr("stroke-width", Util.asString value + "px")
     /// SVG attribute to define the width of the stroke to be applied to the shape.
-    member _.strokeWidth (value: ICssUnit) = h.MakeAttr("strokeWidth", Util.asString value)
+    member _.strokeWidth (value: ICssUnit) = h.MakeAttr("stroke-width", Util.asString value)
     /// SVG attribute to define the width of the stroke to be applied to the shape.
-    member _.strokeWidth (value: int) = h.MakeAttr("strokeWidth", Util.asString value)
+    member _.strokeWidth (value: int) = h.MakeAttr("stroke-width", Util.asString value + "px")
 
     // member _.style (properties: #IStyleAttribute list) = h.MakeAttr("style", (createObj !!properties))
 
@@ -1305,7 +1305,7 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
 
     /// The `tabindex` global attribute indicates that its element can be focused,
     /// and where it participates in sequential keyboard navigation (usually with the Tab key, hence the name).
-    member _.tabIndex (index: int) = h.MakeAttr("tabIndex", Util.asString index)
+    member _.tabIndex (index: int) = h.MakeAttr("tabindex", Util.asString index)
 
     /// Controls browser behavior when opening a link.
     member _.target (frameName: string) = h.MakeAttr("target", frameName)
