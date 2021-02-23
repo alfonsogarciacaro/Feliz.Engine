@@ -1,14 +1,11 @@
 module Snabbdom
 
-open System
 open Fable.Core
-open Fable.Core.JsInterop
-open Browser.Types
 
 type Module = interface end
 type VirtualNode = interface end
 
-type Patch = delegate of HTMLElement * VirtualNode -> unit
+type Patch = delegate of VirtualNode * VirtualNode -> unit
 
 [<ImportMember("snabbdom/modules/attributes")>]
 let attributesModule: Module = jsNative
@@ -31,6 +28,7 @@ type Helper() =
         styleModule
         eventListenersModule
     |]
+    static member inline AsNode(el: Browser.Types.HTMLElement) = unbox el
     static member Empty: VirtualNode = unbox null
     static member Text(str: string): VirtualNode = unbox str
-    static member Patch(el, vnode) = patcher.Invoke(el, vnode)
+    static member Patch(oldNode, newNode) = patcher.Invoke(oldNode, newNode)

@@ -348,6 +348,10 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     /// `prop.classes [ "one"; "two" ]` => `prop.className "one two"`
     member _.classes (names: seq<string>) = h.MakeAttr("class", String.concat " " names)
 
+    member _.classes (names: seq<bool * string>) =
+        let class' = names |> Seq.choose (function false, _ -> None | true, c -> Some c) |> String.concat " "
+        h.MakeAttr("class", class')
+
     /// Defines the number of columns in a textarea.
     member _.cols (value: int) = h.MakeAttr("cols", Util.asString value)
 

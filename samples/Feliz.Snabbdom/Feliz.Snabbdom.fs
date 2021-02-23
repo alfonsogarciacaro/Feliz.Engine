@@ -10,8 +10,7 @@ type Node =
     | Style of string * obj
     | Attr of string * obj
     | Event of string * obj
-    member this.VNode =
-        match this with
+    static member AsVNode = function
         | El n -> n
         | _ -> failwith "Not a virtual node"
 
@@ -47,3 +46,25 @@ let Css =
     CssEngine
         { new CssHelper<Node> with
             member _.MakeStyle(k, v) = Style(k, v) }
+
+let Ev =
+    EventEngine
+        { new EventHelper<Node> with
+            member _.MakeEvent(k, f) = Event(k, f) }
+
+
+module Elmish =
+    let app id (init: unit -> 'Model) update view =
+        let event = new Event<'Msg>()
+        let trigger e = event.Trigger(e)
+        let mutable state = init()
+        let mutable tree = view state trigger |> Node.AsVNode
+        Helper.Patch(Browser.Dom.document.getElementById(id) |> Helper.AsNode, tree)
+
+        let handleEvent evt =
+            state <- update evt state
+            let newTree = view state trigger |> Node.AsVNode
+            Helper.Patch(tree, newTree)
+            tree <- newTree
+
+        event.Publish.Add(handleEvent)
