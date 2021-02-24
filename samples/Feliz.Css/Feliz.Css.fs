@@ -22,21 +22,23 @@ let directChild selector nodes =
 
 
 let print (path: string) (nodes: Node seq) =
-    let rec printRule (stream: Node.Fs.WriteStream<string>) selector nodes =
-        stream.write(selector + " {" + Node.Api.os.EOL) |> ignore
+    let rec printRule (stream: Node.Fs.WriteStream<string>) selector = function
+        | [] -> () // Do nothings if node list is empty
+        | nodes ->
+            stream.write(selector + " {" + Node.Api.os.EOL) |> ignore
 
-        nodes |> List.iter (function
-            | Prop(key, value) ->
-                stream.write("    " + key + ": " + value + ";" + Node.Api.os.EOL) |> ignore
-            | _ -> ())
+            nodes |> List.iter (function
+                | Prop(key, value) ->
+                    stream.write("    " + key + ": " + value + ";" + Node.Api.os.EOL) |> ignore
+                | _ -> ())
 
-        stream.write("}" + Node.Api.os.EOL + Node.Api.os.EOL) |> ignore
+            stream.write("}" + Node.Api.os.EOL + Node.Api.os.EOL) |> ignore
 
-        nodes |> List.iter (function
-            | Rule(connector, selector2, nodes) ->
-                let selector = selector + connector + selector2
-                printRule stream selector nodes
-            | _ -> ())
+            nodes |> List.iter (function
+                | Rule(connector, selector2, nodes) ->
+                    let selector = selector + connector + selector2
+                    printRule stream selector nodes
+                | _ -> ())
 
     let stream = Node.Api.fs.createWriteStream(path)
     try

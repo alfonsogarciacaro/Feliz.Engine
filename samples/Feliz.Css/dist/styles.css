@@ -1,5 +1,5 @@
 .my-class {
-    background-color: #F0F8FF;
+    background-color: #663399;
 }
 
 .my-class .child {
@@ -7,10 +7,12 @@
 }
 
 .my-class > .child {
-    max-width: 40;
+    max-width: 40px;
+    color: #663399;
+    border-radius: 5px;
 }
 
 .my-class.another-class {
-    flex-direction: row-reverse;
+    flex-direction: column;
 }
 
