@@ -3,7 +3,10 @@ module Snabbdom
 open Fable.Core
 
 type Module = interface end
-type VirtualNode = interface end
+
+// TODO: Other properties https://github.com/snabbdom/snabbdom#virtual-node
+type VirtualNode =
+    abstract elm: Browser.Types.Element
 
 type Patch = delegate of VirtualNode * VirtualNode -> unit
 

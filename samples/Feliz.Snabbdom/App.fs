@@ -6,17 +6,12 @@ type Todo = {
   Id : Guid
   Description : string
   Completed : bool
-}
-
-type TodoBeingEdited = {
-  Id: Guid
-  Description: string
+  Editing : string option
 }
 
 type State = {
   TodoList: Todo list
   NewTodo : string
-  TodoBeingEdited : TodoBeingEdited option
 }
 
 type Msg =
@@ -32,11 +27,10 @@ type Msg =
 
 let init() = {
   TodoList = [
-    { Id = Guid.NewGuid(); Description = "Learn F#"; Completed = false }
-    { Id = Guid.NewGuid(); Description = "Learn Elmish"; Completed = true }
+    { Id = Guid.NewGuid(); Description = "Learn F#"; Completed = false; Editing = None }
+    { Id = Guid.NewGuid(); Description = "Learn Elmish"; Completed = true; Editing = None }
   ]
   NewTodo = ""
-  TodoBeingEdited = None
 }
 
 let update (msg: Msg) (state: State) =
@@ -51,7 +45,8 @@ let update (msg: Msg) (state: State) =
       let nextTodo =
         { Id = Guid.NewGuid()
           Description = state.NewTodo
-          Completed = false }
+          Completed = false
+          Editing = None }
 
       { state with
           NewTodo = ""
@@ -75,43 +70,46 @@ let update (msg: Msg) (state: State) =
       { state with TodoList = nextTodoList }
 
   | StartEditingTodo todoId ->
-      let nextEditModel =
-        state.TodoList
-        |> List.tryFind (fun todo -> todo.Id = todoId)
-        |> Option.map (fun todo -> { Id = todoId; Description = todo.Description })
-
-      { state with TodoBeingEdited = nextEditModel }
+      let todos = state.TodoList |> List.map (fun t ->
+        { t with Editing = if t.Id = todoId then Some t.Description else None })
+      { state with TodoList = todos }
 
   | CancelEdit ->
-      { state with TodoBeingEdited = None }
+      let todos = state.TodoList |> List.map (fun t -> { t with Editing = None })
+      { state with TodoList = todos }
 
   | ApplyEdit ->
-      match state.TodoBeingEdited with
-      | None -> state
-      | Some todoBeingEdited when todoBeingEdited.Description = "" -> state
-      | Some todoBeingEdited ->
-          let nextTodoList =
-            state.TodoList
-            |> List.map (fun todo ->
-                if todo.Id = todoBeingEdited.Id
-                then { todo with Description = todoBeingEdited.Description }
-                else todo)
-
-          { state with TodoList = nextTodoList; TodoBeingEdited = None }
+      let todos = state.TodoList |> List.map (fun t ->
+        match t.Editing with
+        | None -> t
+        | Some d -> { t with Description = d; Editing = None })
+      { state with TodoList = todos }
 
   | SetEditedDescription newText ->
-      let nextEditModel =
-        state.TodoBeingEdited
-        |> Option.map (fun todoBeingEdited -> { todoBeingEdited with Description = newText })
+      let todos = state.TodoList |> List.map (fun t ->
+        { t with Editing = t.Editing |> Option.map (fun _ -> newText) })
+      { state with TodoList = todos }
 
-      { state with TodoBeingEdited = nextEditModel }
-
+open Browser.Types
 open Feliz
 open Feliz.Snabbdom
 
 // Helper function to easily construct div with only classes and children
 let div (classes: string list) (children: Node list) =
     Html.div((Attr.classes classes)::children)
+
+let onEnterOrEscape dispatch onEnterMsg onEscapeMsg =
+    Ev.onKeyUp (fun ev ->
+      let el = ev.target :?> HTMLInputElement
+      match ev.key with
+      | "Enter" ->
+        dispatch onEnterMsg
+        el.value <- ""
+      | "Escape" ->
+        dispatch onEscapeMsg
+        el.value <- ""
+        el.blur()
+      | _ -> ())
 
 let appTitle =
     Html.p [
@@ -126,17 +124,7 @@ let inputField (state: State) (dispatch: Msg -> unit) =
         Attr.classes [ "input"; "is-medium" ]
         Attr.value state.NewTodo
         Ev.onTextChange (SetNewTodo >> dispatch)
-        Ev.onKeyUp (fun ev ->
-          let el = ev.target :?> Browser.Types.HTMLInputElement
-          match ev.key with
-          | "Enter" ->
-            dispatch AddNewTodo
-            el.value <- ""
-          | "Escape" ->
-            SetNewTodo "" |> dispatch
-            el.value <- ""
-            el.blur()
-          | _ -> ())
+        onEnterOrEscape dispatch AddNewTodo (SetNewTodo "")
       ]
     ]
 
@@ -149,7 +137,8 @@ let inputField (state: State) (dispatch: Msg -> unit) =
     ]
   ]
 
-let renderTodo (todo: Todo) (dispatch: Msg -> unit) =
+let renderTodo (todo: Todo) dispatch =
+  // printfn $"Rendering todo {todo.Description} {todo.Id}"
   Html.li [
     key todo.Id
     Attr.className "box"
@@ -166,77 +155,76 @@ let renderTodo (todo: Todo) (dispatch: Msg -> unit) =
       Css.transform.scale 0.1
     ]
 
-    div [ "columns"; "is-mobile"; "is-vcentered" ] [
-        div [ "column"; "subtitle"] [
-            Html.p [
-              Attr.className "subtitle"
-              Html.text todo.Description
-              Ev.onDblClick (fun _ -> dispatch (StartEditingTodo todo.Id))
-            ]
+    match todo.Editing with
+    | Some editing ->
+      div [ "field is-grouped" ] [
+        div [ "control is-expanded" ] [
+          Html.input [
+            Attr.classes [ "input"; "is-medium" ]
+            Attr.value editing
+            Ev.onTextChange (SetEditedDescription >> dispatch)
+            onEnterOrEscape dispatch ApplyEdit CancelEdit
+            Hook.insert (fun vnode ->
+              let el = vnode.elm :?> HTMLInputElement
+              el.select()
+            )
+          ]
         ]
 
-        div [ "column"; "is-narrow" ] [
-            div [ "buttons" ] [
-                Html.button [
-                    Attr.classes  [ true, "button"; todo.Completed, "is-success"]
-                    Ev.onClick (fun _ -> dispatch (ToggleCompleted todo.Id))
-                    Html.i [ Attr.classes [ "fa"; "fa-check" ] ]
-                ]
-            ]
+        div [ "control"; "buttons" ] [
+          Html.button [
+            Attr.classes [ "button"; "is-primary"]
+            Ev.onClick (fun _ -> dispatch ApplyEdit)
+            Html.i [ Attr.classes ["fa"; "fa-save" ] ]
+          ]
 
-            Html.button [
-                Css.marginRight (length.px 5)
-                Attr.classes [ "button"; "is-primary" ]
-                Ev.onClick (fun _ -> dispatch (StartEditingTodo todo.Id))
-                Html.i [ Attr.classes [ "fa"; "fa-edit" ] ]
-            ]
-
-            Html.button [
-                Attr.classes [ "button"; "is-danger" ]
-                Ev.onClick (fun _ -> dispatch (DeleteTodo todo.Id))
-                Html.i [ Attr.classes [ "fa"; "fa-times" ] ]
-            ]
-        ]
-    ]
-  ]
-
-
-let renderEditForm (todoBeingEdited: TodoBeingEdited) (dispatch: Msg -> unit) =
-  div [ "box" ] [
-    div [ "field is-grouped" ] [
-      div [ "control is-expanded" ] [
-        Html.input [
-          Attr.classes [ "input"; "is-medium" ]
-          Attr.value todoBeingEdited.Description
-          Ev.onTextChange (SetEditedDescription >> dispatch)
+          Html.button [
+            Attr.classes ["button"; "is-warning"]
+            Ev.onClick (fun _ -> dispatch CancelEdit)
+            Html.i [ Attr.classes ["fa"; "fa-arrow-right"] ]
+          ]
         ]
       ]
 
-      div [ "control"; "buttons" ] [
-        Html.button [
-          Attr.classes [ "button"; "is-primary"]
-          Ev.onClick (fun _ -> dispatch ApplyEdit)
-          Html.i [ Attr.classes ["fa"; "fa-save" ] ]
-        ]
+    | None ->
+      div [ "columns"; "is-mobile"; "is-vcentered" ] [
+          div [ "column"; "subtitle"] [
+              Html.p [
+                Css.userSelect.none
+                Css.cursor.pointer
+                Attr.className "subtitle"
+                Html.text todo.Description
+                Ev.onDblClick (fun _ -> dispatch (StartEditingTodo todo.Id))
+              ]
+          ]
 
-        Html.button [
-          Attr.classes ["button"; "is-warning"]
-          Ev.onClick (fun _ -> dispatch CancelEdit)
-          Html.i [ Attr.classes ["fa"; "fa-arrow-right"] ]
-        ]
+          div [ "column"; "is-narrow" ] [
+              Html.button [
+                  Attr.classes  [ true, "button"; todo.Completed, "is-success"]
+                  Ev.onClick (fun _ -> dispatch (ToggleCompleted todo.Id))
+                  Html.i [ Attr.classes [ "fa"; "fa-check" ] ]
+              ]
+
+              Html.button [
+                  Css.margin(length.zero, length.px 5)
+                  Attr.classes [ "button"; "is-primary" ]
+                  Ev.onClick (fun _ -> dispatch (StartEditingTodo todo.Id))
+                  Html.i [ Attr.classes [ "fa"; "fa-edit" ] ]
+              ]
+
+              Html.button [
+                  Attr.classes [ "button"; "is-danger" ]
+                  Ev.onClick (fun _ -> dispatch (DeleteTodo todo.Id))
+                  Html.i [ Attr.classes [ "fa"; "fa-times" ] ]
+              ]
+          ]
       ]
-    ]
   ]
 
 let todoList (state: State) (dispatch: Msg -> unit) =
-  Html.ul [
-      for todo in state.TodoList ->
-        match state.TodoBeingEdited with
-        | Some todoBeingEdited when todoBeingEdited.Id = todo.Id ->
-            renderEditForm todoBeingEdited dispatch
-        | _otherwise ->
-            renderTodo todo dispatch
-  ]
+  Html.ul (state.TodoList |> List.map (fun todo ->
+    Elmish.memoize renderTodo (fun t -> t.Id) todo dispatch
+  ))
 
 let view (state: State) (dispatch: Msg -> unit) =
   Html.div [
