@@ -3,13 +3,13 @@ module App
 open System
 
 type Todo = {
-  Id : int
+  Id : Guid
   Description : string
   Completed : bool
 }
 
 type TodoBeingEdited = {
-  Id: int
+  Id: Guid
   Description: string
 }
 
@@ -22,18 +22,18 @@ type State = {
 type Msg =
   | SetNewTodo of string
   | AddNewTodo
-  | DeleteTodo of int
-  | ToggleCompleted of int
+  | DeleteTodo of Guid
+  | ToggleCompleted of Guid
   | CancelEdit
   | ApplyEdit
-  | StartEditingTodo of int
+  | StartEditingTodo of Guid
   | SetEditedDescription of string
 
 
 let init() = {
   TodoList = [
-    { Id = 1; Description = "Learn F#"; Completed = false }
-    { Id = 2; Description = "Learn Elmish"; Completed = true }
+    { Id = Guid.NewGuid(); Description = "Learn F#"; Completed = false }
+    { Id = Guid.NewGuid(); Description = "Learn Elmish"; Completed = true }
   ]
   NewTodo = ""
   TodoBeingEdited = None
@@ -48,16 +48,8 @@ let update (msg: Msg) (state: State) =
       state
 
   | AddNewTodo ->
-      let nextTodoId =
-        match state.TodoList with
-        | [ ] -> 1
-        | elems ->
-            elems
-            |> List.maxBy (fun todo -> todo.Id)
-            |> fun todo -> todo.Id + 1
-
       let nextTodo =
-        { Id = nextTodoId
+        { Id = Guid.NewGuid()
           Description = state.NewTodo
           Completed = false }
 
@@ -158,7 +150,22 @@ let inputField (state: State) (dispatch: Msg -> unit) =
   ]
 
 let renderTodo (todo: Todo) (dispatch: Msg -> unit) =
-  div [ "box" ] [
+  Html.li [
+    key todo.Id
+    Attr.className "box"
+    Css.opacity 0.
+    Css.transform.scale 1.5
+    // Snabbdom doesn't support `all`, we need to list all the transitioning properties
+    Css.transition "opacity 0.5s, transform 0.5s"
+    Css.delayed [
+      Css.opacity 1.
+      Css.transform.scale 1.
+    ]
+    Css.remove [
+      Css.opacity 0.
+      Css.transform.scale 0.1
+    ]
+
     div [ "columns"; "is-mobile"; "is-vcentered" ] [
         div [ "column"; "subtitle"] [
             Html.p [

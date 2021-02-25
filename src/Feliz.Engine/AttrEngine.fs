@@ -756,29 +756,6 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     /// <feConvolveMatrix> element.
     member _.kernelMatrix (values: seq<int>) = h.MakeAttr("kernelMatrix", (values |> Seq.map Util.asString  |> String.concat " "))
 
-    /// A special string attribute you need to include when creating arrays of elements.
-    /// Keys help React identify which items have changed, are added, or are removed.
-    /// Keys should be given to the elements inside an array to give the elements a stable identity.
-    ///
-    /// Keys only need to be unique among sibling elements in the same array. They don’t need to
-    /// be unique across the whole application or even a single component.
-    member _.key (value: Guid) = h.MakeAttr("value", (Util.asString value))
-    /// A special string attribute you need to include when creating arrays of elements. Keys help
-    /// React identify which items have changed, are added, or are removed. Keys should be given
-    /// to the elements inside an array to give the elements a stable identity.
-    ///
-    /// Keys only need to be unique among sibling elements in the same array. They don’t need to
-    /// be unique across the whole application or even a single component.
-    member _.key (value: int) = h.MakeAttr("key", Util.asString value)
-    /// A special string attribute you need to include when creating arrays of elements. Keys
-    /// help React identify which
-    /// items have changed, are added, or are removed. Keys should be given to the elements
-    /// inside an array to give the elements a stable identity.
-    ///
-    /// Keys only need to be unique among sibling elements in the same array. They don’t need to
-    /// be unique across the whole application or even a single component.
-    member _.key (value: string) = h.MakeAttr("key", value)
-
     /// Indicates the simple duration of an animation.
     member _.keyPoints (values: seq<float>) =
         h.MakeAttr("keyPoints", (values |> Seq.map Util.asString  |> String.concat ";"))

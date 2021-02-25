@@ -3130,6 +3130,8 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```
     member _.gridTemplate(value: string) =
         h.MakeStyle("grid-template", asString value)
+    member _.transition(value: string) =
+        h.MakeStyle("transition", value)
     /// Sets the length of time a transition animation should take to complete. By default, the
     /// value is 0s, meaning that no animation will occur.
     member _.transitionDuration(timespan: TimeSpan) =
