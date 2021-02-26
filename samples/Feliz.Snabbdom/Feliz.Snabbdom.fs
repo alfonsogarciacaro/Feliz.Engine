@@ -114,20 +114,23 @@ module internal Util =
         newVNode
 
 module Elmish =
-    let mount (init: unit -> 'Model) update view node =
-        let event = new Event<'Msg>()
-        let trigger e = event.Trigger(e)
-        let mutable state = init()
-        let mutable tree = view state trigger |> Node.AsVNode
+    type Cmd<'Msg> = (('Msg -> unit) -> unit) list
+
+    let mount (init: unit -> 'Model * Cmd<'Msg>) update view node =
+        let mutable tree = Unchecked.defaultof<_>
+        let m, cmd = init()
+        let mutable state = m
+
+        let rec dispatch msg =
+            state <- update msg state
+            tree <- view state dispatch |> Util.patch tree
+
+        tree <- view state dispatch |> Node.AsVNode
         Helper.Patch(node, tree)
+        for cmd in cmd do
+            cmd dispatch
 
-        let handleEvent evt =
-            state <- update evt state
-            tree <- view state trigger |> Util.patch tree
-
-        event.Publish.Add(handleEvent)
-
-    let app id (init: unit -> 'Model) update view =
+    let app id (init: unit -> 'Model * Cmd<'Msg>) update view =
         Browser.Dom.document.getElementById(id)
         |> Helper.AsNode
         |> mount init update view

@@ -4,47 +4,38 @@ open System
 
 module Clock =
   type Model =
-    { OnTimeout: unit -> unit
-      Timeout: TimeSpan
-      Original: DateTime
-      Current: DateTime }
+    { Elapsed: TimeSpan }
 
   type Msg = Tick
 
-  type ExtMsg = TimeOver
-
-  let init ts cb () =
-    { OnTimeout = cb
-      Timeout = ts
-      Original = DateTime.Now
-      Current = DateTime.Now }
-
   let update msg model =
     match msg with
-    | Tick ->
-      let model = { model with Current = DateTime.Now }
-      if model.Current - model.Original > model.Timeout then
-        model.OnTimeout()
-      model
+    | Tick -> { model with Elapsed = model.Elapsed + TimeSpan.FromSeconds 1. }
 
   open Fable.Core
   open Feliz.Snabbdom
 
-  let view model dispatch =
+  let view model _dispatch =
     Html.p [
-      Hook.insert (fun n ->
-        let id = JS.setInterval (fun _ -> dispatch Tick) 1000
-        n.elm.dataset.["interval"] <- string id)
-
-      Hook.destroy (fun n ->
-        n.elm.dataset.["interval"] |> int |> JS.clearInterval)
-
-      Html.text (model.Current.ToString("HH:mm:ss"))
+      Html.text (model.Elapsed.ToString("c", Globalization.CultureInfo.InvariantCulture))
     ]
 
-  let mount ts cb =
+  let mount () =
+    let intervalId = ref 0
+
+    let init() =
+        { Elapsed = TimeSpan() }, [fun dispatch ->
+          intervalId := JS.setInterval (fun _ ->
+            // printfn "Tick %i" !intervalId
+            dispatch Tick) 1000
+          // printfn "Set interval %i" !intervalId
+        ]
+
     Html.div [
-      Hook.insert (Elmish.mount (init ts cb) update view)
+      Hook.insert (Elmish.mount init update view)
+      Hook.destroy (fun _ ->
+        // printfn "Clear interval %i" !intervalId
+        JS.clearInterval !intervalId)
     ]
 
 type Todo = {
@@ -71,14 +62,15 @@ type Msg =
   | StartEditingTodo of Guid
   | SetEditedDescription of string
 
-let init() = {
-  TodoList = [
-    { Id = Guid.NewGuid(); Description = "Learn F#"; Completed = false; Editing = None }
-    { Id = Guid.NewGuid(); Description = "Learn Elmish"; Completed = true; Editing = None }
-  ]
-  NewTodo = ""
-  Timeout = false
-}
+let init() =
+  {
+    TodoList = [
+      { Id = Guid.NewGuid(); Description = "Learn F#"; Completed = false; Editing = None }
+      { Id = Guid.NewGuid(); Description = "Learn Elmish"; Completed = true; Editing = None }
+    ]
+    NewTodo = ""
+    Timeout = false
+  }, []
 
 let update (msg: Msg) (state: State) =
   match msg with
@@ -161,21 +153,22 @@ let onEnterOrEscape dispatch onEnterMsg onEscapeMsg =
         el.blur()
       | _ -> ())
 
-let appTitle (_: State) dispatch =
+let level leftItems rightItems =
   div ["level"] [
-    div ["level-left"] [
-      div ["level-item"] [
-        Html.p [
-          Attr.className "title"
-          Html.text "Elmish To-Do List"
-        ]
-      ]
+    div ["level-left"]
+      (leftItems |> List.map (fun i -> div ["level-item"] [i]))
+    div ["level-right"]
+      (rightItems |> List.map (fun i -> div ["level-item"] [i]))
+  ]
+
+let appTitle (_: State) _dispatch =
+  level [
+    Html.p [
+      Attr.className "title"
+      Html.text "Elmish To-Do List"
     ]
-    div ["level-right"] [
-      div ["level-item"] [
-        Clock.mount (TimeSpan.FromSeconds(5.)) (fun () -> dispatch Timeout)
-      ]
-    ]
+  ] [
+    // Clock.mount ()
   ]
 
 let inputField (state: State) (dispatch: Msg -> unit) =
@@ -248,13 +241,17 @@ let renderTodo dispatch (todo: Todo) =
 
     | None ->
       div [ "columns"; "is-mobile"; "is-vcentered" ] [
-          div [ "column"; "subtitle"] [
-              Html.p [
-                Css.userSelect.none
-                Css.cursor.pointer
-                Attr.className "subtitle"
-                Html.text todo.Description
-                Ev.onDblClick (fun _ -> dispatch (StartEditingTodo todo.Id))
+          div [ "column" ] [
+              level [
+                Html.p [
+                  Css.userSelect.none
+                  Css.cursor.pointer
+                  Attr.className "subtitle"
+                  Html.text todo.Description
+                  Ev.onDblClick (fun _ -> dispatch (StartEditingTodo todo.Id))
+                ]
+              ] [
+                Clock.mount()
               ]
           ]
 
