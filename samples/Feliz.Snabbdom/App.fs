@@ -3,16 +3,29 @@ module App
 open System
 
 module Clock =
-  type Model = { DateTime: DateTime }
+  type Model =
+    { OnTimeout: unit -> unit
+      Timeout: TimeSpan
+      Original: DateTime
+      Current: DateTime }
 
   type Msg = Tick
 
-  let init () =
-    { DateTime = DateTime.Now }
+  type ExtMsg = TimeOver
+
+  let init ts cb () =
+    { OnTimeout = cb
+      Timeout = ts
+      Original = DateTime.Now
+      Current = DateTime.Now }
 
   let update msg model =
     match msg with
-    | Tick -> { DateTime = DateTime.Now }
+    | Tick ->
+      let model = { model with Current = DateTime.Now }
+      if model.Current - model.Original > model.Timeout then
+        model.OnTimeout()
+      model
 
   open Fable.Core
   open Feliz.Snabbdom
@@ -26,12 +39,12 @@ module Clock =
       Hook.destroy (fun n ->
         n.elm.dataset.["interval"] |> int |> JS.clearInterval)
 
-      Html.text (model.DateTime.ToString("HH:mm:ss"))
+      Html.text (model.Current.ToString("HH:mm:ss"))
     ]
 
-  let mount () =
+  let mount ts cb =
     Html.div [
-      Hook.insert (Elmish.mount init update view)
+      Hook.insert (Elmish.mount (init ts cb) update view)
     ]
 
 type Todo = {
@@ -44,9 +57,11 @@ type Todo = {
 type State = {
   TodoList: Todo list
   NewTodo : string
+  Timeout: bool
 }
 
 type Msg =
+  | Timeout
   | SetNewTodo of string
   | AddNewTodo
   | DeleteTodo of Guid
@@ -56,17 +71,20 @@ type Msg =
   | StartEditingTodo of Guid
   | SetEditedDescription of string
 
-
 let init() = {
   TodoList = [
     { Id = Guid.NewGuid(); Description = "Learn F#"; Completed = false; Editing = None }
     { Id = Guid.NewGuid(); Description = "Learn Elmish"; Completed = true; Editing = None }
   ]
   NewTodo = ""
+  Timeout = false
 }
 
 let update (msg: Msg) (state: State) =
   match msg with
+  | Timeout ->
+    { state with Timeout = true }
+
   | SetNewTodo desc ->
       { state with NewTodo = desc }
 
@@ -143,7 +161,7 @@ let onEnterOrEscape dispatch onEnterMsg onEscapeMsg =
         el.blur()
       | _ -> ())
 
-let appTitle() =
+let appTitle (_: State) dispatch =
   div ["level"] [
     div ["level-left"] [
       div ["level-item"] [
@@ -155,7 +173,7 @@ let appTitle() =
     ]
     div ["level-right"] [
       div ["level-item"] [
-        Clock.mount()
+        Clock.mount (TimeSpan.FromSeconds(5.)) (fun () -> dispatch Timeout)
       ]
     ]
   ]
@@ -271,7 +289,11 @@ let view (state: State) (dispatch: Msg -> unit) =
     Css.margin(length.zero, length.auto)
     Css.maxWidth 800
     Css.padding 20
-    appTitle()
+    Css.backgroundColor (if state.Timeout
+      then color.red
+      else color.transparent)
+
+    appTitle state dispatch
     inputField state dispatch
     todoList state dispatch
   ]
