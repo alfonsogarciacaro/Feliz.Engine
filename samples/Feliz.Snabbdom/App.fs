@@ -2,6 +2,38 @@ module App
 
 open System
 
+module Clock =
+  type Model = { DateTime: DateTime }
+
+  type Msg = Tick
+
+  let init () =
+    { DateTime = DateTime.Now }
+
+  let update msg model =
+    match msg with
+    | Tick -> { DateTime = DateTime.Now }
+
+  open Fable.Core
+  open Feliz.Snabbdom
+
+  let view model dispatch =
+    Html.p [
+      Hook.insert (fun n ->
+        let id = JS.setInterval (fun _ -> dispatch Tick) 1000
+        n.elm.dataset.["interval"] <- string id)
+
+      Hook.destroy (fun n ->
+        n.elm.dataset.["interval"] |> int |> JS.clearInterval)
+
+      Html.text (model.DateTime.ToString("HH:mm:ss"))
+    ]
+
+  let mount () =
+    Html.div [
+      Hook.insert (Elmish.mount init update view)
+    ]
+
 type Todo = {
   Id : Guid
   Description : string
@@ -111,11 +143,22 @@ let onEnterOrEscape dispatch onEnterMsg onEscapeMsg =
         el.blur()
       | _ -> ())
 
-let appTitle =
-    Html.p [
-      Attr.className "title"
-      Html.text "Elmish To-Do List"
+let appTitle() =
+  div ["level"] [
+    div ["level-left"] [
+      div ["level-item"] [
+        Html.p [
+          Attr.className "title"
+          Html.text "Elmish To-Do List"
+        ]
+      ]
     ]
+    div ["level-right"] [
+      div ["level-item"] [
+        Clock.mount()
+      ]
+    ]
+  ]
 
 let inputField (state: State) (dispatch: Msg -> unit) =
   div [ "field"; "has-addons" ] [
@@ -137,10 +180,9 @@ let inputField (state: State) (dispatch: Msg -> unit) =
     ]
   ]
 
-let renderTodo (todo: Todo) dispatch =
-  // printfn $"Rendering todo {todo.Description} {todo.Id}"
+let renderTodo dispatch (todo: Todo) =
+  printfn $"Rendering todo {todo.Description}"
   Html.li [
-    key todo.Id
     Attr.className "box"
     Css.opacity 0.
     Css.transform.scale 1.5
@@ -222,16 +264,14 @@ let renderTodo (todo: Todo) dispatch =
   ]
 
 let todoList (state: State) (dispatch: Msg -> unit) =
-  Html.ul (state.TodoList |> List.map (fun todo ->
-    Elmish.memoize renderTodo (fun t -> t.Id) todo dispatch
-  ))
+  Html.ul (state.TodoList |> List.map (memoize (renderTodo dispatch)))
 
 let view (state: State) (dispatch: Msg -> unit) =
   Html.div [
     Css.margin(length.zero, length.auto)
     Css.maxWidth 800
     Css.padding 20
-    appTitle
+    appTitle()
     inputField state dispatch
     todoList state dispatch
   ]

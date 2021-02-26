@@ -15,5 +15,5 @@ module.exports = {
 		chunkFilename: '[name].[id].js',
 	},
 	mode,
-	// devtool: prod ? false: 'source-map'
+	devtool: prod ? false: 'source-map'
 };

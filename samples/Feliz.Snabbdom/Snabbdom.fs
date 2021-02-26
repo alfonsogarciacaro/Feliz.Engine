@@ -1,14 +1,15 @@
 module Snabbdom
 
+open System
 open Fable.Core
 
 type Module = interface end
 
 // TODO: Other properties https://github.com/snabbdom/snabbdom#virtual-node
-type VirtualNode =
-    abstract elm: Browser.Types.Element
+type VNode =
+    abstract elm: Browser.Types.HTMLElement
 
-type Patch = delegate of VirtualNode * VirtualNode -> unit
+type Patch = delegate of VNode * VNode -> unit
 
 [<ImportMember("snabbdom/modules/attributes")>]
 let attributesModule: Module = jsNative
@@ -20,10 +21,14 @@ let styleModule: Module = jsNative
 let eventListenersModule: Module = jsNative
 
 [<ImportMember("snabbdom/h")>]
-let h(tag: string, props: obj, children: ResizeArray<VirtualNode>): VirtualNode = jsNative
+let h(tag: string, props: obj, children: ResizeArray<VNode>): VNode = jsNative
 
 [<ImportMember("snabbdom/init")>]
 let init(modules: Module[]): Patch = jsNative
+
+// [<ImportMember("snabbdom/thunk")>]
+[<ImportMember("./thunk")>]
+let thunk(sel: string, key: Guid, fn: obj, args: obj[]): VNode = jsNative
 
 type Helper() =
     static let patcher = init [|
@@ -32,6 +37,7 @@ type Helper() =
         eventListenersModule
     |]
     static member inline AsNode(el: Browser.Types.HTMLElement) = unbox el
-    static member Empty: VirtualNode = unbox null
-    static member Text(str: string): VirtualNode = unbox str
+    static member Empty: VNode = unbox null
+    static member Text(str: string): VNode = unbox str
     static member Patch(oldNode, newNode) = patcher.Invoke(oldNode, newNode)
+    static member Thunk(sel: string, key: Guid, renderFn: obj, stateArgs: obj[]) = thunk(sel, key, renderFn, stateArgs)

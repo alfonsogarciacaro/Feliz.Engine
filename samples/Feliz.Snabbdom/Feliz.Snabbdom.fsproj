@@ -11,7 +11,7 @@
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="*.fsproj; *.fs" PackagePath="fable\" />
+    <Content Include="*.fsproj; *.fs; thunk.js" PackagePath="fable\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Feliz.Engine.Event\Feliz.Engine.Event.fsproj" />
