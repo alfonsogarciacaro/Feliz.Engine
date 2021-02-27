@@ -5,8 +5,12 @@ open Fable.Core
 
 type Module = interface end
 
-// TODO: Other properties https://github.com/snabbdom/snabbdom#virtual-node
 type VNode =
+    abstract sel: string
+    abstract key: string
+    abstract data: obj
+    abstract children: VNode[]
+    abstract text: string
     abstract elm: Browser.Types.HTMLElement
 
 type Patch = delegate of VNode * VNode -> unit

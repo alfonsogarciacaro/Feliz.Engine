@@ -101,9 +101,26 @@ let Ev = EventEngine(h)
 
 // TODO: Other hooks https://github.com/snabbdom/snabbdom#hooks
 module Hook =
+    /// the patch process begins
+    let pre (f: unit -> unit) = Hook("pre", f)
+    /// a vnode has been added
+    let init (f: VNode -> unit) = Hook("init", f)
+    /// a DOM element has been created based on a vnode
+    let create (f: VNode -> VNode -> unit) = Hook("create", f)
+    /// an element has been inserted into the DOM
     let insert (f: VNode -> unit) = Hook("insert", f)
-    let remove (f: VNode -> unit) = Hook("remove", f)
+    /// an element is about to be patched
+    let prepatch (f: VNode -> VNode -> unit) = Hook("prepatch", f)
+    /// an element is being updated
+    let update (f: VNode -> VNode -> unit) = Hook("update", f)
+    /// an element has been patched
+    let postpatch (f: VNode -> VNode -> unit) = Hook("postpatch", f)
+    /// an element is directly or indirectly being removed
     let destroy (f: VNode -> unit) = Hook("destroy", f)
+    /// an element is directly being removed from the DOM
+    let remove (f: VNode -> (unit -> unit) -> unit) = Hook("remove", f)
+    /// the patch process is done
+    let post (f: unit -> unit) = Hook("post", f)
 
 module internal Util =
     let inline getKey x = (^a: (member Id: Guid) x)
