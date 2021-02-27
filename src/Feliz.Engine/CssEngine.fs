@@ -33,8 +33,12 @@ open Feliz.Styles
 type internal Util =
     static member inline asString(x: string): string = x
     static member inline asString(x: int): string = string x
+    static member inline asString(x: int option): string =
+        match x with Some x -> Util.asString x | None -> ""
     static member inline asString(x: float): string = string x
     static member inline asString(x: Guid): string = string x
+    static member inline asString< ^t when ^t : (member AsString: string)> (x: ^t option): string =
+        match x with Some x -> Util.asString x | None -> ""
     static member inline asString< ^t when ^t : (member AsString: string)> (x: ^t): string =
 #if FABLE_COMPILER
         unbox x
@@ -701,7 +705,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
 
     /// Sets the distance between the borders of adjacent <table> cells. Applies only when border-collapse is separate.
     member _.borderSpacing(horizontal: ICssUnit, ?vertical: ICssUnit) =
-        h.MakeStyle("border-spacing", asString horizontal + (match vertical with Some v -> " " + asString v | None -> ""))
+        h.MakeStyle("border-spacing", asString horizontal + " " + asString vertical)
     /// Sets this property to its default value
     member _.borderSpacingInitial = h.MakeStyle("border-spacing", "initial")
     /// Inherits this property from its parent element.
@@ -1517,6 +1521,10 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// Sets the flex grow factor of a flex item main size. It specifies how much of the remaining
     /// space in the flex container should be assigned to the item (the flex grow factor).
     member _.flexGrow (value: int) = h.MakeStyle("flex-grow", asString value)
+    /// Shorthand of flex-grow, flex-shrink and flex-basis
+    member _.flex (grow: int, ?shrink: int, ?basis: ICssUnit) = h.MakeStyle("flex", asString grow + " " + asString shrink + " " + asString basis)
+    /// Shorthand of flex-grow, flex-shrink and flex-basis
+    member _.flex (value: string) = h.MakeStyle("flex", value)
 
     /// Sets the width of each individual grid column in pixels.
     ///
