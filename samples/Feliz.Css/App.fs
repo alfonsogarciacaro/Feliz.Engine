@@ -20,7 +20,7 @@ seq {
         ]
 
         and' ".another-class" [
-            Css.flexDirection.column
+            Css.flexDirectionColumn
         ]
     ]
 }

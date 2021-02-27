@@ -196,16 +196,20 @@ let renderTodo dispatch (todo: Todo) =
   Html.li [
     Attr.className "box"
     Css.opacity 0.
-    Css.transform.scale 1.5
+    Css.transformScale 1.5
     // Snabbdom doesn't support `all`, we need to list all the transitioning properties
-    Css.transition "opacity 0.5s, transform 0.5s"
+    Css.transitionProperty(
+      transitionProperty.opacity,
+      transitionProperty.transform
+    )
+    Css.transitionDurationSeconds 0.5
     Css.delayed [
       Css.opacity 1.
-      Css.transform.scale 1.
+      Css.transformScale 1.
     ]
     Css.remove [
       Css.opacity 0.
-      Css.transform.scale 0.1
+      Css.transformScale 0.1
     ]
 
     match todo.Editing with
@@ -244,8 +248,8 @@ let renderTodo dispatch (todo: Todo) =
           div [ "column" ] [
               level [
                 Html.p [
-                  Css.userSelect.none
-                  Css.cursor.pointer
+                  Css.userSelectNone
+                  Css.cursorPointer
                   Attr.className "subtitle"
                   Html.text todo.Description
                   Ev.onDblClick (fun _ -> dispatch (StartEditingTodo todo.Id))
