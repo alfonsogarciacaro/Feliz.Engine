@@ -699,6 +699,15 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// Inherits this property from its parent element.
     member _.borderCollapseInheritFromParent = h.MakeStyle("border-collapse", "inherit")
 
+    /// Sets the distance between the borders of adjacent <table> cells. Applies only when border-collapse is separate.
+    member _.borderSpacing(horizontal: ICssUnit, ?vertical: ICssUnit) =
+        h.MakeStyle("border-spacing", asString horizontal + (match vertical with Some v -> " " + asString v | None -> ""))
+    /// Sets this property to its default value
+    member _.borderSpacingInitial = h.MakeStyle("border-spacing", "initial")
+    /// Inherits this property from its parent element.
+    member _.borderSpacingInheritFromParent = h.MakeStyle("border-spacing", "inherit")
+    member _.borderSpacingUnset = h.MakeStyle("border-spacing", "unset")
+
     /// Sets the size of the element's background image.
     ///
     /// The image can be left to its natural size, stretched, or constrained to fit the available space.
