@@ -112,6 +112,8 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
         CssEngine { new CssHelper<'Style> with
                         member _.MakeStyle(k, v) = f k v }
 
+    member _.boxShadow(value: string) = h.MakeStyle("box-shadow", value)
+
     member _.boxShadow(horizontalOffset: int, verticalOffset: int, color: string) =
         h.MakeStyle("box-shadow",
             (asString horizontalOffset) + "px " +
@@ -143,16 +145,9 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     member _.heightInheritFromParent = h.MakeStyle("height", "inherit")
     /// Sets this property to its default value.
     member _.heightInitial = h.MakeStyle("height", "initial")
-    /// Resets this property to its inherited value if it inherits from its parent, and to its initial value if not.
-    member _.heightUnset = h.MakeStyle("height", "unset")
-    /// The larger of either the intrinsic minimum height or the smaller of the intrinsic preferred height and the available height
-    [<Experimental("This is an experimental API that should not be used in production code.")>]
-    member _.heightFitContent = h.MakeStyle("height", "fit-content")
     /// The intrinsic preferred height.
-    [<Experimental("This is an experimental API that should not be used in production code.")>]
     member _.heightMaxContent = h.MakeStyle("height", "max-content")
     /// The intrinsic minimum height.
-    [<Experimental("This is an experimental API that should not be used in production code.")>]
     member _.heightMinContent = h.MakeStyle("height", "min-content")
 
     member _.maxHeight(value: int) = h.MakeStyle("max-height", asString value + "px")
@@ -161,17 +156,10 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     member _.maxHeightInheritFromParent = h.MakeStyle("max-height", "inherit")
     /// Sets this property to its default value.
     member _.maxHeightInitial = h.MakeStyle("max-height", "initial")
-    /// Resets this property to its inherited value if it inherits from its parent, and to its initial value if not.
-    member _.maxHeightUnset = h.MakeStyle("max-height", "unset")
-    /// The larger of either the intrinsic minimum height or the smaller of the intrinsic preferred height and the available height
-    [<Experimental("This is an experimental API that should not be used in production code.")>]
-    member _.maxHeightFitContent = h.MakeStyle("max-height", "fit-content")
     /// The intrinsic preferred height.
-    [<Experimental("This is an experimental API that should not be used in production code.")>]
-    member _.maxHeightMaxContent = h.MakeStyle("max-height", "max-content")
+    member _.maxHeightMaxContent = h.MakeStyle("height", "max-content")
     /// The intrinsic minimum height.
-    [<Experimental("This is an experimental API that should not be used in production code.")>]
-    member _.maxHeightMinContent = h.MakeStyle("max-height", "min-content")
+    member _.maxHeightMinContent = h.MakeStyle("height", "min-content")
 
     member _.minHeight(value: int) = h.MakeStyle("min-height", asString value + "px")
     member _.minHeight(value: ICssUnit) = h.MakeStyle("min-height", asString value)
@@ -179,17 +167,10 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     member _.minHeightInheritFromParent = h.MakeStyle("min-height", "inherit")
     /// Sets this property to its default value.
     member _.minHeightInitial = h.MakeStyle("min-height", "initial")
-    /// Resets this property to its inherited value if it inherits from its parent, and to its initial value if not.
-    member _.minHeightUnset = h.MakeStyle("min-height", "unset")
-    /// The larger of either the intrinsic minimum height or the smaller of the intrinsic preferred height and the available height
-    [<Experimental("This is an experimental API that should not be used in production code.")>]
-    member _.minHeightFitContent = h.MakeStyle("min-height", "fit-content")
     /// The intrinsic preferred height.
-    [<Experimental("This is an experimental API that should not be used in production code.")>]
-    member _.minHeightMaxContent = h.MakeStyle("min-height", "max-content")
+    member _.minHeightMaxContent = h.MakeStyle("height", "max-content")
     /// The intrinsic minimum height.
-    [<Experimental("This is an experimental API that should not be used in production code.")>]
-    member _.minHeightMinContent = h.MakeStyle("min-height", "min-content")
+    member _.minHeightMinContent = h.MakeStyle("height", "min-content")
 
     /// The browser determines the justification algorithm
     member _.textJustifyAuto = h.MakeStyle("text-justify", "auto")
@@ -710,7 +691,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     member _.borderSpacingInitial = h.MakeStyle("border-spacing", "initial")
     /// Inherits this property from its parent element.
     member _.borderSpacingInheritFromParent = h.MakeStyle("border-spacing", "inherit")
-    member _.borderSpacingUnset = h.MakeStyle("border-spacing", "unset")
 
     /// Sets the size of the element's background image.
     ///
@@ -1062,9 +1042,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     member _.outlineStyleInitial = h.MakeStyle("outline-style", "initial")
     /// Inherits this property from its parent element
     member _.outlineStyleInheritFromParent = h.MakeStyle("outline-style", "inherit")
-    /// Resets to its inherited value if the property naturally inherits from its parent,
-    /// and to its initial value if not.
-    member _.outlineStyleUnset = h.MakeStyle("outline-style", "unset")
 
     /// Sets the initial position for each background image.
     ///
@@ -1460,25 +1437,10 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// padding-right, padding-bottom, and padding-left.
     member _.padding(value: ICssUnit) = h.MakeStyle("padding", asString value)
     /// Sets the padding area for vertical and horizontal axis.
-    member _.padding(vertical: int, horizontal: int) =
-        h.MakeStyle("padding",
-            (asString vertical) + "px " +
-            (asString horizontal) + "px"
-        )
-    /// Sets the padding area for vertical and horizontal axis.
     member _.padding(vertical: ICssUnit, horizontal: ICssUnit) =
         h.MakeStyle("padding",
             (asString vertical) + " " +
             (asString horizontal)
-        )
-    /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
-    /// padding-right, padding-bottom, and padding-left.
-    member _.padding(top: int, right: int, bottom: int, left: int) =
-        h.MakeStyle("padding",
-            (asString top) + "px " +
-            (asString right) + "px " +
-            (asString bottom) + "px " +
-            (asString left) + "px"
         )
     /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
     /// padding-right, padding-bottom, and padding-left.
@@ -1530,54 +1492,15 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     ///
     /// **CSS**
     /// ```css
-    /// grid-template-columns: 199.5px 99.5px 99.5px;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// gridTemplateColumns: [199.5;99.5;99.5]
-    /// ```
-    member _.gridTemplateColumns(value: float list) =
-        let addPixels = fun x -> x + "px"
-        h.MakeStyle("grid-template-columns", (List.map addPixels >> String.concat " ") (value |> List.map asString))
-    /// Sets the width of each individual grid column in pixels.
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-columns: 199.5px 99.5px 99.5px;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// gridTemplateColumns: [|199.5;99.5;99.5|]
-    /// ```
-    member _.gridTemplateColumns(value: float[]) =
-        let addPixels = fun x -> x + "px"
-        h.MakeStyle("grid-template-columns", (Array.map addPixels >> String.concat " ") (value |> Array.map asString))
-    /// Sets the width of each individual grid column in pixels.
-    ///
-    /// **CSS**
-    /// ```css
     /// grid-template-columns: 100px 200px 100px;
     /// ```
     /// **F#**
     /// ```f#
     /// gridTemplateColumns: [100; 200; 100]
     /// ```
-    member _.gridTemplateColumns(value: int list) =
+    member _.gridTemplateColumns(value: int seq) =
         let addPixels = fun x -> x + "px"
-        h.MakeStyle("grid-template-columns", (List.map addPixels >> String.concat " ") (value |> List.map asString))
-    /// Sets the width of each individual grid column in pixels.
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-columns: 100px 200px 100px;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// gridTemplateColumns: [|100; 200; 100|]
-    /// ```
-    member _.gridTemplateColumns(value: int[]) =
-        let addPixels = fun x -> x + "px"
-        h.MakeStyle("grid-template-columns", (Array.map addPixels >> String.concat " ") (value |> Array.map asString))
+        h.MakeStyle("grid-template-columns", value |> Seq.map (asString >> addPixels) |> String.concat " ")
     /// Sets the width of each individual grid column.
     ///
     /// **CSS**
@@ -1588,20 +1511,8 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// gridTemplateColumns: [length.fr 1; length.fr 1; length.fr 2]
     /// ```
-    member _.gridTemplateColumns(value: ICssUnit list) =
-        h.MakeStyle("grid-template-columns", String.concat " " (value |> List.map asString))
-    /// Sets the width of each individual grid column.
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-columns: 1fr 1fr 2fr;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// gridTemplateColumns: [|length.fr 1; length.fr 1; length.fr 2|]
-    /// ```
-    member _.gridTemplateColumns(value: ICssUnit[]) =
-        h.MakeStyle("grid-template-columns", String.concat " " (value |> Array.map asString))
+    member _.gridTemplateColumns(value: ICssUnit seq) =
+        h.MakeStyle("grid-template-columns", value |> Seq.map asString |> String.concat " ")
     /// Sets the width of each individual grid column. It can also name the lines between them
     /// There can be multiple names for the same line
     ///
@@ -1619,109 +1530,8 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     ///     grid.namedLine "second-line-end"
     /// ]
     /// ```
-    member _.gridTemplateColumns(value: IGridTemplateItem list) =
-        h.MakeStyle("grid-template-columns", String.concat " " (value |> List.map asString))
-    /// Sets the width of each individual grid column. It can also name the lines between them
-    /// There can be multiple names for the same line
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-columns: [first-line] auto [first-line-end second-line-start] 100px [second-line-end];
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateColumns [|
-    ///     grid.namedLine "first-line"
-    ///     grid.templateWidth length.auto
-    ///     grid.namedLines [|"first-line-end second-line-start"|]
-    ///     grid.templateWidth 100
-    ///     grid.namedLine "second-line-end"
-    /// |]
-    /// ```
-    member _.gridTemplateColumns(value: IGridTemplateItem[]) =
-        h.MakeStyle("grid-template-columns", String.concat " " (value |> Array.map asString))
-    /// Sets the width of a number of grid columns to the defined width in pixels
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-columns: repeat(3, 99.5px);
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateColumns (3, 99.5)
-    /// ```
-    member _.gridTemplateColumns(count: int, size: float) =
-        h.MakeStyle("grid-template-columns",
-            "repeat(" +
-            (asString count) + ", " +
-            (asString size) + "px)"
-        )
-    /// Sets the width of a number of grid columns to the defined width in pixels
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-columns: repeat(3, 100px);
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateColumns (3, 100)
-    /// ```
-    member _.gridTemplateColumns(count: int, size: int) =
-        h.MakeStyle("grid-template-columns",
-            "repeat(" +
-            (asString count) + ", " +
-            (asString size) + "px)"
-        )
-    /// Sets the width of a number of grid columns to the defined width
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-columns: repeat(3, 1fr);
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateColumns (3, length.fr 1)
-    /// ```
-    member _.gridTemplateColumns(count: int, size: ICssUnit) =
-        h.MakeStyle("grid-template-columns",
-            "repeat(" +
-            (asString count) + ", " +
-            (asString size) + ")"
-        )
-    /// Sets the width of a number of grid columns to the defined width in pixels, as well as naming the lines between them
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-columns: repeat(3, 1.5px [col-start]);
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateColumns (3, 1.5, "col-start")
-    /// ```
-    member _.gridTemplateColumns(count: int, size: float, areaName: string) =
-        h.MakeStyle("grid-template-columns",
-            "repeat(" +
-            (asString count) + ", " +
-            (asString size) + "px [" +
-            areaName + "])"
-        )
-    /// Sets the width of a number of grid columns to the defined width in pixels, as well as naming the lines between them
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-columns: repeat(3, 10px [col-start]);
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateColumns (3, 10, "col-start")
-    /// ```
-    member _.gridTemplateColumns(count: int, size: int, areaName: string) =
-        h.MakeStyle("grid-template-columns",
-            "repeat(" +
-            (asString count) + ", " +
-            (asString size) + "px [" +
-            areaName + "])"
-        )
+    member _.gridTemplateColumns(value: IGridTemplateItem seq) =
+        h.MakeStyle("grid-template-columns", value |> Seq.map asString |> String.concat " ")
     /// Sets the width of a number of grid columns to the defined width, as well as naming the lines between them
     ///
     /// **CSS**
@@ -1732,39 +1542,13 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridTemplateColumns (3, length.fr 1, "col-start")
     /// ```
-    member _.gridTemplateColumns(count: int, size: ICssUnit, areaName: string) =
+    member _.gridTemplateColumns(count: int, size: ICssUnit, ?areaName: string) =
+        let areaName = match areaName with Some n -> " [" + n + "]" | None -> ""
         h.MakeStyle("grid-template-columns",
             "repeat(" +
             (asString count) + ", " +
-            (asString size) + " [" +
-            areaName + "])"
+            (asString size) + areaName + ")"
         )
-    /// Sets the width of a number of grid rows to the defined width in pixels
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-rows: 99.5px 199.5px 99.5px;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateRows [99.5; 199.5; 99.5]
-    /// ```
-    member _.gridTemplateRows(value: float list) =
-        let addPixels = (fun x -> x + "px")
-        h.MakeStyle("grid-template-rows", (List.map addPixels >> String.concat " ") (value |> List.map asString))
-    /// Sets the width of a number of grid rows to the defined width in pixels
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-rows: 99.5px 199.5px 99.5px;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateRows [|99.5; 199.5; 99.5|]
-    /// ```
-    member _.gridTemplateRows(value: float[]) =
-        let addPixels = (fun x -> x + "px")
-        h.MakeStyle("grid-template-rows", (Array.map addPixels >> String.concat " ") (value |> Array.map asString))
     /// Sets the width of a number of grid rows to the defined width
     ///
     /// **CSS**
@@ -1775,22 +1559,9 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridTemplateRows [100, 200, 100]
     /// ```
-    member _.gridTemplateRows(value: int list) =
+    member _.gridTemplateRows(value: int seq) =
         let addPixels = (fun x -> x + "px")
-        h.MakeStyle("grid-template-rows", (List.map addPixels >> String.concat " ") (value |> List.map asString))
-    /// Sets the width of a number of grid rows to the defined width in pixels
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-rows: 100px 200px 100px;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateRows [|100; 200; 100|]
-    /// ```
-    member _.gridTemplateRows(value: int[]) =
-        let addPixels = (fun x -> x + "px")
-        h.MakeStyle("grid-template-rows", (Array.map addPixels >> String.concat " ") (value |> Array.map asString))
+        h.MakeStyle("grid-template-rows", value |> Seq.map (asString >> addPixels) |> String.concat " ")
     /// Sets the width of a number of grid rows to the defined width
     ///
     /// **CSS**
@@ -1801,20 +1572,8 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridTemplateRows [length.fr 1; length.percent 10; length.px 250; length.auto]
     /// ```
-    member _.gridTemplateRows(value: ICssUnit list) =
-        h.MakeStyle("grid-template-rows", String.concat " " (value |> List.map asString))
-    /// Sets the width of a number of grid rows to the defined width
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-rows: 1fr 10% 250px auto;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateRows [|length.fr 1; length.percent 10; length.px 250; length.auto|]
-    /// ```
-    member _.gridTemplateRows(value: ICssUnit[]) =
-        h.MakeStyle("grid-template-rows", String.concat " " (value |> Array.map asString))
+    member _.gridTemplateRows(value: ICssUnit seq) =
+        h.MakeStyle("grid-template-rows", value |> Seq.map asString |> String.concat " ")
     /// Sets the width of a number of grid rows to the defined width as well as naming the spaces between
     ///
     /// **CSS**
@@ -1831,58 +1590,8 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     ///     grid.namedLine "row-2-end"
     /// ]
     /// ```
-    member _.gridTemplateRows(value: IGridTemplateItem list) =
-        h.MakeStyle("grid-template-rows", String.concat " " (value |> List.map asString))
-    /// Sets the width of a number of grid rows to the defined width as well as naming the spaces between
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-rows: [row-1-start] 1fr [row-1-end row-2-start] 1fr [row-2-end];
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateRows [|
-    ///     grid.namedLine "row-1-start"
-    ///     grid.templateWidth (length.fr 1)
-    ///     grid.namedLines [|"row-1-end"; "row-2-start"|]
-    ///     grid.templateWidth (length.fr 1)
-    ///     grid.namedLine "row-2-end"
-    /// |]
-    /// ```
-    member _.gridTemplateRows(value: IGridTemplateItem[]) =
-        h.MakeStyle("grid-template-rows", String.concat " " (value |> Array.map asString))
-    /// Sets the width of a number of grid rows to the defined width in pixels
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-rows: repeat(3, 199.5);
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateRows (3, 199.5)
-    /// ```
-    member _.gridTemplateRows(count: int, size: float) =
-        h.MakeStyle("grid-template-rows",
-            "repeat("+
-            (asString count) + ", " +
-            (asString size) + "px)"
-        )
-    /// Sets the width of a number of grid rows to the defined width in pixels
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-rows: repeat(3, 100px);
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateRows (3, 100)
-    /// ```
-    member _.gridTemplateRows(count: int, size: int) =
-        h.MakeStyle("grid-template-rows",
-            "repeat("+
-            (asString count) + ", " +
-            (asString size) + "px)"
-        )
+    member _.gridTemplateRows(value: IGridTemplateItem seq) =
+        h.MakeStyle("grid-template-rows", value |> Seq.map asString |> String.concat " ")
     /// Sets the width of a number of grid rows to the defined width
     ///
     /// **CSS**
@@ -1893,62 +1602,12 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridTemplateRows (3, length.percent 10)
     /// ```
-    member _.gridTemplateRows(count: int, size: ICssUnit) =
+    member _.gridTemplateRows(count: int, size: ICssUnit, ?areaName: string) =
+        let areaName = match areaName with Some n -> " [" + n + "]" | None -> ""
         h.MakeStyle("grid-template-rows",
             "repeat("+
             (asString count) + ", " +
-            (asString size) + ")"
-        )
-    /// Sets the width of a number of grid rows to the defined width in pixels as well as naming the spaces between
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-rows: repeat(3, 75.5, [row]);
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateRows (3, 75.5, "row")
-    /// ```
-    member _.gridTemplateRows(count: int, size: float, areaName: string) =
-        h.MakeStyle("grid-template-rows",
-            "repeat("+
-            (asString count) + ", " +
-            (asString size) + "px [" +
-            areaName + "])"
-        )
-    /// Sets the width of a number of grid rows to the defined width in pixels as well as naming the spaces between
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-rows: repeat(3, 100px, [row]);
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateRows (3, 100, "row")
-    /// ```
-    member _.gridTemplateRows(count: int, size: int, areaName: string) =
-        h.MakeStyle("grid-template-rows",
-            "repeat("+
-            (asString count) + ", " +
-            (asString size) + "px [" +
-            areaName + "])"
-        )
-    /// Sets the width of a number of grid rows to the defined width in pixels as well as naming the spaces between
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-rows: repeat(3, 10%, [row]);
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateRows (3, length.percent 10, "row")
-    /// ```
-    member _.gridTemplateRows(count: int, size: ICssUnit, areaName: string) =
-        h.MakeStyle("grid-template-rows",
-            "repeat("+
-            (asString count) + ", " +
-            (asString size) + " [" +
-            areaName + "])"
+            (asString size) + areaName + ")"
         )
     /// 2D representation of grid layout as blocks with names
     ///
@@ -2004,35 +1663,9 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridTemplateAreas ["first"; "second"; "third"; "fourth"]
     /// ```
-    member _.gridTemplateAreas(value: string list) =
-        let block = (String.concat " ") value
+    member _.gridTemplateAreas(value: string seq) =
+        let block = String.concat " " value
         h.MakeStyle("grid-template-areas", "'" + block + "'")
-    /// One-dimensional alternative to the nested list. For column-based layouts
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-template-areas: 'first second third fourth';
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridTemplateAreas [|"first"; "second"; "third"; "fourth"|]
-    /// ```
-    member _.gridTemplateAreas(value: string[]) =
-        let block = (String.concat " ") value
-        h.MakeStyle("grid-template-areas", "'" + block + "'")
-    /// Specifies the size of the grid lines. You can think of it like
-    /// setting the width of the gutters between the columns.
-    ///
-    /// **CSS**
-    /// ```css
-    /// column-gap: 1.5px;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.columnGap 1.5
-    /// ```
-    member _.columnGap(value: float) =
-        h.MakeStyle("column-gap", asString value + "px")
     /// Specifies the size of the grid lines. You can think of it like
     /// setting the width of the gutters between the columns.
     ///
@@ -2059,19 +1692,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```
     member _.columnGap(value: ICssUnit) =
         h.MakeStyle("column-gap", asString value)
-    /// Specifies the size of the grid lines. You can think of it like
-    /// setting the width of the gutters between the rows.
-    ///
-    /// **CSS**
-    /// ```css
-    /// row-gap: 2.5px;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.rowGap 2.5
-    /// ```
-    member _.rowGap(value: float) =
-        h.MakeStyle("row-gap", asString value + "px")
     /// Specifies the size of the grid lines. You can think of it like
     /// setting the width of the gutters between the rows.
     ///
@@ -2115,150 +1735,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
         h.MakeStyle("gap",
             (asString rowGap) + " " +
             (asString columnGap)
-        )
-    /// Specifies the size of the grid lines. You can think of it like
-    /// setting the width of the gutters between the rows/columns.
-    ///
-    /// _Shorthand for `rowGap` and `columnGap`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// gap: 1em 3.5px;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gap (length.em 1, 3.5)
-    /// ```
-    member _.gap(rowGap: ICssUnit, columnGap: float) =
-        h.MakeStyle("gap",
-            (asString rowGap) + " " +
-            (asString columnGap) + "px"
-        )
-    /// Specifies the size of the grid lines. You can think of it like
-    /// setting the width of the gutters between the rows/columns.
-    ///
-    /// _Shorthand for `rowGap` and `columnGap`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// gap: 1em 10px;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gap (length.em 1, 10)
-    /// ```
-    member _.gap(rowGap: ICssUnit, columnGap: int) =
-        h.MakeStyle("gap",
-            (asString rowGap) + " " +
-            (asString columnGap) + "px"
-        )
-    /// Specifies the size of the grid lines. You can think of it like
-    /// setting the width of the gutters between the rows/columns.
-    ///
-    /// _Shorthand for `rowGap` and `columnGap`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// gap: 10px 1em;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gap (10, length.em 1)
-    /// ```
-    member _.gap(rowGap: int, columnGap: ICssUnit) =
-        h.MakeStyle("gap",
-            (asString rowGap) + "px " +
-            (asString columnGap)
-        )
-    /// Specifies the size of the grid lines. You can think of it like
-    /// setting the width of the gutters between the rows/columns.
-    ///
-    /// _Shorthand for `rowGap` and `columnGap`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// gap: 10px 1.5px;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gap (10, 1.5)
-    /// ```
-    member _.gap(rowGap: int, columnGap: float) =
-        h.MakeStyle("gap",
-            (asString rowGap) + "px " +
-            (asString columnGap) + "px"
-        )
-    /// Specifies the size of the grid lines. You can think of it like
-    /// setting the width of the gutters between the rows/columns.
-    ///
-    /// _Shorthand for `rowGap` and `columnGap`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// gap: 10px 15px;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gap (10, 15)
-    /// ```
-    member _.gap(rowGap: int, columnGap: int) =
-        h.MakeStyle("gap",
-            (asString rowGap) + "px " +
-            (asString columnGap) + "px"
-        )
-    /// Specifies the size of the grid lines. You can think of it like
-    /// setting the width of the gutters between the rows/columns.
-    ///
-    /// _Shorthand for `rowGap` and `columnGap`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// gap: 2.5px 15%;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gap (2.5, length.percent 15)
-    /// ```
-    member _.gap(rowGap: float, columnGap: ICssUnit) =
-        h.MakeStyle("gap",
-            (asString rowGap) + "px " +
-            (asString columnGap)
-        )
-    /// Specifies the size of the grid lines. You can think of it like
-    /// setting the width of the gutters between the rows/columns.
-    ///
-    /// _Shorthand for `rowGap` and `columnGap`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// gap: 1.5px 1.5px;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gap (1.5, 1.5)
-    /// ```
-    member _.gap(rowGap: float, columnGap: float) =
-        h.MakeStyle("gap",
-            (asString rowGap) + "px " +
-            (asString columnGap) + "px"
-        )
-    /// Specifies the size of the grid lines. You can think of it like
-    /// setting the width of the gutters between the rows/columns.
-    ///
-    /// _Shorthand for `rowGap` and `columnGap`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// gap: 1.5px 10px;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gap (1.5, 10)
-    /// ```
-    member _.gap(rowGap: float, columnGap: int) =
-        h.MakeStyle("gap",
-            (asString rowGap) + "px " +
-            (asString columnGap) + "px"
         )
     /// Sets where an item in the grid starts
     /// The value can be one of the following options:
@@ -3324,7 +2800,7 @@ module color =
         "hsl(" + (string hue) + "," + (string saturation) + "%," + (string lightness) + "%)"
     let rgb (r: int, g: int, b: int) =
         "rgb(" + (string r) + "," + (string g) + "," + (string b) + ")"
-    let rgba (r: int, g: int, b: int, a) =
+    let rgba (r: int, g: int, b: int, a: float) =
         "rgba(" + (string r) + "," + (string g) + "," + (string b) + "," + (string a) + ")"
     let [<Literal>] indianRed = "#CD5C5C"
     let [<Literal>] lightCoral = "#F08080"
