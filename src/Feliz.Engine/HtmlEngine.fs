@@ -25,6 +25,11 @@ module internal HtmlHelperExtensions =
 open HtmlHelperExtensions
 
 type HtmlEngine<'Node>(h: HtmlHelper<'Node>) =
+    /// Create a custom element
+    ///
+    /// You generally shouldn't need to use this, if you notice an element missing please submit an issue.
+    member _.custom (key: string, value: string) = h.MakeNode(key, value)
+
     member _.a (children: seq<'Node>) = h.MakeNode("a", children)
 
     member _.abbr (value: float) = h.MakeNode("abbr", value)

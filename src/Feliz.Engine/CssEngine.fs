@@ -112,6 +112,9 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
         CssEngine { new CssHelper<'Style> with
                         member _.MakeStyle(k, v) = f k v }
 
+    /// Define a custom property
+    member _.custom(key: string, value: string) = h.MakeStyle(key, value)
+
     member _.boxShadow(value: string) = h.MakeStyle("box-shadow", value)
 
     member _.boxShadow(horizontalOffset: int, verticalOffset: int, color: string) =
@@ -2534,8 +2537,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     member _.right(value: int) = h.MakeStyle("right", asString value + "px")
     /// Specifies the horizontal position of a positioned element. It has no effect on non-positioned elements.
     member _.right(value: ICssUnit) = h.MakeStyle("right", asString value)
-    /// Define a custom attribute of via key value pair
-    member _.custom(key: string, value: string) = h.MakeStyle(key, value)
+
     /// Sets an element's bottom border. It sets the values of border-bottom-width,
     /// border-bottom-style and border-bottom-color.
     member _.borderBottom(width: int, style: IBorderStyle, color: string) =
