@@ -40,8 +40,8 @@ type Helper() =
         styleModule
         eventListenersModule
     |]
-    static member inline AsNode(el: Browser.Types.HTMLElement) = unbox el
     static member Empty: VNode = unbox null
     static member Text(str: string): VNode = unbox str
-    static member Patch(oldNode, newNode) = patcher.Invoke(oldNode, newNode)
-    static member Thunk(sel: string, key: Guid, renderFn: obj, stateArgs: obj[]) = thunk(sel, key, renderFn, stateArgs)
+    static member Patch(oldNode: VNode, newNode: VNode): unit = patcher.Invoke(oldNode, newNode)
+    static member Patch(el: Browser.Types.HTMLElement, vnode: VNode): unit = patcher.Invoke(unbox el, vnode)
+    static member Thunk(sel: string, key: Guid, renderFn: obj, stateArgs: obj[]): VNode = thunk(sel, key, renderFn, stateArgs)

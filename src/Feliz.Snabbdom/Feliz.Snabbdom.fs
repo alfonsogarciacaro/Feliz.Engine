@@ -101,14 +101,6 @@ type Extensions() =
     static member destroy(e: CssEngine<Node>, nodes: Node seq) =
         withStyleHook StyleHook.Destroy nodes
 
-module internal Util =
-    let inline getKey x = (^a: (member Id: Guid) x)
-
-    let patch oldVNode node =
-        let newVNode = node |> Node.AsVNode
-        Helper.Patch(oldVNode, newVNode)
-        newVNode
-
 let private h = Helper()
 
 let Html = HtmlEngine(h)
@@ -116,7 +108,6 @@ let Attr = AttrEngine(h)
 let Css = CssEngine(h)
 let Ev = EventEngine(h)
 
-// TODO: Other hooks https://github.com/snabbdom/snabbdom#hooks
 module Hook =
     /// the patch process begins
     let pre (f: unit -> unit) = Hook("pre", f)
@@ -139,29 +130,9 @@ module Hook =
     /// the patch process is done
     let post (f: unit -> unit) = Hook("post", f)
 
-module Elmish =
-    type Cmd<'Msg> = (('Msg -> unit) -> unit) list
-
-    let mount (init: unit -> 'Model * Cmd<'Msg>) update view node =
-        let mutable tree = Unchecked.defaultof<_>
-        let m, cmd = init()
-        let mutable state = m
-
-        let rec dispatch msg =
-            state <- update msg state
-            tree <- view state dispatch |> Util.patch tree
-
-        tree <- view state dispatch |> Node.AsVNode
-        Helper.Patch(node, tree)
-        for cmd in cmd do
-            cmd dispatch
-
-    let app id (init: unit -> 'Model * Cmd<'Msg>) update view =
-        Browser.Dom.document.getElementById(id)
-        |> Helper.AsNode
-        |> mount init update view
-
 let key k = Key k
 
+let inline getId x = (^a: (member Id: Guid) x)
+
 let inline memoize (render: 'Model -> Node) model =
-    Helper.Thunk("memo", (Util.getKey model), (fun m -> render m |> Node.AsVNode), [|model|]) |> El
+    Helper.Thunk("memo", (getId model), (fun m -> render m |> Node.AsVNode), [|model|]) |> El

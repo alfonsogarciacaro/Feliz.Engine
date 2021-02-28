@@ -6,7 +6,7 @@
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Feliz.Snabbdom\Feliz.Snabbdom.fsproj" />
+    <ProjectReference Include="..\..\src\Elmish.Snabbdom\Elmish.Snabbdom.fsproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Fable.Core" Version="3.2.4" />

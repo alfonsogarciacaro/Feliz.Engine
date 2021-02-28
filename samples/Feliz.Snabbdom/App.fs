@@ -3,6 +3,8 @@ module App
 open System
 open Fable.Core
 open Browser.Types
+open Elmish
+open Elmish.Snabbdom
 open Feliz
 open Feliz.Snabbdom
 
@@ -11,6 +13,8 @@ module Clock =
     { Elapsed: TimeSpan }
 
   type Msg = Tick
+
+  let init() = { Elapsed = TimeSpan() }
 
   let update msg model =
     match msg with
@@ -21,23 +25,17 @@ module Clock =
       Html.text (model.Elapsed.ToString("c", Globalization.CultureInfo.InvariantCulture))
     ]
 
+  let subscribe _model dispatch =
+    let intervalId = JS.setInterval (fun _ -> dispatch Tick) 1000
+    printfn "Set interval %i" intervalId
+    { new IDisposable with
+        member _.Dispose() =
+          printfn "Clear interval %i" intervalId
+          JS.clearInterval intervalId }
+
   let mount () =
-    let intervalId = ref 0
-
-    let init() =
-        { Elapsed = TimeSpan() }, [fun dispatch ->
-          intervalId := JS.setInterval (fun _ ->
-            // printfn "Tick %i" !intervalId
-            dispatch Tick) 1000
-          // printfn "Set interval %i" !intervalId
-        ]
-
-    Html.div [
-      Hook.insert (Elmish.mount init update view)
-      Hook.destroy (fun _ ->
-        // printfn "Clear interval %i" !intervalId
-        JS.clearInterval !intervalId)
-    ]
+    Program.mkSimple init update view
+    |> Program.mountOnDisposableVNode subscribe
 
 type Todo = {
   Id : Guid
@@ -71,7 +69,7 @@ let init() =
     ]
     NewTodo = ""
     Timeout = false
-  }, []
+  }
 
 let update (msg: Msg) (state: State) =
   match msg with
@@ -296,4 +294,6 @@ let view (state: State) (dispatch: Msg -> unit) =
     todoList state dispatch
   ]
 
-Elmish.app "app-container" init update view
+Program.mkSimple init update view
+|> Program.mountWithId "app-container"
+|> Program.run
