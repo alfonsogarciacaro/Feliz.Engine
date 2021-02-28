@@ -2271,7 +2271,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
 
     /// Set an element's left border.
     member _.borderLeft(width: ICssUnit, style: IBorderStyle, color: string) =
-        h.MakeStyle("border-bottom",
+        h.MakeStyle("border-left",
             (asString width) + " " +
             (asString style) + " " +
             color
