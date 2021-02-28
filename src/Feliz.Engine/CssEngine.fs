@@ -115,6 +115,22 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// Define a custom property
     member _.custom(key: string, value: string) = h.MakeStyle(key, value)
 
+    /// Specifies that all the element's properties should be changed to their initial values.
+    member _.allInitial = h.MakeStyle("all", "initial")
+    /// Specifies that all the element's properties should be changed to their inherited values.
+    member _.allInherit = h.MakeStyle("all", "inherit")
+    /// Specifies that all the element's properties should be changed to their inherited values if they inherit by default, or to their initial values if not.
+    member _.allUnset = h.MakeStyle("all", "unset")
+    /// Specifies behavior that depends on the stylesheet origin to which the declaration belongs:
+    ///
+    /// User-agent origin
+    ///     Equivalent to unset.
+    /// User origin
+    ///     Rolls back the cascade to the user-agent level, so that the specified values are calculated as if no author-level or user-level rules were specified for the element.
+    /// Author origin
+    ///     Rolls back the cascade to the user level, so that the specified values are calculated as if no author-level rules were specified for the element. For purposes of revert, the Author origin includes the Override and Animation origins.
+    member _.allRevert = h.MakeStyle("all", "revert")
+
     member _.boxShadow(value: string) = h.MakeStyle("box-shadow", value)
 
     member _.boxShadow(horizontalOffset: int, verticalOffset: int, color: string) =
@@ -188,20 +204,20 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     member _.textJustifyInheritFromParent = h.MakeStyle("text-justify", "inherit")
 
     /// Sequences of whitespace will collapse into a single whitespace. Text will wrap when necessary. This is default.
-    member _. normal = h.MakeStyle("white-space", "normal")
+    member _. whiteSpaceNormal = h.MakeStyle("white-space", "normal")
     /// Sequences of whitespace will collapse into a single whitespace. Text will never wrap to the next line.
     /// The text continues on the same line until a `<br> ` tag is encountered.
-    member _. nowrap = h.MakeStyle("white-space", "nowrap")
+    member _. whiteSpaceNowrap = h.MakeStyle("white-space", "nowrap")
     /// Whitespace is preserved by the browser. Text will only wrap on line breaks. Acts like the <pre> tag in HTML.
-    member _. pre = h.MakeStyle("white-space", "pre")
+    member _. whiteSpacePre = h.MakeStyle("white-space", "pre")
     /// Sequences of whitespace will collapse into a single whitespace. Text will wrap when necessary, and on line breaks
-    member _. preline = h.MakeStyle("white-space", "pre-line")
+    member _. whiteSpacePreLine = h.MakeStyle("white-space", "pre-line")
     /// Whitespace is preserved by the browser. Text will wrap when necessary, and on line breaks
-    member _. prewrap = h.MakeStyle("white-space", "pre-wrap")
+    member _. whiteSpacePreWrap = h.MakeStyle("white-space", "pre-wrap")
     /// Sets this property to its default value.
-    member _. initial = h.MakeStyle("white-space", "initial")
+    member _. whiteSpaceInitial = h.MakeStyle("white-space", "initial")
     /// Inherits this property from its parent element.
-    member _. inheritFromParent = h.MakeStyle("white-space", "inherit")
+    member _. whiteSpaceInheritFromParent = h.MakeStyle("white-space", "inherit")
 
     /// Default value. Uses default line break rules.
     member _.wordbreakNormal = h.MakeStyle("word-break", "normal")
@@ -1248,7 +1264,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// The element is positioned relative to its first positioned (not static) ancestor element.
     member _.positionAbsolute = h.MakeStyle("position", "absolute")
     /// The element is positioned relative to the browser window
-    member _.positionFixedRelativeToWindow = h.MakeStyle("position", "fixed")
+    member _.positionFixed = h.MakeStyle("position", "fixed")
     /// The element is positioned relative to its normal position, so "left:20px" adds 20 pixels to the element's LEFT position.
     member _.positionRelative = h.MakeStyle("position", "relative")
     /// The element is positioned based on the user's scroll position
@@ -1735,6 +1751,11 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
         h.MakeStyle("gap",
             (asString rowGap) + " " +
             (asString columnGap)
+        )
+    member _.gap(rowColumnGap: ICssUnit) =
+        h.MakeStyle("gap",
+            (asString rowColumnGap) + " " +
+            (asString rowColumnGap)
         )
     /// Sets where an item in the grid starts
     /// The value can be one of the following options:
@@ -2250,7 +2271,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
 
     /// Set an element's left border.
     member _.borderLeft(width: ICssUnit, style: IBorderStyle, color: string) =
-        h.MakeStyle("border-bottom",
+        h.MakeStyle("border-left",
             (asString width) + " " +
             (asString style) + " " +
             color
