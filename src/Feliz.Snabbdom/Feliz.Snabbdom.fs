@@ -27,38 +27,47 @@ type Node =
         | _ -> failwith "not a vnode"
 
 type Helper() =
+    member _.MakeNode(tag, nodes) =
+        let rec add (o: obj) keys (v: obj) =
+            match keys with
+            | [] -> failwith "Empty key list"
+            | [key] -> o?(key) <- v
+            | key::keys ->
+                if isNull o?(key) then o?(key) <- obj()
+                add (o?(key)) keys v
+
+        let rec addNodes (props: obj) (children: ResizeArray<_>) (nodes: Node seq) =
+            nodes |> Seq.iter (function
+                | Key k -> props?key <- k
+                | Text s -> children.Add(Helper.Text s)
+                | El vnode -> children.Add(vnode)
+                | Hook(k, v) -> add props ["hook"; k] v
+                | Style(k, v, StyleHook.None) -> add props ["style"; k] v
+                | Style(k, v, StyleHook.Delayed) -> add props ["style"; "delayed"; k] v
+                | Style(k, v, StyleHook.Remove) -> add props ["style"; "remove"; k] v
+                | Style(k, v, StyleHook.Destroy) -> add props ["style"; "destroy"; k] v
+                | Attr(k, v) -> add props ["attrs"; k] v
+                | Event(k, v) -> add props ["on"; k] v
+                | Fragment nodes -> addNodes props children nodes
+            )
+
+        let props = obj()
+        let children = ResizeArray()
+        addNodes props children nodes
+        Snabbdom.h(tag, props, children) |> El
+
+    member _.StringToNode(v) = Text v
+    member _.EmptyNode = Fragment []
+
     interface HtmlHelper<Node> with
-        member _.MakeNode(tag, nodes) =
-            let rec add (o: obj) keys (v: obj) =
-                match keys with
-                | [] -> failwith "Empty key list"
-                | [key] -> o?(key) <- v
-                | key::keys ->
-                    if isNull o?(key) then o?(key) <- obj()
-                    add (o?(key)) keys v
+        member this.MakeNode(tag, nodes) = this.MakeNode(tag, nodes)
+        member this.StringToNode(v) = this.StringToNode(v)
+        member this.EmptyNode = this.EmptyNode
 
-            let rec addNodes (props: obj) (children: ResizeArray<_>) (nodes: Node seq) =
-                nodes |> Seq.iter (function
-                    | Key k -> props?key <- k
-                    | Text s -> children.Add(Helper.Text s)
-                    | El vnode -> children.Add(vnode)
-                    | Hook(k, v) -> add props ["hook"; k] v
-                    | Style(k, v, StyleHook.None) -> add props ["style"; k] v
-                    | Style(k, v, StyleHook.Delayed) -> add props ["style"; "delayed"; k] v
-                    | Style(k, v, StyleHook.Remove) -> add props ["style"; "remove"; k] v
-                    | Style(k, v, StyleHook.Destroy) -> add props ["style"; "destroy"; k] v
-                    | Attr(k, v) -> add props ["attrs"; k] v
-                    | Event(k, v) -> add props ["on"; k] v
-                    | Fragment nodes -> addNodes props children nodes
-                )
-
-            let props = obj()
-            let children = ResizeArray()
-            addNodes props children nodes
-            Snabbdom.h(tag, props, children) |> El
-
-        member _.StringToNode(v) = Text v
-        member _.EmptyNode = Fragment []
+    interface SvgHelper<Node> with
+        member this.MakeSvgNode(tag, nodes) = this.MakeNode(tag, nodes)
+        member this.StringToSvgNode(v) = this.StringToNode(v)
+        member this.EmptySvgNode = this.EmptyNode
 
     interface AttrHelper<Node> with
         member _.MakeAttr(key, value) = Attr(key, value)
@@ -92,6 +101,14 @@ type Extensions() =
     static member destroy(e: CssEngine<Node>, nodes: Node seq) =
         withStyleHook StyleHook.Destroy nodes
 
+module internal Util =
+    let inline getKey x = (^a: (member Id: Guid) x)
+
+    let patch oldVNode node =
+        let newVNode = node |> Node.AsVNode
+        Helper.Patch(oldVNode, newVNode)
+        newVNode
+
 let private h = Helper()
 
 let Html = HtmlEngine(h)
@@ -121,14 +138,6 @@ module Hook =
     let remove (f: VNode -> (unit -> unit) -> unit) = Hook("remove", f)
     /// the patch process is done
     let post (f: unit -> unit) = Hook("post", f)
-
-module internal Util =
-    let inline getKey x = (^a: (member Id: Guid) x)
-
-    let patch oldVNode node =
-        let newVNode = node |> Node.AsVNode
-        Helper.Patch(oldVNode, newVNode)
-        newVNode
 
 module Elmish =
     type Cmd<'Msg> = (('Msg -> unit) -> unit) list

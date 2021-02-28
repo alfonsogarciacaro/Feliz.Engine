@@ -8,7 +8,6 @@
   <ItemGroup>
     <Compile Include="Snabbdom.fs" />
     <Compile Include="Feliz.Snabbdom.fs" />
-    <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="*.fsproj; *.fs; thunk.js" PackagePath="fable\" />

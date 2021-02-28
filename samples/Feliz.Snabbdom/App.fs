@@ -1,6 +1,10 @@
 module App
 
 open System
+open Fable.Core
+open Browser.Types
+open Feliz
+open Feliz.Snabbdom
 
 module Clock =
   type Model =
@@ -11,9 +15,6 @@ module Clock =
   let update msg model =
     match msg with
     | Tick -> { model with Elapsed = model.Elapsed + TimeSpan.FromSeconds 1. }
-
-  open Fable.Core
-  open Feliz.Snabbdom
 
   let view model _dispatch =
     Html.p [
@@ -131,10 +132,6 @@ let update (msg: Msg) (state: State) =
       let todos = state.TodoList |> List.map (fun t ->
         { t with Editing = t.Editing |> Option.map (fun _ -> newText) })
       { state with TodoList = todos }
-
-open Browser.Types
-open Feliz
-open Feliz.Snabbdom
 
 // Helper function to easily construct div with only classes and children
 let div (classes: string list) (children: Node list) =
