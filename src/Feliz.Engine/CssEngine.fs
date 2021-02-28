@@ -1479,9 +1479,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     member _.flexBasis (value: int) = h.MakeStyle("flex-basis", asString value + "px")
     /// Sets the initial main size of a flex item. It sets the size of the content box unless
     /// otherwise set with box-sizing.
-    member _.flexBasis (value: float) = h.MakeStyle("flex-basis", asString value + "px")
-    /// Sets the initial main size of a flex item. It sets the size of the content box unless
-    /// otherwise set with box-sizing.
     member _.flexBasis (value: ICssUnit) = h.MakeStyle("flex-basis", asString value)
     /// Sets the flex grow factor of a flex item main size. It specifies how much of the remaining
     /// space in the flex container should be assigned to the item (the flex grow factor).
@@ -1747,23 +1744,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// - span over a specified number of lines
     ///
     ///
-    /// **CSS**
-    /// ```css
-    /// grid-column-start: col2;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridColumnStart "col2"
-    /// ```
-    member _.gridColumnStart(value: string) = h.MakeStyle("grid-column-start", asString value)
-    /// Sets where an item in the grid starts
-    /// The value can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
     /// When there are multiple named lines with the same name, you can specify which one by count
     ///
     /// **CSS**
@@ -1774,7 +1754,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridColumnStart ("col", 2)
     /// ```
-    member _.gridColumnStart(value: string, count: int) =
+    member _.gridColumnStart(value: string, ?count: int) =
         h.MakeStyle("grid-column-start", asString value + " " + (asString count))
     /// Sets where an item in the grid starts
     /// The value can be one of the following options:
@@ -1818,23 +1798,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// - span over a specified number of lines
     ///
     ///
-    /// **CSS**
-    /// ```css
-    /// grid-column-end: col-2;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridColumnEnd "col-2"
-    /// ```
-    member _.gridColumnEnd(value: string) = h.MakeStyle("grid-column-end", asString value)
-    /// Sets where an item in the grid ends
-    /// The value can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
     /// _When there are multiple named lines with the same name, you can specify which one by count_
     ///
     /// **CSS**
@@ -1845,7 +1808,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridColumnEnd ("odd-col", 2)
     /// ```
-    member _.gridColumnEnd(value: string, count: int) =
+    member _.gridColumnEnd(value: string, ?count: int) =
         h.MakeStyle("grid-column-end", asString value + " " + (asString count))
     /// Sets where an item in the grid ends
     /// The value can be one of the following options:
@@ -1891,30 +1854,13 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     ///
     /// **CSS**
     /// ```css
-    /// grid-row-start: col2;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridRowStart "col2"
-    /// ```
-    member _.gridRowStart(value: string) = h.MakeStyle("grid-row-start", asString value)
-    /// Sets where an item in the grid starts
-    /// The value can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
-    /// **CSS**
-    /// ```css
     /// grid-row-start: col 2;
     /// ```
     /// **F#**
     /// ```f#
     /// style.gridRowStart ("col", 2)
     /// ```
-    member _.gridRowStart(value: string, count: int) =
+    member _.gridRowStart(value: string, ?count: int) =
         h.MakeStyle("grid-row-start", asString value + " " + (asString count))
     /// Sets where an item in the grid starts
     /// The value can be one of the following options:
@@ -1958,23 +1904,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// - span over a specified number of lines
     ///
     ///
-    /// **CSS**
-    /// ```css
-    /// grid-row-end: col-2;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridRowEnd "col-2"
-    /// ```
-    member _.gridRowEnd(value: string) = h.MakeStyle("grid-row-end", asString value)
-    /// Sets where an item in the grid ends
-    /// The value can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
     /// _When there are multiple named lines with the same name, you can specify which one by count_
     ///
     /// **CSS**
@@ -1985,7 +1914,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridRowEnd ("odd-col", 2)
     /// ```
-    member _.gridRowEnd(value: string, count: int) =
+    member _.gridRowEnd(value: string, ?count: int) =
         h.MakeStyle("grid-row-end", asString value + " " + (asString count))
     /// Sets where an item in the grid ends
     /// The value can be one of the following options:
@@ -2055,69 +1984,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     ///
     /// **CSS**
     /// ```css
-    /// grid-column: col-2 / 4;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridColumn ("col-2", 4)
-    /// ```
-    member _.gridColumn(start: string, end': int) =
-        h.MakeStyle("grid-column", start + " / " + (asString end'))
-    /// Determines a grid item’s location within the grid by referring to specific grid lines.
-    /// start is the line where the item begins, end' is the line where it ends.
-    /// They can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
-    /// _Shorthand for `gridColumnStart` and `gridColumnEnds`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-column: col-2 / span 2;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridColumn ("col-2", gridColumn.span 2)
-    /// ```
-    member _.gridColumn(start: string, end': IGridSpan) =
-        h.MakeStyle("grid-column", start + " / " + (asString end'))
-    /// Determines a grid item’s location within the grid by referring to specific grid lines.
-    /// start is the line where the item begins, end' is the line where it ends.
-    /// They can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
-    /// _Shorthand for `gridColumnStart` and `gridColumnEnds`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-column: 1/ col-4;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridColumn (1, "col-4")
-    /// ```
-    member _.gridColumn(start: int, end': string) =
-        h.MakeStyle("grid-column", (asString start) + " / " + end')
-    /// Determines a grid item’s location within the grid by referring to specific grid lines.
-    /// start is the line where the item begins, end' is the line where it ends.
-    /// They can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
-    /// _Shorthand for `gridColumnStart` and `gridColumnEnds`_
-    ///
-    /// **CSS**
-    /// ```css
     /// grid-column: 1 / 3;
     /// ```
     /// **F#**
@@ -2125,69 +1991,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.gridColumn (1, 3)
     /// ```
     member _.gridColumn(start: int, end': int) =
-        h.MakeStyle("grid-column", (asString start) + " / " + (asString end'))
-    /// Determines a grid item’s location within the grid by referring to specific grid lines.
-    /// start is the line where the item begins, end' is the line where it ends.
-    /// They can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
-    /// _Shorthand for `gridColumnStart` and `gridColumnEnds`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-column: 1 / span 2;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridColumn (1, gridColumn.span 2)
-    /// ```
-    member _.gridColumn(start: int, end': IGridSpan) =
-        h.MakeStyle("grid-column", (asString start) + " / " + (asString end'))
-    /// Determines a grid item’s location within the grid by referring to specific grid lines.
-    /// start is the line where the item begins, end' is the line where it ends.
-    /// They can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
-    /// _Shorthand for `gridColumnStart` and `gridColumnEnds`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-column: span 2 / col-3;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridColumn (gridColumn.span 2, "col-3")
-    /// ```
-    member _.gridColumn(start: IGridSpan, end': string) =
-        h.MakeStyle("grid-column", (asString start) + " / " + end')
-    /// Determines a grid item’s location within the grid by referring to specific grid lines.
-    /// start is the line where the item begins, end' is the line where it ends.
-    /// They can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
-    /// _Shorthand for `gridColumnStart` and `gridColumnEnds`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-column: span 2 / 4;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridColumn (gridColumn.span 2, 4)
-    /// ```
-    member _.gridColumn(start: IGridSpan, end': int) =
         h.MakeStyle("grid-column", (asString start) + " / " + (asString end'))
     /// Determines a grid item’s location within the grid by referring to specific grid lines.
     /// start is the line where the item begins, end' is the line where it ends.
@@ -2244,69 +2047,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     ///
     /// **CSS**
     /// ```css
-    /// grid-row: row-2 / 4;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridRow ("row-2", 4)
-    /// ```
-    member _.gridRow(start: string, end': int) =
-        h.MakeStyle("grid-row", start + " / " + (asString end'))
-    /// Determines a grid item’s location within the grid by referring to specific grid lines.
-    /// start is the line where the item begins, end' is the line where it ends.
-    /// They can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
-    /// _Shorthand for `gridRowStart` and `gridRowEnds`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-row: row-2 / span "odd-row";
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridRow ("row-2", gridRow.span 2)
-    /// ```
-    member _.gridRow(start: string, end': IGridSpan) =
-        h.MakeStyle("grid-row", start + " / " + (asString end'))
-    /// Determines a grid item’s location within the grid by referring to specific grid lines.
-    /// start is the line where the item begins, end' is the line where it ends.
-    /// They can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
-    /// _Shorthand for `gridRowStart` and `gridRowEnds`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-row: 2 / row-3;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridRow (2, "row-3")
-    /// ```
-    member _.gridRow(start: int, end': string) =
-        h.MakeStyle("grid-row", (asString start) + " / " + end')
-    /// Determines a grid item’s location within the grid by referring to specific grid lines.
-    /// start is the line where the item begins, end' is the line where it ends.
-    /// They can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
-    /// _Shorthand for `gridRowStart` and `gridRowEnds`_
-    ///
-    /// **CSS**
-    /// ```css
     /// grid-row: 2 / 4;
     /// ```
     /// **F#**
@@ -2314,69 +2054,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.gridRow (2, 4)
     /// ```
     member _.gridRow(start: int, end': int) =
-        h.MakeStyle("grid-row", (asString start) + " / " + (asString end'))
-    /// Determines a grid item’s location within the grid by referring to specific grid lines.
-    /// start is the line where the item begins, end' is the line where it ends.
-    /// They can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
-    /// _Shorthand for `gridRowStart` and `gridRowEnds`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-row: 2 / span 3;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridRow (2, gridRow.span 3)
-    /// ```
-    member _.gridRow(start: int, end': IGridSpan) =
-        h.MakeStyle("grid-row", (asString start) + " / " + (asString end'))
-    /// Determines a grid item’s location within the grid by referring to specific grid lines.
-    /// start is the line where the item begins, end' is the line where it ends.
-    /// They can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
-    /// _Shorthand for `gridRowStart` and `gridRowEnds`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-row: span 2 / "row-4";
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridRow (gridRow.span 2, "row-4")
-    /// ```
-    member _.gridRow(start: IGridSpan, end': string) =
-        h.MakeStyle("grid-row", (asString start) + " / " + end')
-    /// Determines a grid item’s location within the grid by referring to specific grid lines.
-    /// start is the line where the item begins, end' is the line where it ends.
-    /// They can be one of the following options:
-    /// - a named line
-    /// - a numbered line
-    /// - span until a named line was hit
-    /// - span over a specified number of lines
-    ///
-    ///
-    /// _Shorthand for `gridRowStart` and `gridRowEnds`_
-    ///
-    /// **CSS**
-    /// ```css
-    /// grid-row: span 2 / 3;
-    /// ```
-    /// **F#**
-    /// ```f#
-    /// style.gridRow (gridRow.span 2, 3)
-    /// ```
-    member _.gridRow(start: IGridSpan, end': int) =
         h.MakeStyle("grid-row", (asString start) + " / " + (asString end'))
     /// Determines a grid item’s location within the grid by referring to specific grid lines.
     /// start is the line where the item begins, end' is the line where it ends.
@@ -2486,10 +2163,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// Sets the size of the font.
     ///
     /// This property is also used to compute the size of em, ex, and other relative <length> units.
-    member _.fontSize(size: float) = h.MakeStyle("font-size", asString size + "px")
-    /// Sets the size of the font.
-    ///
-    /// This property is also used to compute the size of em, ex, and other relative <length> units.
     member _.fontSize(size: ICssUnit) = h.MakeStyle("font-size", asString size)
     /// Specifies the height of a text lines.
     ///
@@ -2497,12 +2170,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     ///
     /// Note: Negative values are not allowed.
     member _.lineHeight(size: int) = h.MakeStyle("line-height", asString size + "px")
-    /// Specifies the height of a text lines.
-    ///
-    /// This property is also used to compute the size of em, ex, and other relative <length> units.
-    ///
-    /// Note: Negative values are not allowed.
-    member _.lineHeight(size: float) = h.MakeStyle("line-height", asString size + "px")
     /// Specifies the height of a text lines.
     ///
     /// This property is also used to compute the size of em, ex, and other relative <length> units.
@@ -2540,14 +2207,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
 
     /// Sets an element's bottom border. It sets the values of border-bottom-width,
     /// border-bottom-style and border-bottom-color.
-    member _.borderBottom(width: int, style: IBorderStyle, color: string) =
-        h.MakeStyle("border-bottom",
-            (asString width) + "px " +
-            (asString style) + " " +
-            color
-        )
-    /// Sets an element's bottom border. It sets the values of border-bottom-width,
-    /// border-bottom-style and border-bottom-color.
     member _.borderBottom(width: ICssUnit, style: IBorderStyle, color: string) =
         h.MakeStyle("border-bottom",
             (asString width) + " " +
@@ -2578,7 +2237,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     ///  - An outline does not take up space
     ///  - An outline may be non-rectangular
     ///
-    member _.outlineOffset (offset:ICssUnit) =
+    member _.outlineOffset (offset: ICssUnit) =
         h.MakeStyle("outline-width", asString offset)
 
     /// An outline is a line that is drawn around elements (outside the borders) to make the element "stand out".
@@ -2588,13 +2247,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// **Note**: Always declare the outline-style property before the outline-color property. An element must have an outline before you change the color of it.
     member _.outlineColor (color: string) =
         h.MakeStyle("outline-color", color)
-    /// Set an element's left border.
-    member _.borderLeft(width: int, style: IBorderStyle, color: string) =
-        h.MakeStyle("border-left",
-            (asString width) + "px " +
-            (asString style) + " " +
-            color
-        )
+
     /// Set an element's left border.
     member _.borderLeft(width: ICssUnit, style: IBorderStyle, color: string) =
         h.MakeStyle("border-bottom",
@@ -2603,23 +2256,9 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
             color
         )
     /// Set an element's right border.
-    member _.borderRight(width: int, style: IBorderStyle, color: string) =
-        h.MakeStyle("border-right",
-            (asString width) + "px " +
-            (asString style) + " " +
-            color
-        )
-    /// Set an element's right border.
     member _.borderRight(width: ICssUnit, style: IBorderStyle, color: string) =
         h.MakeStyle("border-right",
             (asString width) + " " +
-            (asString style) + " " +
-            color
-        )
-    /// Set an element's top border.
-    member _.borderTop(width: int, style: IBorderStyle, color: string) =
-        h.MakeStyle("border-top",
-            (asString width) + "px " +
             (asString style) + " " +
             color
         )
@@ -2673,15 +2312,6 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// Sets an element's border.
     ///
     /// It sets the values of border-width, border-style, and border-color.
-    member _.border(width: int, style: IBorderStyle, color: string) =
-        h.MakeStyle("border",
-            (asString width) + "px " +
-            (asString style) + " " +
-            color
-        )
-    /// Sets an element's border.
-    ///
-    /// It sets the values of border-width, border-style, and border-color.
     member _.border(width: ICssUnit, style: IBorderStyle, color: string) =
         h.MakeStyle("border",
             (asString width) + " " +
@@ -2706,28 +2336,18 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// circular corners, or two radii to make elliptical corners.
     member _.borderRadius (radius: ICssUnit) = h.MakeStyle("border-radius", asString radius)
     /// Sets the width of an element's border.
-    member _.borderWidth (top: int, right: int) =
-        h.MakeStyle("border-width",
-            (asString top) + "px " +
-            (asString right) + "px"
-        )
-    /// Sets the width of an element's border.
     member _.borderWidth (width: int) = h.MakeStyle("border-width", asString width + "px")
     /// Sets the width of an element's border.
-    member _.borderWidth (top: int, right: int, bottom: int) =
+    member _.borderWidth (top: ICssUnit, ?right: ICssUnit) =
         h.MakeStyle("border-width",
-            (asString top) + "px " +
-            (asString right) + "px " +
-            (asString bottom) + "px"
-        )
+            asString top + (match right with Some x -> " " + asString x | None -> ""))
     /// Sets the width of an element's border.
-    member _.borderWidth (top: int, right: int, bottom: int, left: int) =
+    member _.borderWidth (top: ICssUnit, right: ICssUnit, bottom: ICssUnit, ?left: ICssUnit) =
         h.MakeStyle("border-width",
-            (asString top) + "px " +
-            (asString right) + "px " +
-            (asString bottom) + "px " +
-            (asString left) + "px"
-        )
+            (asString top) + " " +
+            (asString right) + " " +
+            (asString bottom) +
+            (match left with Some x -> " " + asString x | None -> ""))
     /// Sets one or more animations to apply to an element. Each name is an @keyframes at-rule that
     /// sets the property values for the animation sequence.
     member _.animationName(keyframeName: string) = h.MakeStyle("animation-name", keyframeName)
@@ -3401,11 +3021,6 @@ type transform =
             "translate(" + (asString x) + "px," + (asString y) + "px)"
         )
     /// Defines a 2D translation.
-    static member inline translate(x: float, y: float) =
-        newTransformProperty (
-            "translate(" + (asString x) + "px," + (asString y) + "px)"
-        )
-    /// Defines a 2D translation.
     static member inline translate(x: ICssUnit, y: ICssUnit) =
         newTransformProperty (
             "translate(" + (asString x) + "," + (asString y) + ")"
@@ -3413,11 +3028,6 @@ type transform =
 
     /// Defines a 3D translation.
     static member inline translate3D(x: int, y: int, z: int) =
-        newTransformProperty (
-            "translate3d(" + (asString x) + "px," + (asString y) + "px," + (asString z) + "px)"
-        )
-    /// Defines a 3D translation.
-    static member inline translate3D(x: float, y: float, z: float) =
         newTransformProperty (
             "translate3d(" + (asString x) + "px," + (asString y) + "px," + (asString z) + "px)"
         )
@@ -3431,25 +3041,16 @@ type transform =
     static member inline translateX(x: int) =
         newTransformProperty ("translateX(" + (asString x) + "px)")
     /// Defines a translation, using only the value for the X-axis.
-    static member inline translateX(x: float) =
-        newTransformProperty ("translateX(" + (asString x) + "px)")
-    /// Defines a translation, using only the value for the X-axis.
     static member inline translateX(x: ICssUnit) =
         newTransformProperty ("translateX(" + (asString x) + ")")
     /// Defines a translation, using only the value for the Y-axis
     static member inline translateY(y: int) =
         newTransformProperty ("translateY(" + (asString y) + "px)")
     /// Defines a translation, using only the value for the Y-axis
-    static member inline translateY(y: float) =
-        newTransformProperty ("translateY(" + (asString y) + "px)")
-    /// Defines a translation, using only the value for the Y-axis
     static member inline translateY(y: ICssUnit) =
         newTransformProperty ("translateY(" + (asString y) + ")")
     /// Defines a 3D translation, using only the value for the Z-axis
     static member inline translateZ(z: int) =
-        newTransformProperty ("translateZ(" + (asString z) + "px)")
-    /// Defines a 3D translation, using only the value for the Z-axis
-    static member inline translateZ(z: float) =
         newTransformProperty ("translateZ(" + (asString z) + "px)")
     /// Defines a 3D translation, using only the value for the Z-axis
     static member inline translateZ(z: ICssUnit) =
