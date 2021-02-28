@@ -104,6 +104,7 @@ type Extensions() =
 let private h = Helper()
 
 let Html = HtmlEngine(h)
+let Svg = SvgEngine(h)
 let Attr = AttrEngine(h)
 let Css = CssEngine(h)
 let Ev = EventEngine(h)
