@@ -43,15 +43,18 @@ let print (path: string) (nodes: Node seq) =
         indented stream indent ("<" + tag)
         nodes |> List.iter (function Attr(k, v) -> printAttr stream k v | _ -> ())
 
-        let textNode = nodes |> List.tryPick (function Text s -> Some s | _ -> None)
-        match textNode, getChildren nodes with
-        // TODO: Fail if there's a text node and children is not empty?
-        | Some str, _ -> stream.write(">" + str + "</" + tag + ">" + Node.Api.os.EOL) |> ignore
-        | None, [] -> stream.write("></" + tag + ">" + Node.Api.os.EOL) |> ignore
-        | None, children ->
-            stream.write(">" + Node.Api.os.EOL) |> ignore
-            children |> List.iter (fun (tag, nodes) -> printEl stream (indent + 1) tag nodes)
-            indented stream indent ("</" + tag + ">" + Node.Api.os.EOL)
+        nodes
+        |> List.tryPick (function Text s -> Some s | _ -> None)
+        |> function
+            // TODO: Fail if there's a text node and children is not empty?
+            | Some str -> stream.write(">" + str + "</" + tag + ">" + Node.Api.os.EOL) |> ignore
+            | None ->
+                match getChildren nodes with
+                | [] -> stream.write("></" + tag + ">" + Node.Api.os.EOL) |> ignore
+                | children ->
+                    stream.write(">" + Node.Api.os.EOL) |> ignore
+                    children |> List.iter (fun (tag, nodes) -> printEl stream (indent + 1) tag nodes)
+                    indented stream indent ("</" + tag + ">" + Node.Api.os.EOL)
 
     let stream = Node.Api.fs.createWriteStream(path)
     try

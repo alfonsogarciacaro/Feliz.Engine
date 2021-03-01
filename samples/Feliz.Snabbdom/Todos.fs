@@ -1,57 +1,54 @@
 module Todos
 
 open System
-open Fable.Core
+open System.Collections.Generic
 open Browser.Types
-open Elmish
 open Elmish.Snabbdom
 open Feliz
 open Feliz.Snabbdom
 
-module Clock =
-  type Model =
-    { Elapsed: TimeSpan }
-
-  type Msg = Tick
-
-  let init() = { Elapsed = TimeSpan() }
-
-  let update msg model =
-    match msg with
-    | Tick -> { model with Elapsed = model.Elapsed + TimeSpan.FromSeconds 1. }
-
-  let view model _dispatch =
-    Html.p [
-      Html.text (model.Elapsed.ToString("c", Globalization.CultureInfo.InvariantCulture))
-    ]
-
-  let subscribe _model dispatch =
-    let intervalId = JS.setInterval (fun _ -> dispatch Tick) 1000
-    printfn "Set interval %i" intervalId
+type Broadcaster<'T>() =
+  let observers = Dictionary<Guid, IObserver<'T>>()
+  member _.Trigger(v) =
+    observers.Values |> Seq.iter (fun w -> w.OnNext(v))
+  member _.Subscribe(w) =
+    let id = Guid.NewGuid()
+    observers.Add(id, w)
     { new IDisposable with
         member _.Dispose() =
-          printfn "Clear interval %i" intervalId
-          JS.clearInterval intervalId }
+          observers.Remove(id) |> ignore }
+  interface IObservable<'T> with
+    member this.Subscribe(w) = this.Subscribe(w)
 
-  let mount () =
-    Program.mkSimple init update view
-    |> Program.mountOnDisposableVNode subscribe
+type ObservableMap<'Key, 'Value when 'Key : comparison> private(map, obs) =
+  new () = ObservableMap(Map.empty, Broadcaster())
+
+  interface IObservable<'Key * 'Value> with
+    member _.Subscribe(w) = obs.Subscribe(w)
+
+  member _.Add(key, value) =
+    obs.Trigger(key, value)
+    ObservableMap(Map.add key value map, obs)
+
+  member _.GetOr(key, defValue) =
+    Map.tryFind key map
+    |> Option.defaultValue defValue
 
 type Todo = {
   Id : Guid
   Description : string
-  Completed : bool
-  Editing : string option
+  Timeout : bool
 }
 
 type State = {
   TodoList: Todo list
   NewTodo : string
-  Timeout: bool
+  Editing: (Guid * string) option
+  Completed: ObservableMap<Guid, bool>
 }
 
 type Msg =
-  | Timeout
+  | Timeout of Guid
   | SetNewTodo of string
   | AddNewTodo
   | DeleteTodo of Guid
@@ -64,19 +61,25 @@ type Msg =
 let init() =
   {
     TodoList = [
-      { Id = Guid.NewGuid(); Description = "Learn F#"; Completed = false; Editing = None }
-      { Id = Guid.NewGuid(); Description = "Learn Elmish"; Completed = true; Editing = None }
+      { Id = Guid.NewGuid(); Description = "Learn F#"; Timeout = false }
+      { Id = Guid.NewGuid(); Description = "Learn Elmish"; Timeout = false }
     ]
     NewTodo = ""
-    Timeout = false
+    Editing = None
+    Completed = ObservableMap()
   }
 
 let update (msg: Msg) (state: State) =
   match msg with
-  | Timeout ->
-    { state with Timeout = true }
+  | Timeout todoId ->
+      state.TodoList |> List.map (fun todo ->
+          if todo.Id = todoId
+          then { todo with Timeout = true }
+          else todo)
+      |> fun todos -> { state with TodoList = todos }
 
   | SetNewTodo desc ->
+      printfn "New todo %s" desc
       { state with NewTodo = desc }
 
   | AddNewTodo when String.IsNullOrWhiteSpace state.NewTodo ->
@@ -86,50 +89,42 @@ let update (msg: Msg) (state: State) =
       let nextTodo =
         { Id = Guid.NewGuid()
           Description = state.NewTodo
-          Completed = false
-          Editing = None }
+          Timeout = false }
 
       { state with
           NewTodo = ""
           TodoList = nextTodo::state.TodoList }
 
   | DeleteTodo todoId ->
-      let nextTodoList =
-        state.TodoList
-        |> List.filter (fun todo -> todo.Id <> todoId)
-
-      { state with TodoList = nextTodoList }
+      state.TodoList
+      |> List.filter (fun todo -> todo.Id <> todoId)
+      |> fun todos -> { state with TodoList = todos }
 
   | ToggleCompleted todoId ->
-      let nextTodoList =
-        state.TodoList
-        |> List.map (fun todo ->
-           if todo.Id = todoId
-           then { todo with Completed = not todo.Completed }
-           else todo)
-
-      { state with TodoList = nextTodoList }
+      let prev = state.Completed.GetOr(todoId, false)
+      { state with Completed = state.Completed.Add(todoId, not prev) }
 
   | StartEditingTodo todoId ->
-      let todos = state.TodoList |> List.map (fun t ->
-        { t with Editing = if t.Id = todoId then Some t.Description else None })
-      { state with TodoList = todos }
+      state.TodoList
+      |> List.tryFind (fun t -> t.Id = todoId)
+      |> Option.map (fun t -> t.Id, t.Description)
+      |> fun editing -> { state with Editing = editing }
 
   | CancelEdit ->
-      let todos = state.TodoList |> List.map (fun t -> { t with Editing = None })
-      { state with TodoList = todos }
+      { state with Editing = None }
 
   | ApplyEdit ->
-      let todos = state.TodoList |> List.map (fun t ->
-        match t.Editing with
-        | None -> t
-        | Some d -> { t with Description = d; Editing = None })
-      { state with TodoList = todos }
+      match state.Editing with
+      | None -> state
+      | Some(todoId, desc) ->
+        state.TodoList |> List.map (fun todo ->
+            if todo.Id = todoId
+            then { todo with Description = desc }
+            else todo)
+        |> fun todos -> { state with Editing = None; TodoList = todos }
 
   | SetEditedDescription newText ->
-      let todos = state.TodoList |> List.map (fun t ->
-        { t with Editing = t.Editing |> Option.map (fun _ -> newText) })
-      { state with TodoList = todos }
+      { state with Editing = state.Editing |> Option.map (fun (id,_) -> id, newText) }
 
 // Helper function to easily construct div with only classes and children
 let div (classes: string list) (children: Node list) =
@@ -157,13 +152,9 @@ let level leftItems rightItems =
   ]
 
 let appTitle (_: State) _dispatch =
-  level [
-    Html.p [
-      Attr.className "title"
-      Html.text "Elmish To-Do List"
-    ]
-  ] [
-    // Clock.mount ()
+  Html.p [
+    Attr.className "title"
+    Html.text "Elmish To-Do List"
   ]
 
 let inputField (state: State) (dispatch: Msg -> unit) =
@@ -186,10 +177,29 @@ let inputField (state: State) (dispatch: Msg -> unit) =
     ]
   ]
 
-let renderTodo dispatch (todo: Todo) =
-  printfn $"Rendering todo {todo.Description}"
+let mountTimer (state: State) dispatch (todo: Todo) =
+    let obs =
+      state.Completed
+      |> Observable.choose (fun (id, completed) ->
+        // Timer is only active when item is not completed
+        if id = todo.Id then Timer.Toggle(not completed) |> Some
+        else None)
+
+    let dispatch = function
+      | Timer.Timeout -> Timeout todo.Id |> dispatch
+
+    Timer.mkProgram obs dispatch
+    |> Program.mountOnVNode
+
+let renderTodo state dispatch (todo: Todo, completed: bool, editing: string option) =
+  printfn $"Rendering todo {todo.Description}, completed: {completed}, editing: {Option.isSome editing}"
   Html.li [
     Attr.className "box"
+
+    Css.backgroundColor (if todo.Timeout
+      then color.red
+      else color.transparent)
+
     Css.opacity 0.
     Css.transformScale 1.5
     // Snabbdom doesn't support `all`, we need to list all the transitioning properties
@@ -207,7 +217,7 @@ let renderTodo dispatch (todo: Todo) =
       Css.transformScale 0.1
     ]
 
-    match todo.Editing with
+    match editing with
     | Some editing ->
       div [ "field is-grouped" ] [
         div [ "control is-expanded" ] [
@@ -250,13 +260,13 @@ let renderTodo dispatch (todo: Todo) =
                   Ev.onDblClick (fun _ -> dispatch (StartEditingTodo todo.Id))
                 ]
               ] [
-                Clock.mount()
+                mountTimer state dispatch todo
               ]
           ]
 
           div [ "column"; "is-narrow" ] [
               Html.button [
-                  Attr.classes  [ true, "button"; todo.Completed, "is-success"]
+                  Attr.classes [ true, "button"; completed, "is-success"]
                   Ev.onClick (fun _ -> dispatch (ToggleCompleted todo.Id))
                   Html.i [ Attr.classes [ "fa"; "fa-check" ] ]
               ]
@@ -278,16 +288,20 @@ let renderTodo dispatch (todo: Todo) =
   ]
 
 let todoList (state: State) (dispatch: Msg -> unit) =
-  Html.ul (state.TodoList |> List.map (memoize (renderTodo dispatch)))
+  Html.ul (
+    state.TodoList
+    |> List.map (fun todo ->
+      todo,
+      state.Completed.GetOr(todo.Id, false),
+      state.Editing |> Option.bind (fun (i,e) -> if i = todo.Id then Some e else None))
+    |> List.map (memoizeWithId (renderTodo state dispatch) (fun (t,_,_) -> t.Id))
+  )
 
 let view (state: State) (dispatch: Msg -> unit) =
   Html.div [
     Css.margin(length.zero, length.auto)
     Css.maxWidth 800
     Css.padding 20
-    Css.backgroundColor (if state.Timeout
-      then color.red
-      else color.transparent)
 
     appTitle state dispatch
     inputField state dispatch

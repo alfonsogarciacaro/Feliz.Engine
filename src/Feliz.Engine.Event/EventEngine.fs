@@ -305,6 +305,14 @@ type EventEngine<'Node>(h: EventHelper<'Node>) =
             handler el.value
         h.MakeEvent("change", handler)
 
+    /// Same as `onInput` but let's you deal with the text changed from the `input` element directly
+    /// instead of extracting it from the event arguments.
+    member _.onTextInput (handler: string -> unit) =
+        let handler (ev: Event) =
+            let el = ev.target :?> HTMLInputElement
+            handler el.value
+        h.MakeEvent("input", handler)
+
     /// Fires when the playing position has changed (like when the user fast forwards to a different point in the media).
     member _.onTimeUpdate (handler: Event -> unit) = h.MakeEvent("timeUpdate", handler)
 

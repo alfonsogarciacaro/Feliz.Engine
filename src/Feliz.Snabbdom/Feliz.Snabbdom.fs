@@ -1,7 +1,6 @@
 ﻿module Feliz.Snabbdom
 
 open System
-open Fable.Core
 open Fable.Core.JsInterop
 open Feliz
 open Snabbdom
@@ -135,5 +134,11 @@ let key k = Key k
 
 let inline getId x = (^a: (member Id: Guid) x)
 
-let inline memoize (render: 'Model -> Node) model =
-    Helper.Thunk("memo", (getId model), (fun m -> render m |> Node.AsVNode), [|model|]) |> El
+let memoizeWith (render: 'arg -> Node) getId equals arg =
+    Helper.Thunk("memo", getId arg, (fun m -> render m |> Node.AsVNode), arg, equals) |> El
+
+let memoizeWithId (render: 'arg -> Node) getId arg =
+    Helper.Thunk("memo", getId arg, (fun m -> render m |> Node.AsVNode), arg) |> El
+
+let inline memoize (render: 'arg -> Node) arg =
+    memoizeWithId render getId arg

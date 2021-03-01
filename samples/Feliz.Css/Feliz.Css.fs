@@ -20,7 +20,6 @@ let and' selector nodes =
 let directChild selector nodes =
     Rule(" > ", selector, nodes)
 
-
 let print (path: string) (nodes: Node seq) =
     let rec printRule (stream: Node.Fs.WriteStream<string>) selector = function
         | [] -> () // Do nothings if node list is empty

@@ -4,42 +4,43 @@
 import { h } from "snabbdom/h";
 
 function copyToThunk(vnode, thunk) {
-    (vnode.data).fn = (thunk.data).fn;
-    (vnode.data).args = (thunk.data).args
-    thunk.data = vnode.data
-    thunk.children = vnode.children
-    thunk.text = vnode.text
-    thunk.elm = vnode.elm
+    vnode.data.fn = thunk.data.fn;
+    vnode.data.arg = thunk.data.arg;
+    vnode.data.equalFn = thunk.data.equalFn;
+    thunk.data = vnode.data;
+    thunk.children = vnode.children;
+    thunk.text = vnode.text;
+    thunk.elm = vnode.elm;
 }
 
-export function thunk(sel, key, fn, args) {
+export function thunk(sel, key, fn, arg, equalFn) {
+    equalFn = equalFn || ((oldArg, newArg) =>
+        Array.isArray(oldArg)
+            ? Array.isArray(newArg)
+                && oldArg.length === newArg.length
+                && oldArg.reduce(((acc, cur, i) => acc && cur === newArg[i]), true)
+            : oldArg === newArg);
+
     return h(sel, {
         key: key,
         hook: {
             init(thunk) {
-                const cur = thunk.data
-                const vnode = (cur.fn).apply(undefined, cur.args)
-                copyToThunk(vnode, thunk)
+                const cur = thunk.data;
+                const vnode = cur.fn.call(undefined, cur.arg);
+                copyToThunk(vnode, thunk);
             },
             prepatch(oldVnode, thunk) {
-                const old = oldVnode.data
-                const cur = thunk.data
-                const oldArgs = old.args
-                const args = cur.args
-                // if (old.fn !== cur.fn || (oldArgs).length !== (args).length) {
-                //   copyToThunk((cur.fn).apply(undefined, args), thunk)
-                //   return
-                // }
-                for (let i = 0; i < (args).length; ++i) {
-                    if ((oldArgs)[i] !== (args)[i]) {
-                        copyToThunk((cur.fn).apply(undefined, args), thunk)
-                        return
-                    }
+                const old = oldVnode.data;
+                const cur = thunk.data;
+                if (!equalFn(old.arg, cur.arg)) {
+                    copyToThunk(cur.fn.call(undefined, cur.arg), thunk);
+                } else {
+                    copyToThunk(oldVnode, thunk);
                 }
-                copyToThunk(oldVnode, thunk)
             }
         },
         fn: fn,
-        args: args
+        arg: arg,
+        equalFn: equalFn,
     })
 }

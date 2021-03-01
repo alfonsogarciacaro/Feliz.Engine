@@ -33,24 +33,10 @@ let update msg model =
 
     | _ -> model
 
-let bodyEvents events =
-    events |> List.iter (function
-        | Event(e, fn) -> document.body.addEventListener(e, unbox fn)
-        | _ -> ())
-
 let view (model: Model) dispatch =
     let left = fst model.position - fst model.offset
     let top = snd model.position - snd model.offset
     Svg.svg [
-        // Add mouse move/up events to page body because sometimes cursor leaves
-        // the boundaries of the rectangle while dragging
-        Hook.insert (fun _ ->
-            bodyEvents [
-                Ev.onMouseMove (fun ev -> MouseMove(ev.x, ev.y) |> dispatch)
-                Ev.onMouseUp (fun _ -> MouseUp |> dispatch)
-            ]
-        )
-
         Css.positionFixed
         Css.left(px left)
         Css.top(px top)
@@ -61,8 +47,8 @@ let view (model: Model) dispatch =
 
             Css.fill(color.rgb(0,255,33))
 
-            // Ev.onMouseMove (fun ev -> MouseMove(ev.x, ev.y) |> dispatch)
-            // Ev.onMouseUp (fun _ -> MouseUp |> dispatch)
+            Ev.onMouseMove (fun ev -> MouseMove(ev.x, ev.y) |> dispatch)
+            Ev.onMouseUp (fun _ -> MouseUp |> dispatch)
 
             Ev.onMouseDown (fun ev ->
                 let rect = (ev.target :?> HTMLElement).getBoundingClientRect()

@@ -32,7 +32,7 @@ let init(modules: Module[]): Patch = jsNative
 
 // [<ImportMember("snabbdom/thunk")>]
 [<ImportMember("./thunk")>]
-let thunk(sel: string, key: Guid, fn: obj, args: obj[]): VNode = jsNative
+let thunk(sel: string, key: Guid, fn: 'arg -> VNode, args: 'arg, equalFn: ('arg -> 'arg -> bool) option): VNode = jsNative
 
 type Helper() =
     static let patcher = init [|
@@ -44,4 +44,4 @@ type Helper() =
     static member Text(str: string): VNode = unbox str
     static member Patch(oldNode: VNode, newNode: VNode): unit = patcher.Invoke(oldNode, newNode)
     static member Patch(el: Browser.Types.HTMLElement, vnode: VNode): unit = patcher.Invoke(unbox el, vnode)
-    static member Thunk(sel: string, key: Guid, renderFn: obj, stateArgs: obj[]): VNode = thunk(sel, key, renderFn, stateArgs)
+    static member Thunk(sel: string, key: Guid, renderFn: 'Arg -> VNode, arg: 'Arg, ?equalFn: 'Arg -> 'Arg -> bool): VNode = thunk(sel, key, renderFn, arg, equalFn)

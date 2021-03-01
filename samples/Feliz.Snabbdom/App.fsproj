@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Dragging.fs" />
+    <Compile Include="Timer.fs" />
     <Compile Include="Todos.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
