@@ -45,7 +45,10 @@ let update msg (model: Model) =
 
   | Toggle v ->
     if v = model.Active then model, None
-    elif v then { model with Active = true; StartedOrResumed = DateTime.Now }, None
+    elif v then { model with Active = true
+                             Finished = false
+                             StartedOrResumed = DateTime.Now
+                             Elapsed = TimeSpan.FromSeconds(0.) }, None
     else { model with Active = false }, None
 
 let view (model: Model) dispatch =
@@ -54,21 +57,20 @@ let view (model: Model) dispatch =
       let intervalId = JS.setInterval (fun _ -> dispatch Tick) 1000
       printfn "Set interval %i" intervalId
 
-      { new IDisposable with
-          member _.Dispose() =
-            JS.clearInterval intervalId
-            printfn "Clear interval %i" intervalId })
+      Disposable.make(fun () ->
+        JS.clearInterval intervalId
+        printfn "Clear interval %i" intervalId))
 
     Html.text (String.Format("{0:00}:{1:00}",
                 floor model.Elapsed.TotalMinutes,
                  (floor model.Elapsed.TotalSeconds |> int) % 60))
   ]
 
-let mount (dispatch: ExtMsg -> unit) (active: bool) =
+let mkProgram (dispatch: ExtMsg -> unit) =
   let update msg model =
     let model, extMsg = update msg model
     extMsg |> Option.iter dispatch
     model
 
   Program.mkSimple init update view
-  |> Program.mountOnVNodeWith active Toggle
+  |> Program.withSetNewArg Toggle

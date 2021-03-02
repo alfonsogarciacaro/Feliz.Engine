@@ -100,6 +100,10 @@ type Extensions() =
     static member destroy(e: CssEngine<Node>, nodes: Node seq) =
         withStyleHook StyleHook.Destroy nodes
 
+type Browser.Types.EventTarget with
+    member this.AsInputEl =
+        this :?> Browser.Types.HTMLInputElement
+
 let private h = Helper()
 let private cache = Fable.Core.JS.Constructors.WeakMap.Create()
 
@@ -129,10 +133,10 @@ type Hook =
 
     /// The disposable returned by the hook when the element is inserted into the DOM
     /// will be disposed when that element is directly or indirectly removed from the DOM
-    static member insert (f: VNode -> IDisposable) =
+    static member insert (f: Func<VNode, IDisposable>) =
         Fragment [
             Hook.insert (fun (v: VNode) ->
-                let disp = f v
+                let disp = f.Invoke(v)
                 cache.set(v.elm, disp) |> ignore)
 
             Hook.destroy (fun (v: VNode) ->
@@ -141,7 +145,24 @@ type Hook =
                 |> Option.iter (fun d -> d.Dispose()))
         ]
 
-let key k = Key k
+module Disposable =
+    let make f =
+        { new IDisposable with
+            member _.Dispose() = f() }
+
+    let concat (disps: IDisposable list) =
+        make (fun () -> disps |> List.iter (fun d -> d.Dispose()))
+
+let private attachEvent (f: Browser.Types.Event -> unit) (el: Browser.Types.Node) (eventType: string) =
+    el.addEventListener (eventType, f)
+    Disposable.make (fun () -> el.removeEventListener (eventType, f))
+
+let private mkEventEngine (node: Browser.Types.Node) =
+    EventEngine
+        { new EventHelper<IDisposable> with
+            member _.MakeEvent(e, f) = e.ToLowerInvariant() |> attachEvent f node }
+
+let BodyEv = mkEventEngine(Browser.Dom.document.body)
 
 let inline getId x = (^a: (member Id: Guid) x)
 
