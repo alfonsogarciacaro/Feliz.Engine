@@ -1,8 +1,6 @@
 ﻿[<RequireQualifiedAccess>]
 module Elmish.Snabbdom.Program
 
-open System
-open System.Collections.Generic
 open Fable.Core
 open Fable.Core.JsInterop
 open Elmish
@@ -10,108 +8,65 @@ open Browser.Types
 open Feliz.Snabbdom
 
 module private rec Util =
-    let rec tryPath (o: obj) (keys: string list): 'a option =
-        Option.ofObj o
-        |> Option.bind (fun o ->
-            match keys with
-            | [] -> failwith "empty keys"
-            | [key] -> o?(key) |> Option.ofObj |> unbox
-            | key::rest ->
-                o?(key)
-                |> Option.ofObj
-                |> Option.bind (fun o -> tryPath o rest))
+    [<Emit("$1 in $0")>]
+    let hasKey (o: obj) (key: string): bool = jsNative
 
-    let cache = Dictionary<Guid, ElmishData>()
+    let copyTo (target: obj) (source: obj) =
+        JS.Constructors.Object.assign(target, source) |> ignore
 
-    type ElmishData(vnode) =
-        let mutable timeoutId: int option = None
-        member val VNode: Snabbdom.VNode = vnode with get, set
-        member val DispatchNewArg: obj -> unit  = ignore with get, set
-        member val Model: obj = null with get, set
-        member _.TimeoutDisposal(guid) =
-            timeoutId <- JS.setTimeout (fun _ ->
-                cache.Remove(guid) |> ignore) 0 |> Some
-        member _.CancelDisposal() =
-            timeoutId |> Option.iter JS.clearTimeout
+    let partialPatch (oldVNode: Snabbdom.VNode) (newVnode: Snabbdom.VNode) =
+        Snabbdom.Helper.Patch(oldVNode, newVnode) |> copyTo oldVNode
 
 open Util
 
 let withSetNewArg (setNewArg: 'arg -> 'msg) (program: Program<'arg, 'model, 'msg, Node>) =
-    // HACK: add the function dynamically
     program?setNewArg <- setNewArg
     program
 
-let private __mountOnVNodeWith (guid: Guid) (arg: 'arg) (program: Program<'arg, 'model, 'msg, Node>): Node =
+let private __mountOnVNodeWith (arg: 'arg) (program: Program<'arg, 'model, 'msg, Node>): Node =
     Html.custom("elmish", [
-      Key guid
       Hook.insert (fun vnode ->
+        let mutable oldVNode = vnode
+
         let setState model dispatch =
-            let data = cache.[guid]
-            let isInvalid =
-                if data.VNode.children.Length = 0 then
-                    tryPath program ["setNewArg"]
-                    |> Option.iter (fun f -> data.DispatchNewArg <- (f >> dispatch))
-                    true
-                else
-                    obj.ReferenceEquals(model, data.Model) |> not
+            let newVNode =
+                Html.custom("elmish", [
+                    Program.view program model dispatch
+                ]) |> Node.AsVNode
 
-            if isInvalid then
-                let newVNode =
-                    Html.custom("elmish", [
-                        Key guid
-                        Program.view program model dispatch
-                    ]) |> Node.AsVNode
-                Snabbdom.Helper.Patch(data.VNode, newVNode)
-                data.VNode <- newVNode
-                data.Model <- box model
+            if oldVNode.children.Length = 0 && hasKey program "setNewArg" then
+                newVNode.data?setNewArg <- (program?setNewArg >> dispatch)
 
-        let program =
-            match cache.TryGetValue(guid) with
-            | true, data ->
-                data.CancelDisposal()
-                data.VNode <- vnode
-                Program.map (fun _ _ -> !!data.Model, []) id id id id program
-            | false, _ ->
-                cache.Add(guid, ElmishData(vnode)) |> ignore
-                program
+            partialPatch oldVNode newVNode
+            oldVNode <- newVNode
 
         program
         |> Program.withSetState setState
         |> Program.runWith arg
       )
 
-      Hook.prepatch (fun _oldVNode _newVNode ->
-        let data = cache.[guid]
-        data.DispatchNewArg(box arg)
-      )
-
-      Hook.destroy (fun vnode ->
-        let data = cache.[guid]
-        data.TimeoutDisposal(guid)
-        if not(obj.ReferenceEquals(vnode, data.VNode)) then
-            for vnode in data.VNode.children do
-                tryPath vnode.data ["hook"; "destroy"]
-                |> Option.iter (fun h -> h vnode)
+      Hook.prepatch (fun oldVNode newVNode ->
+        oldVNode |> copyTo newVNode
+        if hasKey newVNode.data "setNewArg" then
+            newVNode.data?setNewArg(arg)
       )
     ])
 
-let mountOnVNodeWith id (arg: 'arg) (program: Program<'arg, 'model, 'msg, Node>): Node =
-    program |> __mountOnVNodeWith id arg
+let mountOnVNodeWith (arg: 'arg) (program: Program<'arg, 'model, 'msg, Node>): Node =
+    program |> __mountOnVNodeWith arg
 
-let mountOnVNode id (program: Program<_,_,_,_>): Node =
-    program |> __mountOnVNodeWith id ()
+let mountOnVNode (program: Program<_,_,_,_>): Node =
+    program |> __mountOnVNodeWith ()
 
 let mountOnElement (el: HTMLElement) (program: Program<_,_,_,_>) =
-    let mutable oldModel = Unchecked.defaultof<_>
     let mutable tree: Snabbdom.VNode option = None
 
     let setState model dispatch =
-        if not(obj.ReferenceEquals(model, oldModel)) then
-            let newTree = Program.view program model dispatch |> Node.AsVNode
-            match tree with
-            | None -> Snabbdom.Helper.Patch(el, newTree)
-            | Some oldTree -> Snabbdom.Helper.Patch(oldTree, newTree)
-            tree <- Some newTree
+        let newTree = Program.view program model dispatch |> Node.AsVNode
+        match tree with
+        | None -> Snabbdom.Helper.Patch(el, newTree) |> ignore
+        | Some oldTree -> Snabbdom.Helper.Patch(oldTree, newTree) |> ignore
+        tree <- Some newTree
 
     program
     |> Program.withSetState setState

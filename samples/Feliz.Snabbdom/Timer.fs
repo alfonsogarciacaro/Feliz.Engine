@@ -53,6 +53,8 @@ let update msg (model: Model) =
 
 let view (model: Model) dispatch =
   Html.p [
+    Attr.className "subtitle is-6"
+
     Hook.insert(fun _ ->
       let intervalId = JS.setInterval (fun _ -> dispatch Tick) 1000
       printfn "Set interval %i" intervalId

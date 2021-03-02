@@ -13,7 +13,7 @@ type VNode =
     abstract text: string
     abstract elm: Browser.Types.HTMLElement
 
-type Patch = delegate of VNode * VNode -> unit
+type Patch = delegate of VNode * VNode -> VNode
 
 [<ImportMember("snabbdom/modules/attributes")>]
 let attributesModule: Module = jsNative
@@ -42,6 +42,6 @@ type Helper() =
     |]
     static member Empty: VNode = unbox null
     static member Text(str: string): VNode = unbox str
-    static member Patch(oldNode: VNode, newNode: VNode): unit = patcher.Invoke(oldNode, newNode)
-    static member Patch(el: Browser.Types.HTMLElement, vnode: VNode): unit = patcher.Invoke(unbox el, vnode)
+    static member Patch(oldNode: VNode, newNode: VNode): VNode = patcher.Invoke(oldNode, newNode)
+    static member Patch(el: Browser.Types.HTMLElement, vnode: VNode): VNode = patcher.Invoke(unbox el, vnode)
     static member Thunk(sel: string, key: Guid, renderFn: 'Arg -> VNode, arg: 'Arg, ?equalFn: 'Arg -> 'Arg -> bool): VNode = thunk(sel, key, renderFn, arg, equalFn)

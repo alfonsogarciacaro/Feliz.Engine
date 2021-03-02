@@ -105,7 +105,6 @@ type Browser.Types.EventTarget with
         this :?> Browser.Types.HTMLInputElement
 
 let private h = Helper()
-let private cache = Fable.Core.JS.Constructors.WeakMap.Create()
 
 let Html = HtmlEngine(h)
 let Svg = SvgEngine(h)
@@ -137,12 +136,16 @@ type Hook =
         Fragment [
             Hook.insert (fun (v: VNode) ->
                 let disp = f.Invoke(v)
-                cache.set(v.elm, disp) |> ignore)
+                v.data?disposable <- disp)
+
+            Hook.update (fun oldNode newNode ->
+                newNode.data?disposable <- oldNode.data?disposable
+            )
 
             Hook.destroy (fun (v: VNode) ->
-                cache.get(v.elm)
+                v.data?disposable
                 |> Option.ofObj
-                |> Option.iter (fun d -> d.Dispose()))
+                |> Option.iter (fun (d: IDisposable) -> d.Dispose()))
         ]
 
 module Disposable =

@@ -183,6 +183,80 @@ let inputField (state: State) (dispatch: Msg -> unit) =
         ]
     ]
 
+let rec findParentWithClass (className: string) (el: HTMLElement) =
+    let parent = el.parentElement
+    if isNull parent then failwithf "Cannot find parent witch class %s" className
+    elif parent.classList.contains(className) then parent
+    else findParentWithClass className parent
+
+let renderTodoDescription dispatch (todo: Todo) (editing: string option) =
+    div [ "column"; "is-7" ] [
+        match editing with
+        | Some editing ->
+            Html.input [
+                Attr.classes [ "input"; "is-medium" ]
+                Attr.value editing
+                Ev.onTextChange (SetEditedDescription >> dispatch)
+                onEnterOrEscape dispatch ApplyEdit CancelEdit
+                Hook.insert(fun vnode ->
+                    let el = vnode.elm.AsInputEl
+                    let parentBox = findParentWithClass "box" el
+                    el.select()
+                    BodyEv.onMouseDown(fun ev ->
+                        if not (parentBox.contains(ev.target :?> _)) then
+                            CancelEdit |> dispatch)
+                )
+            ]
+        | None ->
+            Html.p [
+                Attr.className "subtitle"
+
+                Css.userSelectNone
+                Css.cursorPointer
+
+                Html.text todo.Description
+                Ev.onDblClick (fun _ -> dispatch (StartEditingTodo todo.Id))
+            ]
+    ]
+
+let renderTodoButtons dispatch (todo: Todo) (editing: string option) =
+    let isEditing = Option.isSome editing
+
+    let button msg isVisible classes (iconClasses: string list) =
+        Html.button [
+            Attr.classes [
+                true, "button"
+                not isVisible, "is-invisible"
+                yield! classes
+            ]
+            Css.marginRight(px 4)
+            Ev.onClick (fun ev ->
+                ev.preventDefault()
+                dispatch msg)
+            Html.i [
+                Attr.classes iconClasses
+            ]
+        ]
+
+    div [ "column"; "is-4" ] [
+        button ApplyEdit isEditing
+            [ true, "is-primary" ]
+            [ "fa"; "fa-save" ]
+
+        button (ToggleCompleted todo.Id) (not isEditing)
+            [ todo.Completed, "is-success" ]
+            [ "fa"; "fa-check" ]
+
+        button (StartEditingTodo todo.Id) (not isEditing)
+            [ true, "is-primary" ]
+            [ "fa"; "fa-edit" ]
+
+        button (DeleteTodo todo.Id) (not isEditing)
+            [ true, "is-danger" ]
+            [ "fa"; "fa-times" ]
+    ]
+
+
 let renderTodo dispatch (todo: Todo, editing: string option) =
     printfn $"Rendering todo {todo.Description}, editing: {Option.isSome editing}"
 
@@ -210,81 +284,14 @@ let renderTodo dispatch (todo: Todo, editing: string option) =
             Css.transformScale 0.1
         ]
 
-        level [ match editing with
-                | Some editing ->
-                    Html.input [
-                        Attr.classes [ "input"; "is-medium" ]
-                        Attr.value editing
-                        Ev.onTextChange (SetEditedDescription >> dispatch)
-                        onEnterOrEscape dispatch ApplyEdit CancelEdit
-                        Hook.insert(fun vnode ->
-                            let el = vnode.elm.AsInputEl
-                            el.select()
-                            BodyEv.onMouseDown(fun ev ->
-                                if not (el.contains(ev.target :?> _)) then
-                                    CancelEdit |> dispatch)
-                        )
-                    ]
-                | None ->
-                    Html.p [
-                        Attr.className "subtitle"
+        div [ "columns" ] [
+            renderTodoDescription dispatch todo editing
+            renderTodoButtons dispatch todo editing
 
-                        Css.userSelectNone
-                        Css.cursorPointer
-                        Css.margin(px 8, zero)
-
-                        Html.text todo.Description
-                        Ev.onDblClick (fun _ -> dispatch (StartEditingTodo todo.Id))
-                    ] ] [
-
-            match editing with
-            | Some _ ->
-                Html.button [
-                    Attr.classes [ "button"; "is-primary" ]
-                    Ev.onClick (fun _ -> dispatch ApplyEdit)
-                    Html.i [
-                        Attr.classes [ "fa"; "fa-save" ]
-                    ]
-                ]
-
-                Html.button [
-                    Attr.classes [ "button"; "is-warning" ]
-                    Ev.onClick (fun _ -> dispatch CancelEdit)
-                    Html.i [
-                        Attr.classes [ "fa"; "fa-ban" ]
-                    ]
-                ]
-
-            | None ->
-                Html.button [
-                    Attr.classes [
-                        true, "button"
-                        todo.Completed, "is-success"
-                    ]
-                    Ev.onClick (fun _ -> dispatch (ToggleCompleted todo.Id))
-                    Html.i [
-                        Attr.classes [ "fa"; "fa-check" ]
-                    ]
-                ]
-
-                Html.button [
-                    Attr.classes [ "button"; "is-primary" ]
-                    Ev.onClick (fun _ -> dispatch (StartEditingTodo todo.Id))
-                    Html.i [
-                        Attr.classes [ "fa"; "fa-edit" ]
-                    ]
-                ]
-
-                Html.button [
-                    Attr.classes [ "button"; "is-danger" ]
-                    Ev.onClick (fun _ -> dispatch (DeleteTodo todo.Id))
-                    Html.i [
-                        Attr.classes [ "fa"; "fa-times" ]
-                    ]
-                ]
-
-            Timer.mkProgram (fun (Timer.Timeout) -> Timeout todo.Id |> dispatch)
-            |> Program.mountOnVNodeWith todo.Id (not todo.Completed) // Timer is only active when item is not completed
+            div [ "column" ] [
+                Timer.mkProgram (fun (Timer.Timeout) -> Timeout todo.Id |> dispatch)
+                |> Program.mountOnVNodeWith (not todo.Completed) // Timer is only active when item is not completed
+            ]
         ]
     ]
 
