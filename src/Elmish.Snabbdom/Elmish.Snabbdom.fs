@@ -1,46 +1,75 @@
 ﻿[<RequireQualifiedAccess>]
 module Elmish.Snabbdom.Program
 
-open System
 open Fable.Core
+open Fable.Core.JsInterop
 open Elmish
 open Browser.Types
 open Feliz.Snabbdom
 
-let private cache = JS.Constructors.WeakMap.Create()
+module private Util =
+    let rec tryPath (o: obj) (keys: string list): obj option =
+        Option.ofObj o
+        |> Option.bind (fun o ->
+            match keys with
+            | [] -> failwith "empty keys"
+            | [key] -> o?(key) |> Option.ofObj
+            | key::rest ->
+                o?(key)
+                |> Option.ofObj
+                |> Option.bind (fun o -> tryPath o rest))
 
-[<Emit("$0 && typeof $0.Dispose === 'function' ? $0 : void 0")>]
-let tryDisposable (o: obj): IDisposable option = jsNative
+    type ElmishData() =
+        member val VNode: Snabbdom.VNode = Unchecked.defaultof<_> with get, set
+        member val Dispatch: obj -> unit = ignore with get, set
+        member this.Dispose() =
+            let vnode = this.VNode
+            match tryPath vnode ["data"; "hook"; "destroy"] with
+            | None -> ()
+            | Some h -> (h :?> _) vnode
 
-let mountOnVNodeWith (arg: 'arg) (program: Program<'arg, 'model, 'msg, Node>): Node =
+    let cache = JS.Constructors.WeakMap.Create<HTMLElement, ElmishData>()
+
+open Util
+
+let private __mountOnVNodeWith (arg: 'arg) (onNewArg: ('arg -> 'msg) option) (program: Program<'arg, 'model, 'msg, Node>): Node =
     Html.div [
       Hook.insert (fun vnode ->
         let el = vnode.elm
-        let mutable tree = vnode
+        let mutable oldVNode = vnode
+        cache.set(el, ElmishData()) |> ignore
 
         let setState model dispatch =
-            cache.set(el, box model) |> ignore
-            let newTree = Program.view program model dispatch |> Node.AsVNode
-            Snabbdom.Helper.Patch(tree, newTree)
-            tree <- newTree
+            let newVNode = Program.view program model dispatch |> Node.AsVNode
+
+            // Snabbdom keeps a reference to the original node, not the patched one, so we save in the cache
+            let data = cache.get(el)
+            data.VNode <- newVNode
+            data.Dispatch <- unbox dispatch
+
+            Snabbdom.Helper.Patch(oldVNode, newVNode)
+            oldVNode <- newVNode
 
         program
         |> Program.withSetState setState
         |> Program.runWith arg
       )
 
-      // The virtual node instance will change if this function is called multiple times
-      // but the underlying HTMLElement should remain the same (even if it's not actually
-      // in the Dom because it has been replaced by Program.view)
-      Hook.destroy (fun vnode ->
-        cache.get(vnode.elm)
-        |> tryDisposable
-        |> Option.iter (fun d -> d.Dispose())
+      Hook.prepatch (fun vnode _ ->
+        match onNewArg with
+        | Some onNewArg -> cache.get(vnode.elm).Dispatch(box(onNewArg arg))
+        | None -> ()
       )
+
+      Hook.destroy (fun vnode ->
+        cache.get(vnode.elm).Dispose())
     ]
 
+let mountOnVNodeWith (arg: 'arg) (onNewArg: 'arg -> 'msg) (program: Program<'arg, 'model, 'msg, Node>): Node =
+    program |> __mountOnVNodeWith arg (Some onNewArg)
+
 let mountOnVNode (program: Program<_,_,_,_>): Node =
-    program |> mountOnVNodeWith ()
+    program |> __mountOnVNodeWith ()  None
 
 let mountOnElement (el: HTMLElement) (program: Program<_,_,_,_>) =
     let mutable tree: Snabbdom.VNode option = None

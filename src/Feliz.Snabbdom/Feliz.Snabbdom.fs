@@ -35,25 +35,25 @@ type Helper() =
                 if isNull o?(key) then o?(key) <- obj()
                 add (o?(key)) keys v
 
-        let rec addNodes (props: obj) (children: ResizeArray<_>) (nodes: Node seq) =
+        let rec addNodes (data: obj) (children: ResizeArray<_>) (nodes: Node seq) =
             nodes |> Seq.iter (function
-                | Key k -> props?key <- k
+                | Key k -> data?key <- k
                 | Text s -> children.Add(Helper.Text s)
                 | El vnode -> children.Add(vnode)
-                | Hook(k, v) -> add props ["hook"; k] v
-                | Style(k, v, StyleHook.None) -> add props ["style"; k] v
-                | Style(k, v, StyleHook.Delayed) -> add props ["style"; "delayed"; k] v
-                | Style(k, v, StyleHook.Remove) -> add props ["style"; "remove"; k] v
-                | Style(k, v, StyleHook.Destroy) -> add props ["style"; "destroy"; k] v
-                | Attr(k, v) -> add props ["attrs"; k] v
-                | Event(k, v) -> add props ["on"; k] v
-                | Fragment nodes -> addNodes props children nodes
+                | Hook(k, v) -> add data ["hook"; k] v
+                | Style(k, v, StyleHook.None) -> add data ["style"; k] v
+                | Style(k, v, StyleHook.Delayed) -> add data ["style"; "delayed"; k] v
+                | Style(k, v, StyleHook.Remove) -> add data ["style"; "remove"; k] v
+                | Style(k, v, StyleHook.Destroy) -> add data ["style"; "destroy"; k] v
+                | Attr(k, v) -> add data ["attrs"; k] v
+                | Event(k, v) -> add data ["on"; k] v
+                | Fragment nodes -> addNodes data children nodes
             )
 
-        let props = obj()
+        let data = obj()
         let children = ResizeArray()
-        addNodes props children nodes
-        Snabbdom.h(tag, props, children) |> El
+        addNodes data children nodes
+        Snabbdom.h(tag, data, children) |> El
 
     member _.StringToNode(v) = Text v
     member _.EmptyNode = Fragment []
@@ -101,6 +101,7 @@ type Extensions() =
         withStyleHook StyleHook.Destroy nodes
 
 let private h = Helper()
+let private cache = Fable.Core.JS.Constructors.WeakMap.Create()
 
 let Html = HtmlEngine(h)
 let Svg = SvgEngine(h)
@@ -108,27 +109,37 @@ let Attr = AttrEngine(h)
 let Css = CssEngine(h)
 let Ev = EventEngine(h)
 
-module Hook =
-    /// the patch process begins
-    let pre (f: unit -> unit) = Hook("pre", f)
+type Hook =
     /// a vnode has been added
-    let init (f: VNode -> unit) = Hook("init", f)
+    static member init (f: Func<VNode, unit>) = Node.Hook("init", f)
     /// a DOM element has been created based on a vnode
-    let create (f: VNode -> VNode -> unit) = Hook("create", f)
+    static member create (f: Func<VNode, VNode, unit>) = Node.Hook("create", f)
     /// an element has been inserted into the DOM
-    let insert (f: VNode -> unit) = Hook("insert", f)
+    static member insert (f: Func<VNode, unit>) = Node.Hook("insert", f)
     /// an element is about to be patched
-    let prepatch (f: VNode -> VNode -> unit) = Hook("prepatch", f)
+    static member prepatch (f: Func<VNode, VNode, unit>) = Node.Hook("prepatch", f)
     /// an element is being updated
-    let update (f: VNode -> VNode -> unit) = Hook("update", f)
+    static member update (f: Func<VNode, VNode, unit>) = Node.Hook("update", f)
     /// an element has been patched
-    let postpatch (f: VNode -> VNode -> unit) = Hook("postpatch", f)
+    static member postpatch (f: Func<VNode, VNode, unit>) = Node.Hook("postpatch", f)
     /// an element is directly or indirectly being removed
-    let destroy (f: VNode -> unit) = Hook("destroy", f)
+    static member destroy (f: Func<VNode, unit>) = Node.Hook("destroy", f)
     /// an element is directly being removed from the DOM
-    let remove (f: VNode -> (unit -> unit) -> unit) = Hook("remove", f)
-    /// the patch process is done
-    let post (f: unit -> unit) = Hook("post", f)
+    static member remove (f: Func<VNode, (unit -> unit), unit>) = Node.Hook("remove", f)
+
+    /// The disposable returned by the hook when the element is inserted into the DOM
+    /// will be disposed when that element is directly or indirectly removed from the DOM
+    static member insert (f: VNode -> IDisposable) =
+        Fragment [
+            Hook.insert (fun (v: VNode) ->
+                let disp = f v
+                cache.set(v.elm, disp) |> ignore)
+
+            Hook.destroy (fun (v: VNode) ->
+                cache.get(v.elm)
+                |> Option.ofObj
+                |> Option.iter (fun d -> d.Dispose()))
+        ]
 
 let key k = Key k
 
