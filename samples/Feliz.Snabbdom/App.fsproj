@@ -8,10 +8,10 @@
     <Compile Include="Todos.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
-  <!-- <ItemGroup>
-    <ProjectReference Include="..\..\src\Elmish.Snabbdom\Elmish.Snabbdom.fsproj" />
-  </ItemGroup> -->
   <ItemGroup>
-    <PackageReference Include="Elmish.Snabbdom" Version="1.0.0-beta-002" />
+    <ProjectReference Include="..\..\src\Elmish.Snabbdom\Elmish.Snabbdom.fsproj" />
   </ItemGroup>
+  <!-- <ItemGroup>
+    <PackageReference Include="Elmish.Snabbdom" Version="1.0.0-beta-002" />
+  </ItemGroup> -->
 </Project>

@@ -21,9 +21,6 @@ type Node =
     | Attr of string * obj
     | Event of string * obj
     | Fragment of Node list
-    static member AsVNode = function
-        | El vnode -> vnode
-        | _ -> failwith "not a vnode"
 
 type Helper() =
     member _.MakeNode(tag, nodes) =
@@ -105,6 +102,13 @@ type Browser.Types.EventTarget with
         this :?> Browser.Types.HTMLInputElement
 
 let private h = Helper()
+
+type Node with
+    static member AsVNode = function
+        | El vnode -> vnode
+        | Fragment [El vnode] -> vnode
+        | Fragment nodes -> h.MakeNode("div", nodes) |> Node.AsVNode
+        | _ -> failwith "not a vnode"
 
 let Html = HtmlEngine(h)
 let Svg = SvgEngine(h)

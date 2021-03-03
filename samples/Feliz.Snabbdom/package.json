@@ -2,7 +2,7 @@
     "private": "true",
     "scripts": {
         "postinstall": "dotnet tool restore",
-        "start": "dotnet fable watch --run webpack serve --content-base public"
+        "start": "dotnet fable watch --run webpack serve --hot --content-base public"
     },
     "dependencies": {
         "snabbdom": "^2.1.0",

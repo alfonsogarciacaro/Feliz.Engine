@@ -2,6 +2,7 @@ module App
 
 open Elmish
 open Elmish.Snabbdom
+open Elmish.Snabbdom.HMR
 
 open Todos
 

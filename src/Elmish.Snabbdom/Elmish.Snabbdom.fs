@@ -58,23 +58,22 @@ let mountOnVNodeWith (arg: 'arg) (program: Program<'arg, 'model, 'msg, Node>): N
 let mountOnVNode (program: Program<_,_,_,_>): Node =
     program |> __mountOnVNodeWith ()
 
-let mountOnElement (el: HTMLElement) (program: Program<_,_,_,_>) =
-    let mutable tree: Snabbdom.VNode option = None
+let mountWithId (id: string) program =
+    let el = Browser.Dom.document.getElementById(id)
+    let mutable oldVNode: Snabbdom.VNode option = None
 
     let setState model dispatch =
-        let newTree = Program.view program model dispatch |> Node.AsVNode
-        match tree with
-        | None -> Snabbdom.Helper.Patch(el, newTree) |> ignore
-        | Some oldTree -> Snabbdom.Helper.Patch(oldTree, newTree) |> ignore
-        tree <- Some newTree
+        let newVNode = Program.view program model dispatch |> Node.AsVNode
+        // Use the same selector so the virtual node "fuses" with the actual element,
+        // to avoid removing the el from the DOM and losing the reference in HMR reloads
+        newVNode.sel <- el.tagName.ToLowerInvariant() + "#" + id
+        match oldVNode with
+        | None ->
+            // Snabbdom expects el to be empty, but this is not the case in HMR reloads
+            if el.children.length > 0 then el.innerHTML <- ""
+            Snabbdom.Helper.Patch(el, newVNode) |> ignore
+        | Some oldVNode -> Snabbdom.Helper.Patch(oldVNode, newVNode) |> ignore
+        oldVNode <- Some newVNode
 
     program
     |> Program.withSetState setState
-
-let mountWithId (id: string) program =
-    let el = Browser.Dom.document.getElementById(id)
-    mountOnElement el program
-
-let mountWithSelector (selector: string) program =
-    let el = Browser.Dom.document.querySelector(selector) :?> HTMLElement
-    mountOnElement el program

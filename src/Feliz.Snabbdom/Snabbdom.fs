@@ -6,12 +6,12 @@ open Fable.Core
 type Module = interface end
 
 type VNode =
-    abstract sel: string
-    abstract key: string
-    abstract data: obj
-    abstract children: VNode[]
-    abstract text: string
-    abstract elm: Browser.Types.HTMLElement
+    abstract sel: string with get, set
+    abstract key: string with get, set
+    abstract data: obj with get, set
+    abstract children: VNode[] with get, set
+    abstract text: string with get, set
+    abstract elm: Browser.Types.HTMLElement with get, set
 
 type Patch = delegate of VNode * VNode -> VNode
 
