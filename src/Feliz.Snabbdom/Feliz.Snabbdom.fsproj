@@ -10,7 +10,7 @@
     <Compile Include="Feliz.Snabbdom.fs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="*.fsproj; *.fs; thunk.js" PackagePath="fable\" />
+    <Content Include="*.fsproj; *.fs; snabbdom.min.js" PackagePath="fable\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Feliz.Engine.Event\Feliz.Engine.Event.fsproj" />

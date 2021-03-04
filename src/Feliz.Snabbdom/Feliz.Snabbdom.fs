@@ -126,7 +126,7 @@ type Hook =
     /// an element is about to be patched
     static member prepatch (f: Func<VNode, VNode, unit>) = Node.Hook("prepatch", f)
     /// an element is being updated
-    static member update (f: Func<VNode, VNode, unit>) = Node.Hook("update", f)
+    static member  update (f: Func<VNode, VNode, unit>) = Node.Hook("update", f)
     /// an element has been patched
     static member postpatch (f: Func<VNode, VNode, unit>) = Node.Hook("postpatch", f)
     /// an element is directly or indirectly being removed
@@ -136,10 +136,10 @@ type Hook =
 
     /// The disposable returned by the hook when the element is inserted into the DOM
     /// will be disposed when that element is directly or indirectly removed from the DOM
-    static member insert (f: Func<VNode, IDisposable>) =
+    static member insert (f: VNode -> IDisposable) =
         Fragment [
             Hook.insert (fun (v: VNode) ->
-                let disp = f.Invoke(v)
+                let disp = f v
                 v.data?disposable <- disp)
 
             Hook.update (fun oldNode newNode ->
@@ -150,6 +150,22 @@ type Hook =
                 v.data?disposable
                 |> Option.ofObj
                 |> Option.iter (fun (d: IDisposable) -> d.Dispose()))
+        ]
+
+    static member observe (init: Browser.Types.HTMLElement -> 'arg -> IObserver<'arg>) (arg: 'arg) =
+        Fragment [
+            Hook.insert (fun (v: VNode) ->
+                v.data?observer <- init v.elm arg)
+
+            Hook.update (fun oldNode newNode ->
+                let obs: IObserver<'arg> = oldNode.data?observer
+                obs.OnNext(arg)
+                newNode.data?observer <- obs
+            )
+
+            Hook.destroy (fun (v: VNode) ->
+                let obs: IObserver<'arg> = v.data?observer
+                obs.OnCompleted())
         ]
 
 module Disposable =
@@ -174,10 +190,10 @@ let BodyEv = mkEventEngine(Browser.Dom.document.body)
 let inline getId x = (^a: (member Id: Guid) x)
 
 let memoizeWith (render: 'arg -> Node) getId equals arg =
-    Helper.Thunk("memo", getId arg, (fun m -> render m |> Node.AsVNode), arg, equals) |> El
+    Helper.Memo(getId arg, (fun m -> render m |> Node.AsVNode), arg, equals) |> El
 
 let memoizeWithId (render: 'arg -> Node) getId arg =
-    Helper.Thunk("memo", getId arg, (fun m -> render m |> Node.AsVNode), arg) |> El
+    Helper.Memo(getId arg, (fun m -> render m |> Node.AsVNode), arg) |> El
 
 let inline memoize (render: 'arg -> Node) arg =
     memoizeWithId render getId arg

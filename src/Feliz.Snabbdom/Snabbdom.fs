@@ -15,24 +15,28 @@ type VNode =
 
 type Patch = delegate of VNode * VNode -> VNode
 
-[<ImportMember("snabbdom/modules/attributes")>]
+// [<ImportMember("snabbdom/modules/attributes")>]
+[<ImportMember("./snabbdom.min.js")>]
 let attributesModule: Module = jsNative
 
-[<ImportMember("snabbdom/modules/style")>]
+// [<ImportMember("snabbdom/modules/style")>]
+[<ImportMember("./snabbdom.min.js")>]
 let styleModule: Module = jsNative
 
-[<ImportMember("snabbdom/modules/eventlisteners")>]
+// [<ImportMember("snabbdom/modules/eventlisteners")>]
+[<ImportMember("./snabbdom.min.js")>]
 let eventListenersModule: Module = jsNative
 
-[<ImportMember("snabbdom/h")>]
+// [<ImportMember("snabbdom/h")>]
+[<ImportMember("./snabbdom.min.js")>]
 let h(tag: string, props: obj, children: ResizeArray<VNode>): VNode = jsNative
 
-[<ImportMember("snabbdom/init")>]
+// [<ImportMember("snabbdom/init")>]
+[<ImportMember("./snabbdom.min.js")>]
 let init(modules: Module[]): Patch = jsNative
 
-// [<ImportMember("snabbdom/thunk")>]
-[<ImportMember("./thunk")>]
-let thunk(sel: string, key: Guid, fn: 'arg -> VNode, args: 'arg, equalFn: ('arg -> 'arg -> bool) option): VNode = jsNative
+[<ImportMember("./snabbdom.min.js")>]
+let memo(key: Guid, render: 'arg -> VNode, arg: 'arg, equals: ('arg -> 'arg -> bool) option): VNode = jsNative
 
 type Helper() =
     static let patcher = init [|
@@ -44,4 +48,4 @@ type Helper() =
     static member Text(str: string): VNode = unbox str
     static member Patch(oldNode: VNode, newNode: VNode): VNode = patcher.Invoke(oldNode, newNode)
     static member Patch(el: Browser.Types.HTMLElement, vnode: VNode): VNode = patcher.Invoke(unbox el, vnode)
-    static member Thunk(sel: string, key: Guid, renderFn: 'Arg -> VNode, arg: 'Arg, ?equalFn: 'Arg -> 'Arg -> bool): VNode = thunk(sel, key, renderFn, arg, equalFn)
+    static member Memo(key: Guid, render: 'Arg -> VNode, arg: 'Arg, ?equals: 'Arg -> 'Arg -> bool): VNode = memo(key, render, arg, equals)
