@@ -15,5 +15,17 @@ module.exports = {
 		chunkFilename: '[name].[id].js',
 	},
 	mode,
-	devtool: prod ? false: 'source-map'
+	devtool: prod ? false : 'source-map',
+	module: {
+		rules: [
+			{
+				test: /\.css$/i,
+				use: ["style-loader", "css-loader", "resolve-url-loader"],
+			},
+            {
+                test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*)?$/,
+                use: ['file-loader']
+            }
+		],
+	},
 };

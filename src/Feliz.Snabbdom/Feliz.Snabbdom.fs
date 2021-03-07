@@ -152,10 +152,10 @@ type Hook =
                 |> Option.iter (fun (d: IDisposable) -> d.Dispose()))
         ]
 
-    static member observe (init: Browser.Types.HTMLElement -> 'arg -> IObserver<'arg>) (arg: 'arg) =
+    static member subscribe(arg: 'arg, onInsert: VNode -> IObserver<'arg>) =
         Fragment [
             Hook.insert (fun (v: VNode) ->
-                v.data?observer <- init v.elm arg)
+                v.data?observer <- onInsert v)
 
             Hook.update (fun oldNode newNode ->
                 let obs: IObserver<'arg> = oldNode.data?observer
@@ -167,6 +167,14 @@ type Hook =
                 let obs: IObserver<'arg> = v.data?observer
                 obs.OnCompleted())
         ]
+
+    static member subscribe(arg: 'arg, onInsert: VNode -> ('arg -> unit)) =
+        Hook.subscribe(arg, fun vnode ->
+            let onNext = onInsert vnode
+            { new IObserver<'arg> with
+                member _.OnNext(v) = onNext v
+                member _.OnCompleted() = ()
+                member _.OnError(_) = () })
 
 module Disposable =
     let make f =

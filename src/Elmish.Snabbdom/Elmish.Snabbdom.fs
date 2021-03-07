@@ -23,8 +23,8 @@ let withSetNewArg (setNewArg: 'arg -> 'msg) (program: Program<'arg, 'model, 'msg
     program?setNewArg <- setNewArg
     program
 
-let private __mountOnVNodeWith (arg: 'arg) (init: (Program<'arg, 'model, 'msg, Node> -> unit) -> unit): Node =
-    Html.custom("elmish", [
+let __mountOnVNodeWith (init: (Program<'arg, 'model, 'msg, Node> -> unit) -> unit) (sel: string) (arg: 'arg): Node =
+    Html.custom(sel, [
       Hook.insert (fun vnode -> init(fun program ->
         let mutable oldVNode = vnode
         let mutable oldModel: 'model option = None
@@ -35,7 +35,7 @@ let private __mountOnVNodeWith (arg: 'arg) (init: (Program<'arg, 'model, 'msg, N
             | Some m when obj.ReferenceEquals(m, model) -> ()
             | _ ->
                 let newVNode =
-                    Html.custom("elmish", [
+                    Html.custom(sel, [
                         Program.view program model dispatch
                     ]) |> Node.AsVNode
 
@@ -57,23 +57,28 @@ let private __mountOnVNodeWith (arg: 'arg) (init: (Program<'arg, 'model, 'msg, N
       )
     ])
 
-let mountOnVNodeWith (arg: 'arg) (program: Program<'arg, 'model, 'msg, Node>): Node =
-    __mountOnVNodeWith arg (fun cont -> cont(program))
+let mountOnVNodeWith sel (arg: 'arg) (program: Program<'arg, 'model, 'msg, Node>): Node =
+    __mountOnVNodeWith (fun cont -> cont(program)) sel arg
 
-let mountOnVNode (program: Program<_,_,_,_>): Node =
-    __mountOnVNodeWith () (fun cont -> cont(program))
+let mountOnVNode sel (program: Program<_,_,_,_>): Node =
+    __mountOnVNodeWith (fun cont -> cont(program)) sel ()
 
-[<Emit("cont => import($0).then(m => cont(m.mkProgram(arg)))")>]
-let private importAndMkProgram(path: string): (Program<'arg, 'model, 'msg, Node> -> unit) -> unit = jsNative
+[<Emit("cont => import($0).then(m => cont(m.mkProgram($1)))")>]
+let __importAndMkProgram(path: string) (arg: 'arg): (Program<'arg, 'model, 'msg, Node> -> unit) -> unit = jsNative
 
-let inline importAndMountOnVNodeWith (path: string) (arg: 'arg): Node =
-    __mountOnVNodeWith arg (importAndMkProgram path)
+let inline importAndMountOnVNodeWith (path: string) sel (arg: 'arg): Node =
+    __mountOnVNodeWith (__importAndMkProgram path arg) sel arg
 
-let inline importAndMountOnVNode (path: string): Node =
-    __mountOnVNodeWith () (importAndMkProgram path)
+let inline importAndMountOnVNode (path: string) sel: Node =
+    __mountOnVNodeWith (__importAndMkProgram path ()) sel ()
 
 let mountWithId (id: string) program =
-    let el = Browser.Dom.document.getElementById(id)
+    let parent = Browser.Dom.document.getElementById(id)
+    // Snabbdom expects el to be empty, but this is not the case in HMR reloads
+    if parent.children.length > 0 then parent.innerHTML <- ""
+    let el = Browser.Dom.document.createElement("div")
+    parent.appendChild(el) |> ignore
+
     let mutable oldVNode: Snabbdom.VNode option = None
     let mutable oldModel: 'model option = None
 
@@ -82,13 +87,8 @@ let mountWithId (id: string) program =
         | Some m when obj.ReferenceEquals(m, model) -> ()
         | _ ->
             let newVNode = Program.view program model dispatch |> Node.AsVNode
-            // Make sure the generated element has the same id so we can find it again in HMR reloads
-            newVNode.sel <- newVNode.sel + "#" + id
             match oldVNode with
-            | None ->
-                // Snabbdom expects el to be empty, but this is not the case in HMR reloads
-                if el.children.length > 0 then el.innerHTML <- ""
-                Snabbdom.Helper.Patch(el, newVNode) |> ignore
+            | None -> Snabbdom.Helper.Patch(el, newVNode) |> ignore
             | Some oldVNode -> Snabbdom.Helper.Patch(oldVNode, newVNode) |> ignore
             oldVNode <- Some newVNode
             oldModel <- Some model

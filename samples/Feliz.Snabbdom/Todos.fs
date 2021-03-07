@@ -264,11 +264,8 @@ let renderTodo dispatch (todo: Todo, editing: string option) =
         Attr.className "box"
 
         Css.backgroundColor (
-            if todo.Timeout then
-                color.red
-            else
-                color.transparent
-        )
+            if todo.Timeout then color.red
+            else color.transparent)
 
         Css.opacity 0.
         Css.transformScale 1.5
@@ -288,10 +285,8 @@ let renderTodo dispatch (todo: Todo, editing: string option) =
             renderTodoDescription dispatch todo editing
             renderTodoButtons dispatch todo editing
 
-            div [ "column" ] [
-                Timer.mkProgram (fun (Timer.Timeout) -> Timeout todo.Id |> dispatch)
-                |> Program.mountOnVNodeWith (not todo.Completed) // Timer is only active when item is not completed
-            ]
+            Timer.mkProgram (fun (Timer.Timeout) -> Timeout todo.Id |> dispatch)
+            |> Program.mountOnVNodeWith "div.column" (not todo.Completed) // Timer is only active when item is not completed
         ]
     ]
 
@@ -316,3 +311,6 @@ let view (state: State) (dispatch: Msg -> unit) =
         inputField state dispatch
         todoList state dispatch
     ]
+
+let mkProgram() =
+    Elmish.Program.mkSimple init update view

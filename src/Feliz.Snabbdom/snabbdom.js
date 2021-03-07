@@ -24,6 +24,8 @@ export function memo(key, render, arg, equals) {
             init(vnode) {
                 Object.assign(vnode, render(arg));
                 vnode.data.hook = vnode.data.hook || {};
+                // After creating the element, make sure to put back the selector and keys
+                // so the node is correctly matched when updating
                 vnode.data.hook.create = () => {
                     vnode.sel = "memo";
                     vnode.key = key;

@@ -3,6 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Leaflet.fs" />
     <Compile Include="Dragging.fs" />
     <Compile Include="Timer.fs" />
     <Compile Include="Todos.fs" />
