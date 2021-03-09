@@ -6,8 +6,6 @@ open PublishUtils
 let packages =[
     "Feliz.Engine"
     "Feliz.Engine.Event"
-    "Feliz.Snabbdom"
-    "Elmish.Snabbdom"
 ]
 
 match argsLower with
