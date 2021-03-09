@@ -4,7 +4,6 @@ open System
 open Feliz.Styles
 
 type AttrHelper<'Node> =
-    abstract MakeAttr: key: string * value: obj -> 'Node
     abstract MakeAttr: key: string * value: string -> 'Node
     abstract MakeBooleanAttr: string * bool -> 'Node
     // abstract MakeEvent: string * (Event -> unit) -> 'Node
