@@ -18,7 +18,8 @@ let Html =
 let Attr =
     AttrEngine
         { new AttrHelper<Node> with
-            member _.MakeAttr(key, value) = Attr(key, Choice1Of2 value)
+            member _.MakeAttr(key, value:obj) = Attr(key, Choice1Of2 (string value))
+            member _.MakeAttr(key, value:string) = Attr(key, Choice1Of2 value)
             member _.MakeBooleanAttr(key, value) = Attr(key, Choice2Of2 value) }
 
 let print (path: string) (nodes: Node seq) =
