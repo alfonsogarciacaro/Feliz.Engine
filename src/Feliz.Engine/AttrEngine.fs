@@ -1418,7 +1418,11 @@ type AttrEngine<'Node>(h: AttrHelper<'Node>) =
     /// A hash-name reference to a <map> element; that is a '#' followed by the value of a name of a map element.
     member _.usemap (value: string) = h.MakeAttr("usemap", value)
 
-    member _.value (value: obj) = h.MakeAttr("value", value)
+    member _.value (value: bool) = h.MakeBooleanAttr("value", value)
+    member _.value (value: float) = h.MakeAttr("value", Util.asString value)
+    member _.value (value: Guid) = h.MakeAttr("value", (Util.asString value))
+    member _.value (value: int) = h.MakeAttr("value", Util.asString value)
+    member _.value (value: string) = h.MakeAttr("value", value)
 
 (*
     /// Sets the value of a React controlled component.
