@@ -16,10 +16,8 @@ let Html =
             member _.EmptyNode = Fragment [] }
 
 let Attr =
-    AttrEngine
-        { new AttrHelper<Node> with
-            member _.MakeAttr(key, value:string) = Attr(key, Choice1Of2 value)
-            member _.MakeBooleanAttr(key, value) = Attr(key, Choice2Of2 value) }
+    AttrEngine(makeAttr = (fun k v -> Attr(k, Choice1Of2 v)),
+               makeBooleanAttr = (fun k v -> Attr(k, Choice2Of2 v)))
 
 let print (path: string) (nodes: Node seq) =
     let indented (stream: Node.Fs.WriteStream<string>) indent str =

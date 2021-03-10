@@ -7,7 +7,10 @@ open Feliz.StaticHtml
     Html.div [
         Html.h1 "1"
         Html.button [
-            Attr.className "my-button"
+            Attr.classes [
+                true, "my-button"
+                false, "is-active"
+            ]
             Html.text "Increment"
         ]
         Html.input [
