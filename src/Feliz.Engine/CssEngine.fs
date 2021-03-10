@@ -104,23 +104,20 @@ type internal Util =
 
 open type Util
 
-type CssHelper<'Style> =
-    abstract MakeStyle: key: string * value: string -> 'Style
+// Use Func to avoid Fable checking the arity at runtime because of the returning generic
 
-type CssEngine<'Style>(h: CssHelper<'Style>) =
-    new (f: string -> string -> 'Style) =
-        CssEngine { new CssHelper<'Style> with
-                        member _.MakeStyle(k, v) = f k v }
+type CssEngine<'Style>(makeStyle: Func<string, string, 'Style>) =
+    let makeStyle k v = makeStyle.Invoke(k, v)
 
     /// Define a custom property
-    member _.custom(key: string, value: string) = h.MakeStyle(key, value)
+    member _.custom(key: string, value: string) = makeStyle key value
 
     /// Specifies that all the element's properties should be changed to their initial values.
-    member _.allInitial = h.MakeStyle("all", "initial")
+    member _.allInitial = makeStyle "all" "initial"
     /// Specifies that all the element's properties should be changed to their inherited values.
-    member _.allInherit = h.MakeStyle("all", "inherit")
+    member _.allInherit = makeStyle "all" "inherit"
     /// Specifies that all the element's properties should be changed to their inherited values if they inherit by default, or to their initial values if not.
-    member _.allUnset = h.MakeStyle("all", "unset")
+    member _.allUnset = makeStyle "all" "unset"
     /// Specifies behavior that depends on the stylesheet origin to which the declaration belongs:
     ///
     /// User-agent origin
@@ -129,601 +126,601 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     ///     Rolls back the cascade to the user-agent level, so that the specified values are calculated as if no author-level or user-level rules were specified for the element.
     /// Author origin
     ///     Rolls back the cascade to the user level, so that the specified values are calculated as if no author-level rules were specified for the element. For purposes of revert, the Author origin includes the Override and Animation origins.
-    member _.allRevert = h.MakeStyle("all", "revert")
+    member _.allRevert = makeStyle "all" "revert"
 
-    member _.boxShadow(value: string) = h.MakeStyle("box-shadow", value)
+    member _.boxShadow(value: string) = makeStyle "box-shadow" value
 
     member _.boxShadow(horizontalOffset: int, verticalOffset: int, color: string) =
-        h.MakeStyle("box-shadow",
+        makeStyle "box-shadow" (
             (asString horizontalOffset) + "px " +
             (asString verticalOffset) + "px " +
             color
         )
     member _.boxShadow(horizontalOffset: int, verticalOffset: int, blur: int, color: string) =
-        h.MakeStyle("box-shadow",
+        makeStyle "box-shadow" (
             (asString horizontalOffset) + "px " +
             (asString verticalOffset) + "px " +
             (asString blur) + "px " +
             color
         )
     member _.boxShadow(horizontalOffset: int, verticalOffset: int, blur: int, spread: int, color: string) =
-        h.MakeStyle("box-shadow",
+        makeStyle "box-shadow" (
             (asString horizontalOffset) + "px " +
             (asString verticalOffset) + "px " +
             (asString blur) + "px " +
             (asString spread) + "px " +
             color
         )
-    member _.boxShadowNone = h.MakeStyle("box-shadow", "none")
+    member _.boxShadowNone = makeStyle "box-shadow" "none"
     /// Inherits this property from its parent element.
-    member _.boxShadowInheritFromParent = h.MakeStyle("box-shadow", "inherit")
+    member _.boxShadowInheritFromParent = makeStyle "box-shadow" "inherit"
 
-    member _.height(value: int) = h.MakeStyle("height", asString value + "px")
-    member _.height(value: ICssUnit) = h.MakeStyle("height", asString value)
+    member _.height(value: int) = makeStyle "height" (asString value + "px")
+    member _.height(value: ICssUnit) = makeStyle "height" (asString value)
     /// Inherits this property from its parent element.
-    member _.heightInheritFromParent = h.MakeStyle("height", "inherit")
+    member _.heightInheritFromParent = makeStyle "height" "inherit"
     /// Sets this property to its default value.
-    member _.heightInitial = h.MakeStyle("height", "initial")
+    member _.heightInitial = makeStyle "height" "initial"
     /// The intrinsic preferred height.
-    member _.heightMaxContent = h.MakeStyle("height", "max-content")
+    member _.heightMaxContent = makeStyle "height" "max-content"
     /// The intrinsic minimum height.
-    member _.heightMinContent = h.MakeStyle("height", "min-content")
+    member _.heightMinContent = makeStyle "height" "min-content"
 
-    member _.maxHeight(value: int) = h.MakeStyle("max-height", asString value + "px")
-    member _.maxHeight(value: ICssUnit) = h.MakeStyle("max-height", asString value)
+    member _.maxHeight(value: int) = makeStyle "max-height" (asString value + "px")
+    member _.maxHeight(value: ICssUnit) = makeStyle "max-height" (asString value)
     /// Inherits this property from its parent element.
-    member _.maxHeightInheritFromParent = h.MakeStyle("max-height", "inherit")
+    member _.maxHeightInheritFromParent = makeStyle "max-height" "inherit"
     /// Sets this property to its default value.
-    member _.maxHeightInitial = h.MakeStyle("max-height", "initial")
+    member _.maxHeightInitial = makeStyle "max-height" "initial"
     /// The intrinsic preferred height.
-    member _.maxHeightMaxContent = h.MakeStyle("height", "max-content")
+    member _.maxHeightMaxContent = makeStyle "height" "max-content"
     /// The intrinsic minimum height.
-    member _.maxHeightMinContent = h.MakeStyle("height", "min-content")
+    member _.maxHeightMinContent = makeStyle "height" "min-content"
 
-    member _.minHeight(value: int) = h.MakeStyle("min-height", asString value + "px")
-    member _.minHeight(value: ICssUnit) = h.MakeStyle("min-height", asString value)
+    member _.minHeight(value: int) = makeStyle "min-height" (asString value + "px")
+    member _.minHeight(value: ICssUnit) = makeStyle "min-height" (asString value)
     /// Inherits this property from its parent element.
-    member _.minHeightInheritFromParent = h.MakeStyle("min-height", "inherit")
+    member _.minHeightInheritFromParent = makeStyle "min-height" "inherit"
     /// Sets this property to its default value.
-    member _.minHeightInitial = h.MakeStyle("min-height", "initial")
+    member _.minHeightInitial = makeStyle "min-height" "initial"
     /// The intrinsic preferred height.
-    member _.minHeightMaxContent = h.MakeStyle("height", "max-content")
+    member _.minHeightMaxContent = makeStyle "height" "max-content"
     /// The intrinsic minimum height.
-    member _.minHeightMinContent = h.MakeStyle("height", "min-content")
+    member _.minHeightMinContent = makeStyle "height" "min-content"
 
     /// The browser determines the justification algorithm
-    member _.textJustifyAuto = h.MakeStyle("text-justify", "auto")
+    member _.textJustifyAuto = makeStyle "text-justify" "auto"
     /// Increases/Decreases the space between words
-    member _.textJustifyInterWord = h.MakeStyle("text-justify", "inter-word")
+    member _.textJustifyInterWord = makeStyle "text-justify" "inter-word"
     /// Increases/Decreases the space between characters
-    member _.textJustifyInterCharacter = h.MakeStyle("text-justify", "inter-character")
+    member _.textJustifyInterCharacter = makeStyle "text-justify" "inter-character"
     /// Disables justification methods
-    member _.textJustifyNone = h.MakeStyle("text-justify", "none")
-    member _.textJustifyInitial = h.MakeStyle("text-justify", "initial")
+    member _.textJustifyNone = makeStyle "text-justify" "none"
+    member _.textJustifyInitial = makeStyle "text-justify" "initial"
     /// Inherits this property from its parent element.
-    member _.textJustifyInheritFromParent = h.MakeStyle("text-justify", "inherit")
+    member _.textJustifyInheritFromParent = makeStyle "text-justify" "inherit"
 
     /// Sequences of whitespace will collapse into a single whitespace. Text will wrap when necessary. This is default.
-    member _. whiteSpaceNormal = h.MakeStyle("white-space", "normal")
+    member _. whiteSpaceNormal = makeStyle "white-space" "normal"
     /// Sequences of whitespace will collapse into a single whitespace. Text will never wrap to the next line.
     /// The text continues on the same line until a `<br> ` tag is encountered.
-    member _. whiteSpaceNowrap = h.MakeStyle("white-space", "nowrap")
+    member _. whiteSpaceNowrap = makeStyle "white-space" "nowrap"
     /// Whitespace is preserved by the browser. Text will only wrap on line breaks. Acts like the <pre> tag in HTML.
-    member _. whiteSpacePre = h.MakeStyle("white-space", "pre")
+    member _. whiteSpacePre = makeStyle "white-space" "pre"
     /// Sequences of whitespace will collapse into a single whitespace. Text will wrap when necessary, and on line breaks
-    member _. whiteSpacePreLine = h.MakeStyle("white-space", "pre-line")
+    member _. whiteSpacePreLine = makeStyle "white-space" "pre-line"
     /// Whitespace is preserved by the browser. Text will wrap when necessary, and on line breaks
-    member _. whiteSpacePreWrap = h.MakeStyle("white-space", "pre-wrap")
+    member _. whiteSpacePreWrap = makeStyle "white-space" "pre-wrap"
     /// Sets this property to its default value.
-    member _. whiteSpaceInitial = h.MakeStyle("white-space", "initial")
+    member _. whiteSpaceInitial = makeStyle "white-space" "initial"
     /// Inherits this property from its parent element.
-    member _. whiteSpaceInheritFromParent = h.MakeStyle("white-space", "inherit")
+    member _. whiteSpaceInheritFromParent = makeStyle "white-space" "inherit"
 
     /// Default value. Uses default line break rules.
-    member _.wordbreakNormal = h.MakeStyle("word-break", "normal")
+    member _.wordbreakNormal = makeStyle "word-break" "normal"
     /// To prevent overflow, word may be broken at any character
-    member _.wordbreakBreakAll = h.MakeStyle("word-break", "break-all")
+    member _.wordbreakBreakAll = makeStyle "word-break" "break-all"
     /// Word breaks should not be used for Chinese/Japanese/Korean (CJK) text. Non-CJK text behavior is the same as value "normal"
-    member _.wordbreakKeepAll = h.MakeStyle("word-break", "keep-all")
+    member _.wordbreakKeepAll = makeStyle "word-break" "keep-all"
     /// To prevent overflow, word may be broken at arbitrary points.
-    member _.wordbreakBreakWord = h.MakeStyle("word-break", "break-word")
+    member _.wordbreakBreakWord = makeStyle "word-break" "break-word"
     /// Sets this property to its default value.
-    member _.wordbreakInitial = h.MakeStyle("word-break", "initial")
+    member _.wordbreakInitial = makeStyle "word-break" "initial"
     /// Inherits this property from its parent element.
-    member _.wordbreakInheritFromParent = h.MakeStyle("word-break", "inherit")
+    member _.wordbreakInheritFromParent = makeStyle "word-break" "inherit"
 
     /// Allows a straight jump "scroll effect" between elements within the scrolling box. This is default
-    member _.scrollBehaviorAuto = h.MakeStyle("scroll-behavior", "auto")
+    member _.scrollBehaviorAuto = makeStyle "scroll-behavior" "auto"
     /// Allows a smooth animated "scroll effect" between elements within the scrolling box.
-    member _.scrollBehaviorSmooth = h.MakeStyle("scroll-behavior", "smooth")
+    member _.scrollBehaviorSmooth = makeStyle "scroll-behavior" "smooth"
     /// Sets this property to its default value.
-    member _.scrollBehaviorInitial = h.MakeStyle("scroll-behavior", "initial")
+    member _.scrollBehaviorInitial = makeStyle "scroll-behavior" "initial"
     /// Inherits this property from its parent element.
-    member _.scrollBehaviorInheritFromParent = h.MakeStyle("scroll-behavior", "inherit")
+    member _.scrollBehaviorInheritFromParent = makeStyle "scroll-behavior" "inherit"
 
     /// The content is not clipped, and it may be rendered outside the left and right edges. This is default.
-    member _.overflowVisible = h.MakeStyle("overflow", "visibile")
+    member _.overflowVisible = makeStyle "overflow" "visibile"
     /// The content is clipped - and no scrolling mechanism is provided.
-    member _.overflowHidden = h.MakeStyle("overflow", "hidden")
+    member _.overflowHidden = makeStyle "overflow" "hidden"
     /// The content is clipped and a scrolling mechanism is provided.
-    member _.overflowScroll = h.MakeStyle("overflow", "scroll")
+    member _.overflowScroll = makeStyle "overflow" "scroll"
     /// Should cause a scrolling mechanism to be provided for overflowing boxes
-    member _.overflowAuto = h.MakeStyle("overflow", "auto")
+    member _.overflowAuto = makeStyle "overflow" "auto"
     /// Sets this property to its default value.
-    member _.overflowInitial = h.MakeStyle("overflow", "initial")
+    member _.overflowInitial = makeStyle "overflow" "initial"
     /// Inherits this property from its parent element.
-    member _.overflowInheritFromParent = h.MakeStyle("overflow", "inherit")
+    member _.overflowInheritFromParent = makeStyle "overflow" "inherit"
 
     /// The content is not clipped, and it may be rendered outside the left and right edges. This is default.
-    member _.overflowXVisible = h.MakeStyle("overflow-x", "visibile")
+    member _.overflowXVisible = makeStyle "overflow-x" "visibile"
     /// The content is clipped - and no scrolling mechanism is provided.
-    member _.overflowXHidden = h.MakeStyle("overflow-x", "hidden")
+    member _.overflowXHidden = makeStyle "overflow-x" "hidden"
     /// The content is clipped and a scrolling mechanism is provided.
-    member _.overflowXScroll = h.MakeStyle("overflow-x", "scroll")
+    member _.overflowXScroll = makeStyle "overflow-x" "scroll"
     /// Should cause a scrolling mechanism to be provided for overflowing boxes
-    member _.overflowXAuto = h.MakeStyle("overflow-x", "auto")
+    member _.overflowXAuto = makeStyle "overflow-x" "auto"
     /// Sets this property to its default value.
-    member _.overflowXInitial = h.MakeStyle("overflow-x", "initial")
+    member _.overflowXInitial = makeStyle "overflow-x" "initial"
     /// Inherits this property from its parent element.
-    member _.overflowXInheritFromParent = h.MakeStyle("overflow-x", "inherit")
+    member _.overflowXInheritFromParent = makeStyle "overflow-x" "inherit"
 
     /// The content is not clipped, and it may be rendered outside the left and right edges. This is default.
-    member _.overflowYVisible = h.MakeStyle("overflow-y", "visibile")
+    member _.overflowYVisible = makeStyle "overflow-y" "visibile"
     /// The content is clipped - and no scrolling mechanism is provided.
-    member _.overflowYHidden = h.MakeStyle("overflow-y", "hidden")
+    member _.overflowYHidden = makeStyle "overflow-y" "hidden"
     /// The content is clipped and a scrolling mechanism is provided.
-    member _.overflowYScroll = h.MakeStyle("overflow-y", "scroll")
+    member _.overflowYScroll = makeStyle "overflow-y" "scroll"
     /// Should cause a scrolling mechanism to be provided for overflowing boxes
-    member _.overflowYAuto = h.MakeStyle("overflow-y", "auto")
+    member _.overflowYAuto = makeStyle "overflow-y" "auto"
     /// Sets this property to its default value.
-    member _.overflowYInitial = h.MakeStyle("overflow-y", "initial")
+    member _.overflowYInitial = makeStyle "overflow-y" "initial"
     /// Inherits this property from its parent element.
-    member _.overflowYInheritFromParent = h.MakeStyle("overflow-y", "inherit")
+    member _.overflowYInheritFromParent = makeStyle "overflow-y" "inherit"
 
     /// The element is hidden (but still takes up space).
-    member _.visibilityHidden = h.MakeStyle("visibility", "hidden")
+    member _.visibilityHidden = makeStyle "visibility" "hidden"
     /// Default value. The element is visible.
-    member _.visibilityVisible = h.MakeStyle("visibility", "visible")
+    member _.visibilityVisible = makeStyle "visibility" "visible"
     /// Only for table rows (`<tr> `), row groups (`<tbody> `), columns (`<col> `), column groups
     /// (`<colgroup> `). This value removes a row or column, but it does not affect the table layout.
     /// The space taken up by the row or column will be available for other content.
     ///
     /// If collapse is used on other elements, it renders as "hidden"
-    member _.visibilityCollapse = h.MakeStyle("visibility", "collapse")
+    member _.visibilityCollapse = makeStyle "visibility" "collapse"
     /// Sets this property to its default value.
-    member _.visibilityInitial = h.MakeStyle("visibility", "initial")
+    member _.visibilityInitial = makeStyle "visibility" "initial"
     /// Inherits this property from its parent element.
-    member _.visibilityInheritFromParent = h.MakeStyle("visibility", "inherit")
+    member _.visibilityInheritFromParent = makeStyle "visibility" "inherit"
 
     /// Default value. The length is equal to the length of the flexible item. If the item has
     /// no length specified, the length will be according to its content.
-    member _.flexBasisAuto = h.MakeStyle("flex-basis", "auto")
+    member _.flexBasisAuto = makeStyle "flex-basis" "auto"
     /// Sets this property to its default value.
-    member _.flexBasisInitial = h.MakeStyle("flex-basis", "initial")
+    member _.flexBasisInitial = makeStyle "flex-basis" "initial"
     /// Inherits this property from its parent element.
-    member _.flexBasisInheritFromParent = h.MakeStyle("flex-basis", "inherit")
+    member _.flexBasisInheritFromParent = makeStyle "flex-basis" "inherit"
 
     /// Default value. The flexible items are displayed horizontally, as a row
-    member _.flexDirectionRow = h.MakeStyle("flex-direction", "row")
+    member _.flexDirectionRow = makeStyle "flex-direction" "row"
     /// Same as row, but in reverse order.
-    member _.flexDirectionRowReverse = h.MakeStyle("flex-direction", "row-reverse")
+    member _.flexDirectionRowReverse = makeStyle "flex-direction" "row-reverse"
     /// The flexible items are displayed vertically, as a column
-    member _.flexDirectionColumn = h.MakeStyle("flex-direction", "column")
+    member _.flexDirectionColumn = makeStyle "flex-direction" "column"
     /// Same as column, but in reverse order
-    member _.flexDirectionColumnReverse = h.MakeStyle("flex-direction", "column-reverse")
+    member _.flexDirectionColumnReverse = makeStyle "flex-direction" "column-reverse"
     /// Sets this property to its default value.
-    member _.flexDirectionInitial = h.MakeStyle("flex-basis", "initial")
+    member _.flexDirectionInitial = makeStyle "flex-basis" "initial"
     /// Inherits this property from its parent element.
-    member _.flexDirectionInheritFromParent = h.MakeStyle("flex-basis", "inherit")
+    member _.flexDirectionInheritFromParent = makeStyle "flex-basis" "inherit"
 
     /// Default value. Specifies that the flexible items will not wrap.
-    member _.flexWrapNowrap = h.MakeStyle("flex-wrap", "nowrap")
+    member _.flexWrapNowrap = makeStyle "flex-wrap" "nowrap"
     /// Specifies that the flexible items will wrap if necessary
-    member _.flexWrapWrap = h.MakeStyle("flex-wrap", "wrap")
+    member _.flexWrapWrap = makeStyle "flex-wrap" "wrap"
     /// Specifies that the flexible items will wrap, if necessary, in reverse order
-    member _.flexWrapWrapReverse = h.MakeStyle("flex-wrap", "wrap-reverse")
+    member _.flexWrapWrapReverse = makeStyle "flex-wrap" "wrap-reverse"
     /// Sets this property to its default value.
-    member _.flexWrapInitial = h.MakeStyle("flex-wrap", "initial")
+    member _.flexWrapInitial = makeStyle "flex-wrap" "initial"
     /// Inherits this property from its parent element.
-    member _.flexWrapInheritFromParent = h.MakeStyle("flex-wrap", "inherit")
+    member _.flexWrapInheritFromParent = makeStyle "flex-wrap" "inherit"
 
     /// The element must float on the left side of its containing block.
-    member _.floatLeft = h.MakeStyle("float", "left")
+    member _.floatLeft = makeStyle "float" "left"
     /// The element must float on the right side of its containing block.
-    member _.floatRight = h.MakeStyle("float", "right")
+    member _.floatRight = makeStyle "float" "right"
     /// The element must not float.
-    member _.floatNone = h.MakeStyle("float", "none")
+    member _.floatNone = makeStyle "float" "none"
 
     /// The font display strategy is defined by the user agent.
     ///
     /// Default value
-    member _.fontDisplayAuto = h.MakeStyle("font-display", "auto")
+    member _.fontDisplayAuto = makeStyle "font-display" "auto"
     /// Gives the font face a short block period and an infinite swap period.
-    member _.fontDisplayBlock = h.MakeStyle("font-display", "block")
+    member _.fontDisplayBlock = makeStyle "font-display" "block"
     /// Gives the font face an extremely small block period and an infinite swap period.
-    member _.fontDisplaySwap = h.MakeStyle("font-display", "swap")
+    member _.fontDisplaySwap = makeStyle "font-display" "swap"
     /// Gives the font face an extremely small block period and a short swap period.
-    member _.fontDisplayFallback = h.MakeStyle("font-display", "fallback")
+    member _.fontDisplayFallback = makeStyle "font-display" "fallback"
     /// Gives the font face an extremely small block period and no swap period.
-    member _.fontDisplayOptional = h.MakeStyle("font-display", "optional")
+    member _.fontDisplayOptional = makeStyle "font-display" "optional"
 
     /// Default. The browser determines whether font kerning should be applied or not
-    member _.fontKerningAuto = h.MakeStyle("font-kerning", "auto")
+    member _.fontKerningAuto = makeStyle "font-kerning" "auto"
     /// Specifies that font kerning is applied
-    member _.fontKerningNormal = h.MakeStyle("font-kerning", "normal")
+    member _.fontKerningNormal = makeStyle "font-kerning" "normal"
     /// Specifies that font kerning is not applied
-    member _.fontKerningNone = h.MakeStyle("font-kerning", "none")
+    member _.fontKerningNone = makeStyle "font-kerning" "none"
 
     /// Defines from thin to thick characters. 400 is the same as normal, and 700 is the same as bold.
     /// Possible values are [100, 200, 300, 400, 500, 600, 700, 800, 900]
-    member _.fontWeight(weight: int) = h.MakeStyle("font-weight", asString weight)
+    member _.fontWeight(weight: int) = makeStyle "font-weight" (asString weight)
     /// Defines normal characters. This is default.
-    member _.fontWeightNormal = h.MakeStyle("font-weight", "normal")
+    member _.fontWeightNormal = makeStyle "font-weight" "normal"
     /// Defines thick characters.
-    member _.fontWeightBold = h.MakeStyle("font-weight", "bold")
+    member _.fontWeightBold = makeStyle "font-weight" "bold"
     /// Defines thicker characters
-    member _.fontWeightBolder = h.MakeStyle("font-weight", "bolder")
+    member _.fontWeightBolder = makeStyle "font-weight" "bolder"
     /// Defines lighter characters.
-    member _.fontWeightLighter = h.MakeStyle("font-weight", "lighter")
+    member _.fontWeightLighter = makeStyle "font-weight" "lighter"
     /// Sets this property to its default value.
-    member _.fontWeightInitial = h.MakeStyle("font-weight", "initial")
+    member _.fontWeightInitial = makeStyle "font-weight" "initial"
     /// Inherits this property from its parent element.
-    member _.fontWeightInheritFromParent = h.MakeStyle("font-weight", "inherit")
+    member _.fontWeightInheritFromParent = makeStyle "font-weight" "inherit"
 
     /// The browser displays a normal font style. This is defaut.
-    member _.fontStyleNormal = h.MakeStyle("font-style", "normal")
+    member _.fontStyleNormal = makeStyle "font-style" "normal"
     /// The browser displays an italic font style.
-    member _.fontStyleItalic = h.MakeStyle("font-style", "italic")
+    member _.fontStyleItalic = makeStyle "font-style" "italic"
     /// The browser displays an oblique font style.
-    member _.fontStyleOblique = h.MakeStyle("font-style", "oblique")
+    member _.fontStyleOblique = makeStyle "font-style" "oblique"
     /// Sets this property to its default value.
-    member _.fontStyleInitial = h.MakeStyle("font-style", "initial")
+    member _.fontStyleInitial = makeStyle "font-style" "initial"
     /// Inherits this property from its parent element.
-    member _.fontStyleInheritFromParent = h.MakeStyle("font-style", "inherit")
+    member _.fontStyleInheritFromParent = makeStyle "font-style" "inherit"
 
     /// The browser displays a normal font. This is default
-    member _.fontVariantNormal = h.MakeStyle("font-variant", "normal")
+    member _.fontVariantNormal = makeStyle "font-variant" "normal"
     /// The browser displays a small-caps font
-    member _.fontVariantSmallCaps = h.MakeStyle("font-variant", "small-caps")
+    member _.fontVariantSmallCaps = makeStyle "font-variant" "small-caps"
     /// Sets this property to its default value.
-    member _.fontVariantInitial = h.MakeStyle("font-variant", "initial")
+    member _.fontVariantInitial = makeStyle "font-variant" "initial"
     /// Inherits this property from its parent element.
-    member _.fontVariantInheritFromParent = h.MakeStyle("font-variant", "inherit")
+    member _.fontVariantInheritFromParent = makeStyle "font-variant" "inherit"
 
     /// Break words only at allowed break points
-    member _.wordWrapNormal = h.MakeStyle("word-wrap", "normal")
+    member _.wordWrapNormal = makeStyle "word-wrap" "normal"
     /// Allows unbreakable words to be broken
-    member _.wordWrapBreakWord = h.MakeStyle("word-wrap", "break-word")
+    member _.wordWrapBreakWord = makeStyle "word-wrap" "break-word"
     /// Sets this property to its default value.
-    member _.wordWrapInitial = h.MakeStyle("word-wrap", "initial")
+    member _.wordWrapInitial = makeStyle "word-wrap" "initial"
     /// Inherits this property from its parent element.
-    member _.wordWrapInheritFromParent = h.MakeStyle("word-wrap", "inherit")
+    member _.wordWrapInheritFromParent = makeStyle "word-wrap" "inherit"
 
     /// Default. The element inherits its parent container's align-items property, or "stretch" if it has no parent container.
-    member _.alignSelfAuto = h.MakeStyle("align-self", "auto")
+    member _.alignSelfAuto = makeStyle "align-self" "auto"
     /// The element is positioned to fit the container
-    member _.alignSelfStretch = h.MakeStyle("align-self", "stretch")
+    member _.alignSelfStretch = makeStyle "align-self" "stretch"
     /// The element is positioned at the center of the container
-    member _.alignSelfCenter = h.MakeStyle("align-self", "center")
+    member _.alignSelfCenter = makeStyle "align-self" "center"
     /// The element is positioned at the beginning of the container
-    member _.alignSelfFlexStart = h.MakeStyle("align-self", "flex-start")
+    member _.alignSelfFlexStart = makeStyle "align-self" "flex-start"
     /// The element is positioned at the end of the container
-    member _.alignSelfFlexEnd = h.MakeStyle("align-self", "flex-end")
+    member _.alignSelfFlexEnd = makeStyle "align-self" "flex-end"
     /// The element is positioned at the baseline of the container
-    member _.alignSelfBaseline = h.MakeStyle("align-self", "baseline")
+    member _.alignSelfBaseline = makeStyle "align-self" "baseline"
     /// Sets this property to its default value
-    member _.alignSelfInitial = h.MakeStyle("align-self", "initial")
+    member _.alignSelfInitial = makeStyle "align-self" "initial"
     /// Inherits this property from its parent element
-    member _.alignSelfInheritFromParent = h.MakeStyle("align-self", "inherit")
+    member _.alignSelfInheritFromParent = makeStyle "align-self" "inherit"
 
     /// Default. Items are stretched to fit the container
-    member _.alignItemsStretch = h.MakeStyle("align-items", "stretch")
+    member _.alignItemsStretch = makeStyle "align-items" "stretch"
     /// Items are positioned at the center of the container
-    member _.alignItemsCenter = h.MakeStyle("align-items", "center")
+    member _.alignItemsCenter = makeStyle "align-items" "center"
     /// Items are positioned at the beginning of the container
-    member _.alignItemsFlexStart = h.MakeStyle("align-items", "flex-start")
+    member _.alignItemsFlexStart = makeStyle "align-items" "flex-start"
     /// Items are positioned at the end of the container
-    member _.alignItemsFlexEnd = h.MakeStyle("align-items", "flex-end")
+    member _.alignItemsFlexEnd = makeStyle "align-items" "flex-end"
     /// Items are positioned at the baseline of the container
-    member _.alignItemsBaseline = h.MakeStyle("align-items", "baseline")
+    member _.alignItemsBaseline = makeStyle "align-items" "baseline"
     /// Sets this property to its default value
-    member _.alignItemsInitial = h.MakeStyle("align-items", "initial")
+    member _.alignItemsInitial = makeStyle "align-items" "initial"
     /// Inherits this property from its parent element
-    member _.alignItemsInheritFromParent = h.MakeStyle("align-items", "inherit")
+    member _.alignItemsInheritFromParent = makeStyle "align-items" "inherit"
 
     /// Default value. Lines stretch to take up the remaining space.
-    member _.alignContentStretch = h.MakeStyle("align-content", "stretch")
+    member _.alignContentStretch = makeStyle "align-content" "stretch"
     /// Lines are packed toward the center of the flex container.
-    member _.alignContentCenter = h.MakeStyle("align-content", "center")
+    member _.alignContentCenter = makeStyle "align-content" "center"
     /// Lines are packed toward the start of the flex container.
-    member _.alignContentFlexStart = h.MakeStyle("align-content", "flex-start")
+    member _.alignContentFlexStart = makeStyle "align-content" "flex-start"
     /// Lines are packed toward the end of the flex container.
-    member _.alignContentFlexEnd = h.MakeStyle("align-content", "flex-end")
+    member _.alignContentFlexEnd = makeStyle "align-content" "flex-end"
     /// Lines are evenly distributed in the flex container.
-    member _.alignContentSpaceBetween = h.MakeStyle("align-content", "space-between")
+    member _.alignContentSpaceBetween = makeStyle "align-content" "space-between"
     /// Lines are evenly distributed in the flex container, with half-size spaces on either end.
-    member _.alignContentSpaceAround = h.MakeStyle("align-content", "space-around")
-    member _.alignContentInitial = h.MakeStyle("align-content", "initial")
-    member _.alignContentInheritFromParent = h.MakeStyle("align-content", "inherit")
+    member _.alignContentSpaceAround = makeStyle "align-content" "space-around"
+    member _.alignContentInitial = makeStyle "align-content" "initial"
+    member _.alignContentInheritFromParent = makeStyle "align-content" "inherit"
 
     /// Default value. Items are positioned at the beginning of the container.
-    member _.justifyContentFlexStart = h.MakeStyle("justify-content", "flex-start")
+    member _.justifyContentFlexStart = makeStyle "justify-content" "flex-start"
     /// Items are positioned at the end of the container.
-    member _.justifyContentFlexEnd = h.MakeStyle("justify-content", "flex-end")
+    member _.justifyContentFlexEnd = makeStyle "justify-content" "flex-end"
     /// Items are positioned at the center of the container
-    member _.justifyContentCenter = h.MakeStyle("justify-content", "center")
+    member _.justifyContentCenter = makeStyle "justify-content" "center"
     /// Items are positioned with space between the lines
-    member _.justifyContentSpaceBetween = h.MakeStyle("justify-content", "space-between")
+    member _.justifyContentSpaceBetween = makeStyle "justify-content" "space-between"
     /// Items are positioned with space before, between, and after the lines.
-    member _.justifyContentSpaceAround = h.MakeStyle("justify-content", "space-around")
+    member _.justifyContentSpaceAround = makeStyle "justify-content" "space-around"
     /// Sets this property to its default value.
-    member _.justifyContentInitial = h.MakeStyle("justify-content", "initial")
+    member _.justifyContentInitial = makeStyle "justify-content" "initial"
     /// Inherits this property from its parent element.
-    member _.justifyContentInheritFromParent = h.MakeStyle("justify-content", "inherit")
+    member _.justifyContentInheritFromParent = makeStyle "justify-content" "inherit"
 
-    member _.outlineWidth(width: int) = h.MakeStyle("outline-width", asString width + "px")
-    member _.outlineWidth(width: ICssUnit) = h.MakeStyle("outline-width", asString width)
+    member _.outlineWidth(width: int) = makeStyle "outline-width" (asString width + "px")
+    member _.outlineWidth(width: ICssUnit) = makeStyle "outline-width" (asString width)
     /// Specifies a medium outline. This is default.
-    member _.outlineWidthMedium = h.MakeStyle("outline-width", "medium")
+    member _.outlineWidthMedium = makeStyle "outline-width" "medium"
     /// Specifies a thin outline.
-    member _.outlineWidthThin = h.MakeStyle("outline-width", "thin")
+    member _.outlineWidthThin = makeStyle "outline-width" "thin"
     /// Specifies a thick outline.
-    member _.outlineWidthThick = h.MakeStyle("outline-width", "thick")
+    member _.outlineWidthThick = makeStyle "outline-width" "thick"
     /// Sets this property to its default value
-    member _.outlineWidthInitial = h.MakeStyle("outline-width", "initial")
+    member _.outlineWidthInitial = makeStyle "outline-width" "initial"
     /// Inherits this property from its parent element
-    member _.outlineWidthInheritFromParent = h.MakeStyle("outline-width", "inherit")
+    member _.outlineWidthInheritFromParent = makeStyle "outline-width" "inherit"
 
     /// Default value. The marker is a filled circle
-    member _.listStyleTypeDisc = h.MakeStyle("list-style-type", "disc")
+    member _.listStyleTypeDisc = makeStyle "list-style-type" "disc"
     /// The marker is traditional Armenian numbering
-    member _.listStyleTypeArmenian = h.MakeStyle("list-style-type", "armenian")
+    member _.listStyleTypeArmenian = makeStyle "list-style-type" "armenian"
     /// The marker is a circle
-    member _.listStyleTypeCircle = h.MakeStyle("list-style-type", "circle")
+    member _.listStyleTypeCircle = makeStyle "list-style-type" "circle"
     /// The marker is plain ideographic numbers
-    member _.listStyleTypeCjkIdeographic = h.MakeStyle("list-style-type", "cjk-ideographic")
+    member _.listStyleTypeCjkIdeographic = makeStyle "list-style-type" "cjk-ideographic"
     /// The marker is a number
-    member _.listStyleTypeDecimal = h.MakeStyle("list-style-type", "decimal")
+    member _.listStyleTypeDecimal = makeStyle "list-style-type" "decimal"
     /// The marker is a number with leading zeros (01, 02, 03, etc.)
-    member _.listStyleTypeDecimalLeadingZero = h.MakeStyle("list-style-type", "decimal-leading-zero")
+    member _.listStyleTypeDecimalLeadingZero = makeStyle "list-style-type" "decimal-leading-zero"
     /// The marker is traditional Georgian numbering
-    member _.listStyleTypeGeorgian = h.MakeStyle("list-style-type", "georgian")
+    member _.listStyleTypeGeorgian = makeStyle "list-style-type" "georgian"
     /// The marker is traditional Hebrew numbering
-    member _.listStyleTypeHebrew = h.MakeStyle("list-style-type", "hebrew")
+    member _.listStyleTypeHebrew = makeStyle "list-style-type" "hebrew"
     /// The marker is traditional Hiragana numbering
-    member _.listStyleTypeHiragana = h.MakeStyle("list-style-type", "hiragana")
+    member _.listStyleTypeHiragana = makeStyle "list-style-type" "hiragana"
     /// The marker is traditional Hiragana iroha numbering
-    member _.listStyleTypeHiraganaIroha = h.MakeStyle("list-style-type", "hiragana-iroha")
+    member _.listStyleTypeHiraganaIroha = makeStyle "list-style-type" "hiragana-iroha"
     /// The marker is traditional Katakana numbering
-    member _.listStyleTypeKatakana = h.MakeStyle("list-style-type", "katakana")
+    member _.listStyleTypeKatakana = makeStyle "list-style-type" "katakana"
     /// The marker is traditional Katakana iroha numbering
-    member _.listStyleTypeKatakanaIroha = h.MakeStyle("list-style-type", "katakana-iroha")
+    member _.listStyleTypeKatakanaIroha = makeStyle "list-style-type" "katakana-iroha"
     /// The marker is lower-alpha (a, b, c, d, e, etc.)
-    member _.listStyleTypeLowerAlpha = h.MakeStyle("list-style-type", "lower-alpha")
+    member _.listStyleTypeLowerAlpha = makeStyle "list-style-type" "lower-alpha"
     /// The marker is lower-greek
-    member _.listStyleTypeLowerGreek = h.MakeStyle("list-style-type", "lower-greek")
+    member _.listStyleTypeLowerGreek = makeStyle "list-style-type" "lower-greek"
     /// The marker is lower-latin (a, b, c, d, e, etc.)
-    member _.listStyleTypeLowerLatin = h.MakeStyle("list-style-type", "lower-latin")
+    member _.listStyleTypeLowerLatin = makeStyle "list-style-type" "lower-latin"
     /// The marker is lower-roman (i, ii, iii, iv, v, etc.)
-    member _.listStyleTypeLowerRoman = h.MakeStyle("list-style-type", "lower-roman")
+    member _.listStyleTypeLowerRoman = makeStyle "list-style-type" "lower-roman"
     /// No marker is shown
-    member _.listStyleTypeNone = h.MakeStyle("list-style-type", "none")
+    member _.listStyleTypeNone = makeStyle "list-style-type" "none"
     /// The marker is a square
-    member _.listStyleTypeSquare = h.MakeStyle("list-style-type", "square")
+    member _.listStyleTypeSquare = makeStyle "list-style-type" "square"
     /// The marker is upper-alpha (A, B, C, D, E, etc.)
-    member _.listStyleTypeUpperAlpha = h.MakeStyle("list-style-type", "upper-alpha")
+    member _.listStyleTypeUpperAlpha = makeStyle "list-style-type" "upper-alpha"
     /// The marker is upper-greek
-    member _.listStyleTypeUpperGreek = h.MakeStyle("list-style-type", "upper-greek")
+    member _.listStyleTypeUpperGreek = makeStyle "list-style-type" "upper-greek"
     /// The marker is upper-latin (A, B, C, D, E, etc.)
-    member _.listStyleTypeUpperLatin = h.MakeStyle("list-style-type", "upper-latin")
+    member _.listStyleTypeUpperLatin = makeStyle "list-style-type" "upper-latin"
     /// The marker is upper-roman (I, II, III, IV, V, etc.)
-    member _.listStyleTypeUpperRoman = h.MakeStyle("list-style-type", "upper-roman")
+    member _.listStyleTypeUpperRoman = makeStyle "list-style-type" "upper-roman"
     /// Sets this property to its default value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-align&preval=initial
-    member _.listStyleTypeInitial = h.MakeStyle("list-style-type", "initial")
+    member _.listStyleTypeInitial = makeStyle "list-style-type" "initial"
     /// Inherits this property from its parent element.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-align&preval=initial
-    member _.listStyleTypeInheritFromParent = h.MakeStyle("list-style-type", "inherit")
+    member _.listStyleTypeInheritFromParent = makeStyle "list-style-type" "inherit"
 
-    member _.propertyNone = h.MakeStyle("list-style-image", "none")
+    member _.propertyNone = makeStyle "list-style-image" "none"
     /// The path to the image to be used as a list-item marker
-    member _.propertyUrl (path: string) = h.MakeStyle("list-style-image", "url('" + path + "')")
+    member _.propertyUrl (path: string) = makeStyle "list-style-image" ("url('" + path + "')")
     /// Sets this property to its default value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-align&preval=initial
-    member _.propertyInitial = h.MakeStyle("list-style-image", "initial")
+    member _.propertyInitial = makeStyle "list-style-image" "initial"
     /// Inherits this property from its parent element.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-align&preval=initial
-    member _.propertyInheritFromParent = h.MakeStyle("list-style-image", "inherit")
+    member _.propertyInheritFromParent = makeStyle "list-style-image" "inherit"
 
     /// The bullet points will be inside the list item
-    member _.listStylePositionInside = h.MakeStyle("list-style-position", "inside")
+    member _.listStylePositionInside = makeStyle "list-style-position" "inside"
     /// The bullet points will be outside the list item. This is default
-    member _.listStylePositionOutside = h.MakeStyle("list-style-position", "outside")
+    member _.listStylePositionOutside = makeStyle "list-style-position" "outside"
     /// Sets this property to its default value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-align&preval=initial
-    member _.listStylePositionInitial = h.MakeStyle("list-style-position", "initial")
+    member _.listStylePositionInitial = makeStyle "list-style-position" "initial"
     /// Inherits this property from its parent element.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-align&preval=initial
-    member _.listStylePositionInheritFromParent = h.MakeStyle("list-style-position", "inherit")
+    member _.listStylePositionInheritFromParent = makeStyle "list-style-position" "inherit"
 
-    member _.textDecorationLine(line: ITextDecorationLine) = h.MakeStyle("text-decoration-line", asString line)
-    member _.textDecorationLineNone = h.MakeStyle("text-decoration-line", "none")
-    member _.textDecorationLineUnderline = h.MakeStyle("text-decoration-line", "underline")
-    member _.textDecorationLineOverline = h.MakeStyle("text-decoration-line", "overline")
-    member _.textDecorationLineLineThrough = h.MakeStyle("text-decoration-line", "line-through")
-    member _.textDecorationLineInitial = h.MakeStyle("text-decoration-line", "initial")
+    member _.textDecorationLine(line: ITextDecorationLine) = makeStyle "text-decoration-line" (asString line)
+    member _.textDecorationLineNone = makeStyle "text-decoration-line" "none"
+    member _.textDecorationLineUnderline = makeStyle "text-decoration-line" "underline"
+    member _.textDecorationLineOverline = makeStyle "text-decoration-line" "overline"
+    member _.textDecorationLineLineThrough = makeStyle "text-decoration-line" "line-through"
+    member _.textDecorationLineInitial = makeStyle "text-decoration-line" "initial"
     /// Inherits this property from its parent element.
-    member _.textDecorationLineInheritFromParent = h.MakeStyle("text-decoration-line", "inherit")
+    member _.textDecorationLineInheritFromParent = makeStyle "text-decoration-line" "inherit"
 
-    member _.textDecoration(line: ITextDecorationLine) = h.MakeStyle("text-decoration", asString line)
+    member _.textDecoration(line: ITextDecorationLine) = makeStyle "text-decoration" (asString line)
     member _.textDecoration(bottom: ITextDecorationLine, top: ITextDecorationLine) =
-        h.MakeStyle("text-decoration", (asString bottom) + " " + (asString top))
+        makeStyle "text-decoration" (asString bottom + " " + asString top)
     member _.textDecoration(bottom: ITextDecorationLine, top: ITextDecorationLine, style: ITextDecoration) =
-        h.MakeStyle("text-decoration", (asString bottom) + " " + (asString top) + " " + (asString style))
+        makeStyle "text-decoration" ((asString bottom) + " " + (asString top) + " " + (asString style))
     member _.textDecoration(bottom: ITextDecorationLine, top: ITextDecorationLine, style: ITextDecoration, color: string) =
-        h.MakeStyle("text-decoration", (asString bottom) + " " + (asString top) + " " + (asString style) + " " + color)
-    member _.textDecorationNone = h.MakeStyle("text-decoration", "none")
-    member _.textDecorationUnderline = h.MakeStyle("text-decoration", "underline")
-    member _.textDecorationOverline = h.MakeStyle("text-decoration", "overline")
-    member _.textDecorationLineThrough = h.MakeStyle("text-decoration", "line-through")
-    member _.textDecorationInitial = h.MakeStyle("text-decoration", "initial")
+        makeStyle "text-decoration" ((asString bottom) + " " + (asString top) + " " + (asString style) + " " + color)
+    member _.textDecorationNone = makeStyle "text-decoration" "none"
+    member _.textDecorationUnderline = makeStyle "text-decoration" "underline"
+    member _.textDecorationOverline = makeStyle "text-decoration" "overline"
+    member _.textDecorationLineThrough = makeStyle "text-decoration" "line-through"
+    member _.textDecorationInitial = makeStyle "text-decoration" "initial"
     /// Inherits this property from its parent element.
-    member _.textDecorationInheritFromParent = h.MakeStyle("text-decoration", "inherit")
+    member _.textDecorationInheritFromParent = makeStyle "text-decoration" "inherit"
 
     /// Specifies that child elements will NOT preserve its 3D position. This is default.
-    member _.transformStyleFlat = h.MakeStyle("transform-style", "flat")
+    member _.transformStyleFlat = makeStyle "transform-style" "flat"
     /// Specifies that child elements will preserve its 3D position
-    member _.transformStylePreserve3D = h.MakeStyle("transform-style", "preserve-3d")
-    member _.transformStyleInitial = h.MakeStyle("transform-style", "initial")
+    member _.transformStylePreserve3D = makeStyle "transform-style" "preserve-3d"
+    member _.transformStyleInitial = makeStyle "transform-style" "initial"
     /// Inherits this property from its parent element.
-    member _.transformStyleInheritFromParent = h.MakeStyle("transform-style", "inherit")
+    member _.transformStyleInheritFromParent = makeStyle "transform-style" "inherit"
 
     /// No capitalization. The text renders as it is. This is default.
-    member _.textTransformNone = h.MakeStyle("text-transform", "none")
+    member _.textTransformNone = makeStyle "text-transform" "none"
     /// Transforms the first character of each word to uppercase.
-    member _.textTransformCapitalize = h.MakeStyle("text-transform", "capitalize")
+    member _.textTransformCapitalize = makeStyle "text-transform" "capitalize"
     /// Transforms all characters to uppercase.
-    member _.textTransformUppercase = h.MakeStyle("text-transform", "uppercase")
+    member _.textTransformUppercase = makeStyle "text-transform" "uppercase"
     /// Transforms all characters to lowercase.
-    member _.textTransformLowercase = h.MakeStyle("text-transform", "lowercase")
-    member _.textTransformInitial = h.MakeStyle("text-transform", "initial")
+    member _.textTransformLowercase = makeStyle "text-transform" "lowercase"
+    member _.textTransformInitial = makeStyle "text-transform" "initial"
     /// Inherits this property from its parent element.
-    member _.textTransformInheritFromParent = h.MakeStyle("text-transform", "inherit")
+    member _.textTransformInheritFromParent = makeStyle "text-transform" "inherit"
 
     /// Default value. The text is clipped and not accessible.
-    member _.textOverflowClip = h.MakeStyle("text-overflow", "clip")
+    member _.textOverflowClip = makeStyle "text-overflow" "clip"
     /// Render an ellipsis ("...") to represent the clipped text.
-    member _.textOverflowEllipsis = h.MakeStyle("text-overflow", "ellipsis")
+    member _.textOverflowEllipsis = makeStyle "text-overflow" "ellipsis"
     /// Render the given asString to represent the clipped text.
-    member _.textOverflowInitial = h.MakeStyle("text-overflow", "initial")
+    member _.textOverflowInitial = makeStyle "text-overflow" "initial"
     /// Inherits this property from its parent element.
-    member _.textOverflowInheritFromParent = h.MakeStyle("text-overflow", "inherit")
+    member _.textOverflowInheritFromParent = makeStyle "text-overflow" "inherit"
 
     /// Default value. Specifies no effects.
-    member _.filterNone = h.MakeStyle("filter", "none")
+    member _.filterNone = makeStyle "filter" "none"
     /// Applies a blur effect to the elemeen. A larger value will create more blur.
     ///
     /// This overload takes an integer that represents a percentage from 0 to 100.
-    member _.filterBlur(value: int) = h.MakeStyle("filter", "blur(" + (asString value) + "%)")
+    member _.filterBlur(value: int) = makeStyle "filter" ("blur(" + ((asString value) + "%)"))
     /// Applies a blur effect to the elemeen. A larger value will create more blur.
     ///
     /// This overload takes a floating number that goes from 0 to 1,
-    member _.filterBlur(value: double) = h.MakeStyle("filter", "blur(" + (asString value) + ")")
+    member _.filterBlur(value: double) = makeStyle "filter" ("blur(" + ((asString value) + ")"))
     /// Adjusts the brightness of the elemeen
     ///
     /// This overload takes an integer that represents a percentage from 0 to 100.
     ///
     /// Values over 100% will provide brighter results.
-    member _.filterBrightness(value: int) = h.MakeStyle("filter", "brightness(" + (asString value) + "%)")
+    member _.filterBrightness(value: int) = makeStyle "filter" ("brightness(" + ((asString value) + "%)"))
     /// Adjusts the brightness of the elemeen. A larger value will create more blur.
     ///
     /// This overload takes a floating number that goes from 0 to 1,
-    member _.filterBrightness(value: double) = h.MakeStyle("filter", "brightness(" + (asString value) + ")")
+    member _.filterBrightness(value: double) = makeStyle "filter" ("brightness(" + ((asString value) + ")"))
     /// Adjusts the contrast of the element.
     ///
     /// This overload takes an integer that represents a percentage from 0 to 100.
-    member _.filterContrast(value: int) = h.MakeStyle("filter", "contrast(" + (asString value) + "%)")
+    member _.filterContrast(value: int) = makeStyle "filter" ("contrast(" + ((asString value) + "%)"))
     /// Adjusts the contrast of the element. A larger value will create more contrast.
     ///
     /// This overload takes a floating number that goes from 0 to 1
-    member _.filterContrast(value: double) = h.MakeStyle("filter", "contrast(" + (asString value) + ")")
+    member _.filterContrast(value: double) = makeStyle "filter" ("contrast(" + ((asString value) + ")"))
     /// Applies a drop shadow effect.
-    member _.filterDropShadow(horizontalOffset: int, verticalOffset: int, blur: int, spread: int,  color: string) = h.MakeStyle("filter", "drop-shadow(" + (asString horizontalOffset) + "px " + (asString verticalOffset) + "px " + (asString blur) + "px " + (asString spread) + "px " + color + ")")
+    member _.filterDropShadow(horizontalOffset: int, verticalOffset: int, blur: int, spread: int,  color: string) = makeStyle "filter" ("drop-shadow(" + (asString horizontalOffset) + "px " + (asString verticalOffset) + "px " + (asString blur) + "px " + (asString spread) + "px " + color + ")")
     /// Applies a drop shadow effect.
-    member _.filterDropShadow(horizontalOffset: int, verticalOffset: int, blur: int, color: string) = h.MakeStyle("filter", "drop-shadow(" + (asString horizontalOffset) + "px " + (asString verticalOffset) + "px " + (asString blur) + "px " + color + ")")
+    member _.filterDropShadow(horizontalOffset: int, verticalOffset: int, blur: int, color: string) = makeStyle "filter" ("drop-shadow(" + (asString horizontalOffset) + "px " + (asString verticalOffset) + "px " + (asString blur) + "px " + color + ")")
     /// Applies a drop shadow effect.
-    member _.filterDropShadow(horizontalOffset: int, verticalOffset: int, color: string) = h.MakeStyle("filter", "drop-shadow(" + (asString horizontalOffset) + "px " + (asString verticalOffset) + "px " + color + ")")
+    member _.filterDropShadow(horizontalOffset: int, verticalOffset: int, color: string) = makeStyle "filter" ("drop-shadow(" + (asString horizontalOffset) + "px " + (asString verticalOffset) + "px " + color + ")")
     /// Converts the image to grayscale
     ///
     /// This overload takes an integer that represents a percentage from 0 to 100.
-    member _.filterGrayscale(value: int) = h.MakeStyle("filter", "grayscale(" + (asString value) + "%)")
+    member _.filterGrayscale(value: int) = makeStyle "filter" ("grayscale(" + ((asString value) + "%)"))
     /// Converts the image to grayscale
     ///
     /// This overload takes a floating number that goes from 0 to 1
-    member _.filterGrayscale(value: double) = h.MakeStyle("filter", "grayscale(" + (asString value) + ")")
+    member _.filterGrayscale(value: double) = makeStyle "filter" ("grayscale(" + ((asString value) + ")"))
     /// Applies a hue rotation on the image. The value defines the number of degrees around the color circle the image
     /// samples will be adjusted. 0deg is default, and represents the original image.
     ///
     /// **Note**: Maximum value is 360
-    member _.filterHueRotate(degrees: int) = h.MakeStyle("filter", "hue-rotate(" + (asString degrees) + "deg)")
+    member _.filterHueRotate(degrees: int) = makeStyle "filter" ("hue-rotate(" + (asString degrees) + "deg)")
     /// Inverts the element.
     ///
     /// This overload takes an integer that represents a percentage from 0 to 100.
-    member _.filterInvert(value: int) = h.MakeStyle("filter", "invert(" + (asString value) + "%)")
+    member _.filterInvert(value: int) = makeStyle "filter" ("invert(" + ((asString value) + "%)"))
     /// Inverts the element.
     ///
     /// This overload takes a floating number that goes from 0 to 1
-    member _.filterInvert(value: double) = h.MakeStyle("filter", "invert(" + (asString value) + ")")
+    member _.filterInvert(value: double) = makeStyle "filter" ("invert(" + ((asString value) + ")"))
     /// Sets the opacity of the element.
     ///
     /// This overload takes an integer that represents a percentage from 0 to 100.
-    member _.filterOpacity(value: int) = h.MakeStyle("filter", "opacity(" + (asString value) + "%)")
+    member _.filterOpacity(value: int) = makeStyle "filter" ("opacity(" + ((asString value) + "%)"))
     /// Sets the opacity of the element.
     ///
     /// This overload takes a floating number that goes from 0 to 1
-    member _.filterOpacity(value: double) = h.MakeStyle("filter", "opacity(" + (asString value) + ")")
+    member _.filterOpacity(value: double) = makeStyle "filter" ("opacity(" + ((asString value) + ")"))
     /// Sets the saturation of the element.
     ///
     /// This overload takes an integer that represents a percentage from 0 to 100.
-    member _.filterSaturate(value: int) = h.MakeStyle("filter", "saturate(" + (asString value) + "%)")
+    member _.filterSaturate(value: int) = makeStyle "filter" ("saturate(" + ((asString value) + "%)"))
     /// Sets the saturation of the element.
     ///
     /// This overload takes a floating number that goes from 0 to 1
-    member _.filterSaturate(value: double) = h.MakeStyle("filter", "saturate(" + (asString value) + ")")
+    member _.filterSaturate(value: double) = makeStyle "filter" ("saturate(" + ((asString value) + ")"))
     /// Applies Sepia filter to the element.
     ///
     /// This overload takes an integer that represents a percentage from 0 to 100.
-    member _.filterSepia(value: int) = h.MakeStyle("filter", "sepia(" + (asString value) + "%)")
+    member _.filterSepia(value: int) = makeStyle "filter" ("sepia(" + ((asString value) + "%)"))
     /// Applies Sepia filter to the element.
     ///
     /// This overload takes a floating number that goes from 0 to 1
-    member _.filterSepia(value: double) = h.MakeStyle("filter", "sepia(" + (asString value) + ")")
+    member _.filterSepia(value: double) = makeStyle "filter" ("sepia(" + ((asString value) + ")"))
     /// The url() function takes the location of an XML file that specifies an SVG filter, and may include an anchor to a specific filter element.
     ///
     /// Example: `filter: url(svg-url#element-id)`
-    member _.filterUrl(value: string) = h.MakeStyle("filter", "url(" + value + ")")
+    member _.filterUrl(value: string) = makeStyle "filter" ("url(" + value + ")")
     /// Sets this property to its default value.
-    member _.filterInitial = h.MakeStyle("filter", "initial")
+    member _.filterInitial = makeStyle "filter" "initial"
     /// Inherits this property from its parent element.
-    member _.filterInheritFromParent = h.MakeStyle("filter", "inherit")
+    member _.filterInheritFromParent = makeStyle "filter" "inherit"
 
     /// Sets whether table borders should collapse into a single border or be separated as in standard HTML.
     /// Borders are separated; each cell will display its own borders. This is default.
-    member _.borderCollapseSeparate = h.MakeStyle("border-collapse", "separate")
+    member _.borderCollapseSeparate = makeStyle "border-collapse" "separate"
     /// Borders are collapsed into a single border when possible (border-spacing and empty-cells properties have no effect)
-    member _.borderCollapseCollapse = h.MakeStyle("border-collapse", "collapse")
+    member _.borderCollapseCollapse = makeStyle "border-collapse" "collapse"
     /// Sets this property to its default value
-    member _.borderCollapseInitial = h.MakeStyle("border-collapse", "initial")
+    member _.borderCollapseInitial = makeStyle "border-collapse" "initial"
     /// Inherits this property from its parent element.
-    member _.borderCollapseInheritFromParent = h.MakeStyle("border-collapse", "inherit")
+    member _.borderCollapseInheritFromParent = makeStyle "border-collapse" "inherit"
 
     /// Sets the distance between the borders of adjacent <table> cells. Applies only when border-collapse is separate.
     member _.borderSpacing(horizontal: ICssUnit, ?vertical: ICssUnit) =
-        h.MakeStyle("border-spacing", asString horizontal + " " + asString vertical)
+        makeStyle "border-spacing" (asString horizontal + " " + asString vertical)
     /// Sets this property to its default value
-    member _.borderSpacingInitial = h.MakeStyle("border-spacing", "initial")
+    member _.borderSpacingInitial = makeStyle "border-spacing" "initial"
     /// Inherits this property from its parent element.
-    member _.borderSpacingInheritFromParent = h.MakeStyle("border-spacing", "inherit")
+    member _.borderSpacingInheritFromParent = makeStyle "border-spacing" "inherit"
 
     /// Sets the size of the element's background image.
     ///
     /// The image can be left to its natural size, stretched, or constrained to fit the available space.
-    member _.backgroundSize(value: string) = h.MakeStyle("background-size", asString value)
+    member _.backgroundSize(value: string) = makeStyle "background-size" (asString value)
     /// Sets the size of the element's background image.
     ///
     /// The image can be left to its natural size, stretched, or constrained to fit the available space.
-    member _.backgroundSize(value: ICssUnit) = h.MakeStyle("background-size", asString value)
+    member _.backgroundSize(value: ICssUnit) = makeStyle "background-size" (asString value)
     /// Sets the size of the element's background image.
     ///
     /// The image can be left to its natural size, stretched, or constrained to fit the available space.
     member _.backgroundSize(width: ICssUnit, height: ICssUnit) =
-        h.MakeStyle("background-size",
+        makeStyle "background-size" (
             asString width
             + " " +
             asString height
@@ -731,653 +728,653 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// Default value. The background image is displayed in its original size
     ///
     /// See [example here](https://www.w3schools.com/cssref/playit.asp?filename=playcss_background-size&preval=auto)
-    member _.backgroundSizeAuto = h.MakeStyle("background-size", "auto")
+    member _.backgroundSizeAuto = makeStyle "background-size" "auto"
     /// Resize the background image to cover the entire container, even if it has to stretch the image or cut a little bit off one of the edges.
     ///
     /// See [example here](https://www.w3schools.com/cssref/playit.asp?filename=playcss_background-size&preval=cover)
-    member _.backgroundSizeCover = h.MakeStyle("background-size", "cover")
+    member _.backgroundSizeCover = makeStyle "background-size" "cover"
     /// Resize the background image to make sure the image is fully visible
     ///
     /// See [example here](https://www.w3schools.com/cssref/playit.asp?filename=playcss_background-size&preval=contain)
-    member _.backgroundSizeContain = h.MakeStyle("background-size", "contain")
+    member _.backgroundSizeContain = makeStyle "background-size" "contain"
     /// Sets this property to its default value.
-    member _.backgroundSizeInitial = h.MakeStyle("background-size", "initial")
+    member _.backgroundSizeInitial = makeStyle "background-size" "initial"
     /// Inherits this property from its parent element.
-    member _.backgroundSizeInheritFromParent = h.MakeStyle("background-size", "inherit")
+    member _.backgroundSizeInheritFromParent = makeStyle "background-size" "inherit"
 
     /// Default value. The line will display as a single line.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=solid
-    member _.textDecorationStyleSolid = h.MakeStyle("text-decoration-style", "solid")
+    member _.textDecorationStyleSolid = makeStyle "text-decoration-style" "solid"
     /// The line will display as a double line.
     ///
     /// https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=double
-    member _.textDecorationStyleDouble = h.MakeStyle("text-decoration-style", "double")
+    member _.textDecorationStyleDouble = makeStyle "text-decoration-style" "double"
     /// The line will display as a dotted line.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=dotted
-    member _.textDecorationStyleDotted = h.MakeStyle("text-decoration-style", "dotted")
+    member _.textDecorationStyleDotted = makeStyle "text-decoration-style" "dotted"
     /// The line will display as a dashed line.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=dashed
-    member _.textDecorationStyleDashed = h.MakeStyle("text-decoration-style", "dashed")
+    member _.textDecorationStyleDashed = makeStyle "text-decoration-style" "dashed"
     /// The line will display as a wavy line.
     ///
     /// https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=wavy
-    member _.textDecorationStyleWavy = h.MakeStyle("text-decoration-style", "wavy")
+    member _.textDecorationStyleWavy = makeStyle "text-decoration-style" "wavy"
     /// Sets this property to its default value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=initial
-    member _.textDecorationStyleInitial = h.MakeStyle("text-decoration-style", "initial")
+    member _.textDecorationStyleInitial = makeStyle "text-decoration-style" "initial"
     /// Inherits this property from its parent element.
-    member _.textDecorationStyleInheritFromParent = h.MakeStyle("text-decoration-style", "inherit")
+    member _.textDecorationStyleInheritFromParent = makeStyle "text-decoration-style" "inherit"
 
     /// Makes the text as narrow as it gets.
-    member _.fontStretchUltraCondensed = h.MakeStyle("font-stretch", "ultra-condensed")
+    member _.fontStretchUltraCondensed = makeStyle "font-stretch" "ultra-condensed"
     /// Makes the text narrower than condensed, but not as narrow as ultra-condensed
-    member _.fontStretchExtraCondensed = h.MakeStyle("font-stretch", "extra-condensed")
+    member _.fontStretchExtraCondensed = makeStyle "font-stretch" "extra-condensed"
     /// Makes the text narrower than semi-condensed, but not as narrow as extra-condensed.
-    member _.fontStretchCondensed = h.MakeStyle("font-stretch", "condensed")
+    member _.fontStretchCondensed = makeStyle "font-stretch" "condensed"
     /// Makes the text narrower than normal, but not as narrow as condensed.
-    member _.fontStretchSemiCondensed = h.MakeStyle("font-stretch", "semi-condensed")
+    member _.fontStretchSemiCondensed = makeStyle "font-stretch" "semi-condensed"
     /// Default value. No font stretching
-    member _.fontStretchNormal = h.MakeStyle("font-stretch", "normal")
+    member _.fontStretchNormal = makeStyle "font-stretch" "normal"
     /// Makes the text wider than normal, but not as wide as expanded
-    member _.fontStretchSemiExpanded = h.MakeStyle("font-stretch", "semi-expanded")
+    member _.fontStretchSemiExpanded = makeStyle "font-stretch" "semi-expanded"
     /// Makes the text wider than semi-expanded, but not as wide as extra-expanded
-    member _.fontStretchExpanded = h.MakeStyle("font-stretch", "expanded")
+    member _.fontStretchExpanded = makeStyle "font-stretch" "expanded"
     /// Makes the text wider than expanded, but not as wide as ultra-expanded
-    member _.fontStretchExtraExpanded = h.MakeStyle("font-stretch", "extra-expanded")
+    member _.fontStretchExtraExpanded = makeStyle "font-stretch" "extra-expanded"
     /// Makes the text as wide as it gets.
-    member _.fontStretchUltraExpanded = h.MakeStyle("font-stretch", "ultra-expanded")
+    member _.fontStretchUltraExpanded = makeStyle "font-stretch" "ultra-expanded"
     /// Sets this property to its default value.
-    member _.fontStretchInitial = h.MakeStyle("font-stretch", "initial")
+    member _.fontStretchInitial = makeStyle "font-stretch" "initial"
     /// Inherits this property from its parent element.
-    member _.fontStretchInheritFromParent = h.MakeStyle("font-stretch", "inherit")
+    member _.fontStretchInheritFromParent = makeStyle "font-stretch" "inherit"
 
     /// The element does not float, (will be displayed just where it occurs in the text). This is default
-    member _.floatStyleNone = h.MakeStyle("float", "none")
-    member _.floatStyleLeft = h.MakeStyle("float", "left")
-    member _.floatStyleRight = h.MakeStyle("float", "right")
+    member _.floatStyleNone = makeStyle "float" "none"
+    member _.floatStyleLeft = makeStyle "float" "left"
+    member _.floatStyleRight = makeStyle "float" "right"
     /// Sets this property to its default value.
-    member _.floatStyleInitial = h.MakeStyle("float", "initial")
+    member _.floatStyleInitial = makeStyle "float" "initial"
     /// Inherits this property from its parent element.
-    member _.floatStyleInheritFromParent = h.MakeStyle("float", "inherit")
+    member _.floatStyleInheritFromParent = makeStyle "float" "inherit"
 
     /// The element is aligned with the baseline of the parent. This is default.
-    member _.verticalAlignBaseline = h.MakeStyle("vertical-align", "baseline")
+    member _.verticalAlignBaseline = makeStyle "vertical-align" "baseline"
     /// The element is aligned with the subscript baseline of the parent
-    member _.verticalAlignSub = h.MakeStyle("vertical-align", "sup")
+    member _.verticalAlignSub = makeStyle "vertical-align" "sup"
     /// The element is aligned with the superscript baseline of the parent.
-    member _.verticalAlignSuper = h.MakeStyle("vertical-align", "super")
+    member _.verticalAlignSuper = makeStyle "vertical-align" "super"
     /// The element is aligned with the top of the tallest element on the line.
-    member _.verticalAlignTop = h.MakeStyle("vertical-align", "top")
+    member _.verticalAlignTop = makeStyle "vertical-align" "top"
     /// The element is aligned with the top of the parent element's font.
-    member _.verticalAlignTextTop = h.MakeStyle("vertical-align", "text-top")
+    member _.verticalAlignTextTop = makeStyle "vertical-align" "text-top"
     /// The element is placed in the middle of the parent element.
-    member _.verticalAlignMiddle = h.MakeStyle("vertical-align", "middle")
+    member _.verticalAlignMiddle = makeStyle "vertical-align" "middle"
     /// The element is aligned with the lowest element on the line.
-    member _.verticalAlignBottom = h.MakeStyle("vertical-align", "bottom")
+    member _.verticalAlignBottom = makeStyle "vertical-align" "bottom"
     /// The element is aligned with the bottom of the parent element's font
-    member _.verticalAlignTextBottom = h.MakeStyle("vertical-align", "text-bottom")
+    member _.verticalAlignTextBottom = makeStyle "vertical-align" "text-bottom"
     /// Sets this property to its default value.
-    member _.verticalAlignInitial = h.MakeStyle("vertical-align", "initial")
+    member _.verticalAlignInitial = makeStyle "vertical-align" "initial"
     /// Inherits this property from its parent element.
-    member _.verticalAlignInheritFromParent = h.MakeStyle("vertical-align", "inherit")
+    member _.verticalAlignInheritFromParent = makeStyle "vertical-align" "inherit"
 
     /// Let the content flow horizontally from left to right, vertically from top to bottom
-    member _.writingModeHorizontalTopBottom = h.MakeStyle("writing-mode", "horizontal-tb")
+    member _.writingModeHorizontalTopBottom = makeStyle "writing-mode" "horizontal-tb"
     /// Let the content flow vertically from top to bottom, horizontally from right to left
-    member _.writingModeVerticalRightLeft = h.MakeStyle("writing-mode", "vertical-rl")
+    member _.writingModeVerticalRightLeft = makeStyle "writing-mode" "vertical-rl"
     /// Let the content flow vertically from top to bottom, horizontally from left to right
-    member _.writingModeVerticalLeftRight = h.MakeStyle("writing-mode", "vertical-lr")
+    member _.writingModeVerticalLeftRight = makeStyle "writing-mode" "vertical-lr"
     /// Sets this property to its default value.
-    member _.writingModeInitial = h.MakeStyle("writing-mode", "initial")
+    member _.writingModeInitial = makeStyle "writing-mode" "initial"
     /// Inherits this property from its parent element.
-    member _.writingModeInheritFromParent = h.MakeStyle("writing-mode", "inherit")
+    member _.writingModeInheritFromParent = makeStyle "writing-mode" "inherit"
 
     /// Default value. Specifies a animation effect with a slow start, then fast, then end slowly (equivalent to cubic-bezier(0.25,0.1,0.25,1)).
-    member _.animationTimingFunctionEase = h.MakeStyle("animation-timing-function", "ease")
+    member _.animationTimingFunctionEase = makeStyle "animation-timing-function" "ease"
     /// Specifies a animation effect with the same speed from start to end (equivalent to cubic-bezier(0,0,1,1))
-    member _.animationTimingFunctionLinear = h.MakeStyle("animation-timing-function", "linear")
+    member _.animationTimingFunctionLinear = makeStyle "animation-timing-function" "linear"
     /// Specifies a animation effect with a slow start (equivalent to cubic-bezier(0.42,0,1,1)).
-    member _.animationTimingFunctionEaseIn = h.MakeStyle("animation-timing-function", "ease-in")
+    member _.animationTimingFunctionEaseIn = makeStyle "animation-timing-function" "ease-in"
     /// Specifies a animation effect with a slow end (equivalent to cubic-bezier(0,0,0.58,1)).
-    member _.animationTimingFunctionEaseOut = h.MakeStyle("animation-timing-function", "ease-out")
+    member _.animationTimingFunctionEaseOut = makeStyle "animation-timing-function" "ease-out"
     /// Specifies a animation effect with a slow start and end (equivalent to cubic-bezier(0.42,0,0.58,1))
-    member _.animationTimingFunctionEaseInOut = h.MakeStyle("animation-timing-function", "ease-in-out")
+    member _.animationTimingFunctionEaseInOut = makeStyle "animation-timing-function" "ease-in-out"
     /// Define your own values in the cubic-bezier function. Possible values are numeric values from 0 to 1
-    member _.animationTimingFunctionCubicBezier(n1: float, n2: float, n3: float, n4: float) = h.MakeStyle("animation-timing-function", "cubic-bezier(" + (asString n1) + "," + (asString n2) + "," + (asString n3) + ", " + (asString n4) + ")")
+    member _.animationTimingFunctionCubicBezier(n1: float, n2: float, n3: float, n4: float) = makeStyle "animation-timing-function" ("cubic-bezier(" + (asString n1) + "," + (asString n2) + "," + (asString n3) + ", " + (asString n4) + ")")
     /// Sets this property to its default value
-    member _.animationTimingFunctionInitial = h.MakeStyle("animation-timing-function", "initial")
+    member _.animationTimingFunctionInitial = makeStyle "animation-timing-function" "initial"
     /// Inherits this property from its parent element.
-    member _.animationTimingFunctionInheritFromParent = h.MakeStyle("animation-timing-function", "inherit")
+    member _.animationTimingFunctionInheritFromParent = makeStyle "animation-timing-function" "inherit"
 
     /// Default value. Specifies a transition effect with a slow start, then fast, then end slowly (equivalent to cubic-bezier(0.25,0.1,0.25,1)).
-    member _.transitionTimingFunctionEase = h.MakeStyle("transition-timing-function", "ease")
+    member _.transitionTimingFunctionEase = makeStyle "transition-timing-function" "ease"
     /// Specifies a transition effect with the same speed from start to end (equivalent to cubic-bezier(0,0,1,1))
-    member _.transitionTimingFunctionLinear = h.MakeStyle("transition-timing-function", "linear")
+    member _.transitionTimingFunctionLinear = makeStyle "transition-timing-function" "linear"
     /// Specifies a transition effect with a slow start (equivalent to cubic-bezier(0.42,0,1,1)).
-    member _.transitionTimingFunctionEaseIn = h.MakeStyle("transition-timing-function", "ease-in")
+    member _.transitionTimingFunctionEaseIn = makeStyle "transition-timing-function" "ease-in"
     /// Specifies a transition effect with a slow end (equivalent to cubic-bezier(0,0,0.58,1)).
-    member _.transitionTimingFunctionEaseOut = h.MakeStyle("transition-timing-function", "ease-out")
+    member _.transitionTimingFunctionEaseOut = makeStyle "transition-timing-function" "ease-out"
     /// Specifies a transition effect with a slow start and end (equivalent to cubic-bezier(0.42,0,0.58,1))
-    member _.transitionTimingFunctionEaseInOut = h.MakeStyle("transition-timing-function", "ease-in-out")
+    member _.transitionTimingFunctionEaseInOut = makeStyle "transition-timing-function" "ease-in-out"
     /// Equivalent to steps(1, start)
-    member _.transitionTimingFunctionStepStart = h.MakeStyle("transition-timing-function", "step-start")
+    member _.transitionTimingFunctionStepStart = makeStyle "transition-timing-function" "step-start"
     /// Equivalent to steps(1, end)
-    member _.transitionTimingFunctionStepEnd = h.MakeStyle("transition-timing-function", "step-end")
+    member _.transitionTimingFunctionStepEnd = makeStyle "transition-timing-function" "step-end"
     /// Define your own values in the cubic-bezier function. Possible values are numeric values from 0 to 1
-    member _.transitionTimingFunctionCubicBezier(n1: float, n2: float, n3: float, n4: float) = h.MakeStyle("transition-timing-function", "cubic-bezier(" + (asString n1) + "," + (asString n2) + "," + (asString n3) + ", " + (asString n4) + ")")
+    member _.transitionTimingFunctionCubicBezier(n1: float, n2: float, n3: float, n4: float) = makeStyle "transition-timing-function" ("cubic-bezier(" + (asString n1) + "," + (asString n2) + "," + (asString n3) + ", " + (asString n4) + ")")
     /// Sets this property to its default value
-    member _.transitionTimingFunctionInitial = h.MakeStyle("transition-timing-function", "initial")
+    member _.transitionTimingFunctionInitial = makeStyle "transition-timing-function" "initial"
     /// Inherits this property from its parent element.
-    member _.transitionTimingFunctionInheritFromParent = h.MakeStyle("transition-timing-function", "inherit")
+    member _.transitionTimingFunctionInheritFromParent = makeStyle "transition-timing-function" "inherit"
 
     /// Default. Text can be selected if the browser allows it.
-    member _.userSelectAuto = h.MakeStyle("user-select", "auto")
+    member _.userSelectAuto = makeStyle "user-select" "auto"
     /// Prevents text selection.
-    member _.userSelectNone = h.MakeStyle("user-select", "none")
+    member _.userSelectNone = makeStyle "user-select" "none"
     /// The text can be selected by the user.
-    member _.userSelectText = h.MakeStyle("user-select", "text")
+    member _.userSelectText = makeStyle "user-select" "text"
     /// Text selection is made with one click instead of a double-click.
-    member _.userSelectAll = h.MakeStyle("user-select", "all")
+    member _.userSelectAll = makeStyle "user-select" "all"
     /// Sets this property to its default value.
-    member _.userSelectInitial = h.MakeStyle("user-select", "initial")
+    member _.userSelectInitial = makeStyle "user-select" "initial"
     /// Inherits this property from its parent element.
-    member _.userSelectInheritFromParent = h.MakeStyle("user-select", "inherit")
+    member _.userSelectInheritFromParent = makeStyle "user-select" "inherit"
 
     /// Sets the line style for all four sides of an element's border.
-    member _.borderStyle(style: IBorderStyle) = h.MakeStyle("border-style", asString style)
+    member _.borderStyle(style: IBorderStyle) = makeStyle "border-style" (asString style)
     /// Sets the line style for all four sides of an element's border.
     member _.borderStyle(vertical: IBorderStyle, horizontal: IBorderStyle)  =
-        h.MakeStyle("border-style", (asString vertical) + " " + (asString horizontal))
+        makeStyle "border-style" (asString vertical + " " + asString horizontal)
     /// Sets the line style for all four sides of an element's border.
     member _.borderStyle(top: IBorderStyle, right: IBorderStyle, bottom: IBorderStyle, left: IBorderStyle) =
-        h.MakeStyle("border-style", (asString top) + " " + (asString right) + " " + (asString bottom) + " " +  (asString left))
+        makeStyle "border-style" ((asString top) + " " + (asString right) + " " + (asString bottom) + " " +  (asString left))
     /// Specifies a dotted border.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=dotted
-    member _.borderStyleDotted = h.MakeStyle("border-style", "dotted")
+    member _.borderStyleDotted = makeStyle "border-style" "dotted"
     /// Specifies a dashed border.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=dotted
-    member _.borderStyleDashed = h.MakeStyle("border-style", "dashed")
+    member _.borderStyleDashed = makeStyle "border-style" "dashed"
     /// Specifies a solid border.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=dotted
-    member _.borderStyleSolid = h.MakeStyle("border-style", "solid")
+    member _.borderStyleSolid = makeStyle "border-style" "solid"
     /// Specifies a double border.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=dotted
-    member _.borderStyleDouble = h.MakeStyle("border-style", "double")
+    member _.borderStyleDouble = makeStyle "border-style" "double"
     /// Specifies a 3D grooved border. The effect depends on the border-color value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=dotted
-    member _.borderStyleGroove = h.MakeStyle("border-style", "groove")
+    member _.borderStyleGroove = makeStyle "border-style" "groove"
     /// Specifies a 3D ridged border. The effect depends on the border-color value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=dotted
-    member _.borderStyleRidge = h.MakeStyle("border-style", "ridge")
+    member _.borderStyleRidge = makeStyle "border-style" "ridge"
     /// Specifies a 3D inset border. The effect depends on the border-color value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=dotted
-    member _.borderStyleInset = h.MakeStyle("border-style", "inset")
+    member _.borderStyleInset = makeStyle "border-style" "inset"
     /// Specifies a 3D outset border. The effect depends on the border-color value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=dotted
-    member _.borderStyleOutset = h.MakeStyle("border-style", "outset")
+    member _.borderStyleOutset = makeStyle "border-style" "outset"
     /// Default value. Specifies no border.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=dotted
-    member _.borderStyleNone = h.MakeStyle("border-style", "none")
+    member _.borderStyleNone = makeStyle "border-style" "none"
     /// The same as "none", except in border conflict resolution for table elements.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=hidden
-    member _.borderStyleHidden = h.MakeStyle("border-style", "hidden")
+    member _.borderStyleHidden = makeStyle "border-style" "hidden"
     /// Sets this property to its default value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=hidden
     ///
     /// Read about initial value https://www.w3schools.com/cssref/css_initial.asp
-    member _.borderStyleInitial = h.MakeStyle("border-style", "initial")
+    member _.borderStyleInitial = makeStyle "border-style" "initial"
     /// Inherits this property from its parent element.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=hidden
     ///
     /// Read about inherit https://www.w3schools.com/cssref/css_inherit.asp
-    member _.borderStyleInheritFromParent = h.MakeStyle("border-style", "inherit")
+    member _.borderStyleInheritFromParent = makeStyle "border-style" "inherit"
 
     /// Browsers use an automatic table layout algorithm. The column width is set by the widest unbreakable
     /// content in the cells. The content will dictate the layout
-    member _.tableLayoutAuto = h.MakeStyle("table-layout", "auto")
+    member _.tableLayoutAuto = makeStyle "table-layout" "auto"
     /// Sets a fixed table layout algorithm. The table and column widths are set by the widths of table and col
     /// or by the width of the first row of cells. Cells in other rows do not affect column widths. If no widths
     /// are present on the first row, the column widths are divided equally across the table, regardless of content
     /// inside the cells
-    member _.tableLayoutFixed' = h.MakeStyle("table-layout", "fixed")
+    member _.tableLayoutFixed' = makeStyle "table-layout" "fixed"
     /// Sets this property to its default value.
-    member _.tableLayoutInitial = h.MakeStyle("table-layout", "initial")
+    member _.tableLayoutInitial = makeStyle "table-layout" "initial"
     /// Inherits this property from its parent element.
-    member _.tableLayoutInheritFromParent = h.MakeStyle("table-layout", "inherit")
+    member _.tableLayoutInheritFromParent = makeStyle "table-layout" "inherit"
 
-    member _.cursor(value: string) = h.MakeStyle("cursor", asString value)
+    member _.cursor(value: string) = makeStyle "cursor" (asString value)
     /// The User Agent will determine the cursor to display based on the current context. E.g., equivalent to text when hovering text.
-    member _.cursorAuto = h.MakeStyle("cursor", "auto")
+    member _.cursorAuto = makeStyle "cursor" "auto"
     /// The cursor indicates an alias of something is to be created
-    member _.cursorAlias = h.MakeStyle("cursor", "alias")
+    member _.cursorAlias = makeStyle "cursor" "alias"
     /// The platform-dependent default cursor. Typically an arrow.
-    member _.cursorDefaultCursor = h.MakeStyle("cursor", "default")
+    member _.cursorDefaultCursor = makeStyle "cursor" "default"
     /// No cursor is rendered.
-    member _.cursorNone = h.MakeStyle("cursor", "none")
+    member _.cursorNone = makeStyle "cursor" "none"
     /// A context menu is available.
-    member _.cursorContextMenu = h.MakeStyle("cursor", "context-menu")
+    member _.cursorContextMenu = makeStyle "cursor" "context-menu"
     /// Help information is available.
-    member _.cursorHelp = h.MakeStyle("cursor", "help")
+    member _.cursorHelp = makeStyle "cursor" "help"
     /// The cursor is a pointer that indicates a link. Typically an image of a pointing hand.
-    member _.cursorPointer = h.MakeStyle("cursor", "pointer")
+    member _.cursorPointer = makeStyle "cursor" "pointer"
     /// The program is busy in the background, but the user can still interact with the interface (in contrast to `wait`).
-    member _.cursorProgress = h.MakeStyle("cursor", "progress")
+    member _.cursorProgress = makeStyle "cursor" "progress"
     /// The program is busy, and the user can't interact with the interface (in contrast to progress). Sometimes an image of an hourglass or a watch.
-    member _.cursorWait = h.MakeStyle("cursor", "wait")
+    member _.cursorWait = makeStyle "cursor" "wait"
     /// The table cell or set of cells can be selected.
-    member _.cursorCell = h.MakeStyle("cursor", "cell")
+    member _.cursorCell = makeStyle "cursor" "cell"
     /// Cross cursor, often used to indicate selection in a bitmap.
-    member _.cursorCrosshair = h.MakeStyle("cursor", "crosshair")
+    member _.cursorCrosshair = makeStyle "cursor" "crosshair"
     /// The text can be selected. Typically the shape of an I-beam.
-    member _.cursorText = h.MakeStyle("cursor", "text")
+    member _.cursorText = makeStyle "cursor" "text"
     /// The vertical text can be selected. Typically the shape of a sideways I-beam.
-    member _.cursorVerticalText = h.MakeStyle("cursor", "vertical-text")
+    member _.cursorVerticalText = makeStyle "cursor" "vertical-text"
     /// Something is to be copied.
-    member _.cursorCopy = h.MakeStyle("cursor", "copy")
+    member _.cursorCopy = makeStyle "cursor" "copy"
     /// Something is to be moved.
-    member _.cursorMove = h.MakeStyle("cursor", "move")
+    member _.cursorMove = makeStyle "cursor" "move"
     /// An item may not be dropped at the current location. On Windows and Mac OS X, `no-drop` is the same as `not-allowed`.
-    member _.cursorNoDrop = h.MakeStyle("cursor", "no-drop")
+    member _.cursorNoDrop = makeStyle "cursor" "no-drop"
     /// The requested action will not be carried out.
-    member _.cursorNotAllowed = h.MakeStyle("cursor", "not-allowed")
+    member _.cursorNotAllowed = makeStyle "cursor" "not-allowed"
     /// Something can be grabbed (dragged to be moved).
-    member _.cursorGrab = h.MakeStyle("cursor", "grab")
+    member _.cursorGrab = makeStyle "cursor" "grab"
     /// Something is being grabbed (dragged to be moved).
-    member _.cursorGrabbing = h.MakeStyle("cursor", "grabbing")
+    member _.cursorGrabbing = makeStyle "cursor" "grabbing"
     /// Something can be scrolled in any direction (panned).
-    member _.cursorAllScroll = h.MakeStyle("cursor", "all-scroll")
+    member _.cursorAllScroll = makeStyle "cursor" "all-scroll"
     /// The item/column can be resized horizontally. Often rendered as arrows pointing left and right with a vertical bar separating them.
-    member _.cursorColumnResize = h.MakeStyle("cursor", "col-resize")
+    member _.cursorColumnResize = makeStyle "cursor" "col-resize"
     /// The item/row can be resized vertically. Often rendered as arrows pointing up and down with a horizontal bar separating them.
-    member _.cursorRowResize = h.MakeStyle("cursor", "row-resize")
+    member _.cursorRowResize = makeStyle "cursor" "row-resize"
     /// Directional resize arrow
-    member _.cursorNorthResize = h.MakeStyle("cursor", "n-resize")
+    member _.cursorNorthResize = makeStyle "cursor" "n-resize"
     /// Directional resize arrow
-    member _.cursorEastResize = h.MakeStyle("cursor", "e-resize")
+    member _.cursorEastResize = makeStyle "cursor" "e-resize"
     /// Directional resize arrow
-    member _.cursorSouthResize = h.MakeStyle("cursor", "s-resize")
+    member _.cursorSouthResize = makeStyle "cursor" "s-resize"
     /// Directional resize arrow
-    member _.cursorWestResize = h.MakeStyle("cursor", "w-resize")
+    member _.cursorWestResize = makeStyle "cursor" "w-resize"
     /// Directional resize arrow
-    member _.cursorNorthEastResize = h.MakeStyle("cursor", "ne-resize")
+    member _.cursorNorthEastResize = makeStyle "cursor" "ne-resize"
     /// Directional resize arrow
-    member _.cursorNorthWestResize = h.MakeStyle("cursor", "nw-resize")
+    member _.cursorNorthWestResize = makeStyle "cursor" "nw-resize"
     /// Directional resize arrow
-    member _.cursorSouthEastResize = h.MakeStyle("cursor", "se-resize")
+    member _.cursorSouthEastResize = makeStyle "cursor" "se-resize"
     /// Directional resize arrow
-    member _.cursorSouthWestResize = h.MakeStyle("cursor", "sw-resize")
+    member _.cursorSouthWestResize = makeStyle "cursor" "sw-resize"
     /// Directional resize arrow
-    member _.cursorEastWestResize = h.MakeStyle("cursor", "ew-resize")
+    member _.cursorEastWestResize = makeStyle "cursor" "ew-resize"
     /// Directional resize arrow
-    member _.cursorNorthSouthResize = h.MakeStyle("cursor", "ns-resize")
+    member _.cursorNorthSouthResize = makeStyle "cursor" "ns-resize"
     /// Directional resize arrow
-    member _.cursorNorthEastSouthWestResize = h.MakeStyle("cursor", "nesw-resize")
+    member _.cursorNorthEastSouthWestResize = makeStyle "cursor" "nesw-resize"
     /// Directional resize arrow
-    member _.cursorNorthWestSouthEastResize = h.MakeStyle("cursor", "nwse-resize")
+    member _.cursorNorthWestSouthEastResize = makeStyle "cursor" "nwse-resize"
     /// Something can be zoomed (magnified) in
-    member _.cursorZoomIn = h.MakeStyle("cursor", "zoom-in")
+    member _.cursorZoomIn = makeStyle "cursor" "zoom-in"
     /// Something can be zoomed out
-    member _.cursorZoomOut = h.MakeStyle("cursor", "zoom-out")
+    member _.cursorZoomOut = makeStyle "cursor" "zoom-out"
 
     /// Permits the user agent to render a custom outline style.
-    member _.outlineStyleAuto = h.MakeStyle("outline-style", "auto")
+    member _.outlineStyleAuto = makeStyle "outline-style" "auto"
     /// Specifies no outline. This is default.
-    member _.outlineStyleNone = h.MakeStyle("outline-style", "none")
+    member _.outlineStyleNone = makeStyle "outline-style" "none"
     /// Specifies a hidden outline
-    member _.outlineStyleHidden = h.MakeStyle("outline-style", "hidden")
+    member _.outlineStyleHidden = makeStyle "outline-style" "hidden"
     /// Specifies a dotted outline
-    member _.outlineStyleDotted = h.MakeStyle("outline-style", "dotted")
+    member _.outlineStyleDotted = makeStyle "outline-style" "dotted"
     /// Specifies a dashed outline
-    member _.outlineStyleDashed = h.MakeStyle("outline-style", "dashed")
+    member _.outlineStyleDashed = makeStyle "outline-style" "dashed"
     /// Specifies a solid outline
-    member _.outlineStyleSolid = h.MakeStyle("outline-style", "solid")
+    member _.outlineStyleSolid = makeStyle "outline-style" "solid"
     /// Specifies a double outliner
-    member _.outlineStyleDouble = h.MakeStyle("outline-style", "double")
+    member _.outlineStyleDouble = makeStyle "outline-style" "double"
     /// Specifies a 3D grooved outline. The effect depends on the outline-color value
-    member _.outlineStyleGroove = h.MakeStyle("outline-style", "groove")
+    member _.outlineStyleGroove = makeStyle "outline-style" "groove"
     /// Specifies a 3D ridged outline. The effect depends on the outline-color value
-    member _.outlineStyleRidge = h.MakeStyle("outline-style", "ridge")
+    member _.outlineStyleRidge = makeStyle "outline-style" "ridge"
     /// Specifies a 3D inset  outline. The effect depends on the outline-color value
-    member _.outlineStyleInset = h.MakeStyle("outline-style", "inset")
+    member _.outlineStyleInset = makeStyle "outline-style" "inset"
     /// Specifies a 3D outset outline. The effect depends on the outline-color value
-    member _.outlineStyleOutset = h.MakeStyle("outline-style", "outset")
+    member _.outlineStyleOutset = makeStyle "outline-style" "outset"
     /// Sets this property to its default value
-    member _.outlineStyleInitial = h.MakeStyle("outline-style", "initial")
+    member _.outlineStyleInitial = makeStyle "outline-style" "initial"
     /// Inherits this property from its parent element
-    member _.outlineStyleInheritFromParent = h.MakeStyle("outline-style", "inherit")
+    member _.outlineStyleInheritFromParent = makeStyle "outline-style" "inherit"
 
     /// Sets the initial position for each background image.
     ///
     /// The position is relative to the position layer set by background-origin.
-    member _.backgroundPosition(position: string) = h.MakeStyle("background-position", position)
+    member _.backgroundPosition(position: string) = makeStyle "background-position" position
     /// The background image will scroll with the page. This is default.
-    member _.backgroundPositionScroll = h.MakeStyle("background-position", "scroll")
+    member _.backgroundPositionScroll = makeStyle "background-position" "scroll"
     /// The background image will not scroll with the page.
-    member _.backgroundPositionFixedNoScroll = h.MakeStyle("background-position", "fixed")
+    member _.backgroundPositionFixedNoScroll = makeStyle "background-position" "fixed"
     /// The background image will scroll with the element's contents.
-    member _.backgroundPositionLocal = h.MakeStyle("background-position", "local")
+    member _.backgroundPositionLocal = makeStyle "background-position" "local"
     /// Sets this property to its default value.
-    member _.backgroundPositionInitial = h.MakeStyle("background-position", "initial")
+    member _.backgroundPositionInitial = makeStyle "background-position" "initial"
     /// Inherits this property from its parent element.
-    member _.backgroundPositionInheritFromParent = h.MakeStyle("background-position", "inherit")
+    member _.backgroundPositionInheritFromParent = makeStyle "background-position" "inherit"
 
     /// This is default. Sets the blending mode to normal.
-    member _.backgroundBlendModeNormal = h.MakeStyle("background-blend-mode", "normal")
+    member _.backgroundBlendModeNormal = makeStyle "background-blend-mode" "normal"
     /// Sets the blending mode to screen
-    member _.backgroundBlendModeScreen = h.MakeStyle("background-blend-mode", "screen")
+    member _.backgroundBlendModeScreen = makeStyle "background-blend-mode" "screen"
     /// Sets the blending mode to overlay
-    member _.backgroundBlendModeOverlay = h.MakeStyle("background-blend-mode", "overlay")
+    member _.backgroundBlendModeOverlay = makeStyle "background-blend-mode" "overlay"
     /// Sets the blending mode to darken
-    member _.backgroundBlendModeDarken = h.MakeStyle("background-blend-mode", "darken")
+    member _.backgroundBlendModeDarken = makeStyle "background-blend-mode" "darken"
     /// Sets the blending mode to multiply
-    member _.backgroundBlendModeLighten = h.MakeStyle("background-blend-mode", "lighten")
+    member _.backgroundBlendModeLighten = makeStyle "background-blend-mode" "lighten"
     /// Sets the blending mode to color-dodge
-    member _.backgroundBlendModeCollorDodge = h.MakeStyle("background-blend-mode", "color-dodge")
+    member _.backgroundBlendModeCollorDodge = makeStyle "background-blend-mode" "color-dodge"
     /// Sets the blending mode to saturation
-    member _.backgroundBlendModeSaturation = h.MakeStyle("background-blend-mode", "saturation")
+    member _.backgroundBlendModeSaturation = makeStyle "background-blend-mode" "saturation"
     /// Sets the blending mode to color
-    member _.backgroundBlendModeColor = h.MakeStyle("background-blend-mode", "color")
+    member _.backgroundBlendModeColor = makeStyle "background-blend-mode" "color"
     /// Sets the blending mode to luminosity
-    member _.backgroundBlendModeLuminosity = h.MakeStyle("background-blend-mode", "luminosity")
+    member _.backgroundBlendModeLuminosity = makeStyle "background-blend-mode" "luminosity"
 
     /// Default value. The background extends behind the border.
-    member _.backgroundClipBorderBox = h.MakeStyle("background-clip", "border-box")
+    member _.backgroundClipBorderBox = makeStyle "background-clip" "border-box"
     /// The background extends to the inside edge of the border.
-    member _.backgroundClipPaddingBox = h.MakeStyle("background-clip", "padding-box")
+    member _.backgroundClipPaddingBox = makeStyle "background-clip" "padding-box"
     /// The background extends to the edge of the content box.
-    member _.backgroundClipContentBox = h.MakeStyle("background-clip", "content-box")
+    member _.backgroundClipContentBox = makeStyle "background-clip" "content-box"
     /// Sets this property to its default value.
-    member _.backgroundClipInitial = h.MakeStyle("background-clip", "initial")
+    member _.backgroundClipInitial = makeStyle "background-clip" "initial"
     /// Inherits this property from its parent element.
-    member _.backgroundClipInheritFromParent = h.MakeStyle("background-clip", "inherit")
+    member _.backgroundClipInheritFromParent = makeStyle "background-clip" "inherit"
 
     member _.transform(transformation: ITransformProperty) =
-        h.MakeStyle("transform", asString transformation)
+        makeStyle "transform" (asString transformation)
     member _.transform(transformations: ITransformProperty list) =
-        h.MakeStyle("transform", String.concat " " (transformations |> List.map asString))
+        makeStyle "transform" (String.concat " " (transformations |> List.map asString))
     /// Defines that there should be no transformation.
-    member _.transformNone = h.MakeStyle("transform", "none")
+    member _.transformNone = makeStyle "transform" "none"
     /// Defines a 2D transformation, using a matrix of six values.
-    member _.transformMatrix(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int) = h.MakeStyle("transform", "matrix(" + (asString x1) + "," + (asString y1) + "," + (asString z1) + "," + (asString x2) + "," + (asString y2) + ", " + (asString z2) + ")")
+    member _.transformMatrix(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int) = makeStyle "transform" ("matrix(" + (asString x1) + "," + (asString y1) + "," + (asString z1) + "," + (asString x2) + "," + (asString y2) + ", " + (asString z2) + ")")
     /// Defines a 2D translation.
-    member _.transformTranslate(x: int, y: int) = h.MakeStyle("transform", "translate(" + (asString x) + "px," + (asString y) + "px)")
+    member _.transformTranslate(x: int, y: int) = makeStyle "transform" ("translate(" + (asString x) + "px," + (asString y) + "px)")
     /// Defines a 2D translation.
-    member _.transformTranslate(x: ICssUnit, y: ICssUnit) = h.MakeStyle("transform", "translate(" + (asString x) + ", " + (asString y) + ")")
+    member _.transformTranslate(x: ICssUnit, y: ICssUnit) = makeStyle "transform" ("translate(" + (asString x) + ", " + (asString y) + ")")
     /// Defines a 3D translation.
-    member _.transformTranslate3D(x: int, y: int, z: int) = h.MakeStyle("transform", "translate3d(" + (asString x) + "px," + (asString y) + "px," + (asString z) + "px)")
+    member _.transformTranslate3D(x: int, y: int, z: int) = makeStyle "transform" ("translate3d(" + (asString x) + "px," + (asString y) + "px," + (asString z) + "px)")
     /// Defines a 3D translation.
-    member _.transformTranslate3D(x: ICssUnit, y: ICssUnit, z: ICssUnit) = h.MakeStyle("transform", "translate3d(" + (asString x) + "," + (asString y) + ", " + (asString z) + ")")
+    member _.transformTranslate3D(x: ICssUnit, y: ICssUnit, z: ICssUnit) = makeStyle "transform" ("translate3d(" + (asString x) + "," + (asString y) + ", " + (asString z) + ")")
     /// Defines a translation, using only the value for the X-axis.
-    member _.transformTranslateX(x: int) = h.MakeStyle("transform", "translateX(" + (asString x) + "px)")
+    member _.transformTranslateX(x: int) = makeStyle "transform" ("translateX(" + (asString x) + "px)")
     /// Defines a translation, using only the value for the X-axis.
-    member _.transformTranslateX(x: ICssUnit) = h.MakeStyle("transform", "translateX(" + (asString x) + ")")
+    member _.transformTranslateX(x: ICssUnit) = makeStyle "transform" ("translateX(" + (asString x) + ")")
     /// Defines a translation, using only the value for the Y-axis
-    member _.transformTranslateY(y: int) = h.MakeStyle("transform", "translateY(" + (asString y) + "px)")
+    member _.transformTranslateY(y: int) = makeStyle "transform" ("translateY(" + (asString y) + "px)")
     /// Defines a translation, using only the value for the Y-axis
-    member _.transformTranslateY(y: ICssUnit) = h.MakeStyle("transform", "translateY(" + (asString y) + ")")
+    member _.transformTranslateY(y: ICssUnit) = makeStyle "transform" ("translateY(" + (asString y) + ")")
     /// Defines a 3D translation, using only the value for the Z-axis
     /// Defines a 3D translation, using only the value for the Z-axis
-    member _.transformTranslateZ(z: ICssUnit) = h.MakeStyle("transform", "translateZ(" + (asString z) + ")")
+    member _.transformTranslateZ(z: ICssUnit) = makeStyle "transform" ("translateZ(" + (asString z) + ")")
     /// Defines a 2D scale transformation.
-    member _.transformScale(x: int, y: int) = h.MakeStyle("transform", "scale(" + (asString x) + ", " + (asString y) + ")")
+    member _.transformScale(x: int, y: int) = makeStyle "transform" ("scale(" + (asString x) + ", " + (asString y) + ")")
     /// Defines a scale transformation.
     /// Defines a scale transformation.
-    member _.transformScale(n: float) = h.MakeStyle("transform", "scale(" + (asString n) + ")")
+    member _.transformScale(n: float) = makeStyle "transform" ("scale(" + (asString n) + ")")
     /// Defines a 3D scale transformation
-    member _.transformScale3D(x: int, y: int, z: int) = h.MakeStyle("transform", "scale3d(" + (asString x) + "," + (asString y) + ", " + (asString z) + ")")
+    member _.transformScale3D(x: int, y: int, z: int) = makeStyle "transform" ("scale3d(" + (asString x) + "," + (asString y) + ", " + (asString z) + ")")
     /// Defines a scale transformation by giving a value for the X-axis.
-    member _.transformScaleX(x: int) = h.MakeStyle("transform", "scaleX(" + (asString x) + ")")
+    member _.transformScaleX(x: int) = makeStyle "transform" ("scaleX(" + (asString x) + ")")
     /// Defines a scale transformation by giving a value for the Y-axis.
-    member _.transformScaleY(y: int) = h.MakeStyle("transform", "scaleY(" + (asString y) + ")")
+    member _.transformScaleY(y: int) = makeStyle "transform" ("scaleY(" + (asString y) + ")")
     /// Defines a 3D translation, using only the value for the Z-axis
-    member _.transformScaleZ(z: int) = h.MakeStyle("transform", "scaleZ(" + (asString z) + ")")
+    member _.transformScaleZ(z: int) = makeStyle "transform" ("scaleZ(" + (asString z) + ")")
     /// Defines a 2D rotation, the angle is specified in the parameter.
-    member _.transformRotate(deg: int) = h.MakeStyle("transform", "rotate(" + (asString deg) + "deg)")
+    member _.transformRotate(deg: int) = makeStyle "transform" ("rotate(" + (asString deg) + "deg)")
     /// Defines a 2D rotation, the angle is specified in the parameter.
-    member _.transformRotate(deg: float) = h.MakeStyle("transform", "rotate(" + (asString deg) + "deg)")
+    member _.transformRotate(deg: float) = makeStyle "transform" ("rotate(" + (asString deg) + "deg)")
     /// Defines a 3D rotation along the X-axis.
-    member _.transformRotateX(deg: float) = h.MakeStyle("transform", "rotateX(" + (asString deg) + "deg)")
+    member _.transformRotateX(deg: float) = makeStyle "transform" ("rotateX(" + (asString deg) + "deg)")
     /// Defines a 3D rotation along the X-axis.
-    member _.transformRotateX(deg: int) = h.MakeStyle("transform", "rotateX(" + (asString deg) + "deg)")
+    member _.transformRotateX(deg: int) = makeStyle "transform" ("rotateX(" + (asString deg) + "deg)")
     /// Defines a 3D rotation along the Y-axis
-    member _.transformRotateY(deg: float) = h.MakeStyle("transform", "rotateY(" + (asString deg) + "deg)")
+    member _.transformRotateY(deg: float) = makeStyle "transform" ("rotateY(" + (asString deg) + "deg)")
     /// Defines a 3D rotation along the Y-axis
-    member _.transformRotateY(deg: int) = h.MakeStyle("transform", "rotateY(" + (asString deg) + "deg)")
+    member _.transformRotateY(deg: int) = makeStyle "transform" ("rotateY(" + (asString deg) + "deg)")
     /// Defines a 3D rotation along the Z-axis
-    member _.transformRotateZ(deg: float) = h.MakeStyle("transform", "rotateZ(" + (asString deg) + "deg)")
+    member _.transformRotateZ(deg: float) = makeStyle "transform" ("rotateZ(" + (asString deg) + "deg)")
     /// Defines a 3D rotation along the Z-axis
-    member _.transformRotateZ(deg: int) = h.MakeStyle("transform", "rotateZ(" + (asString deg) + "deg)")
+    member _.transformRotateZ(deg: int) = makeStyle "transform" ("rotateZ(" + (asString deg) + "deg)")
     /// Defines a 2D skew transformation along the X- and the Y-axis.
-    member _.transformSkew(xAngle: int, yAngle: int) = h.MakeStyle("transform", "skew(" + (asString xAngle) + "deg," + (asString yAngle) + "deg)")
+    member _.transformSkew(xAngle: int, yAngle: int) = makeStyle "transform" ("skew(" + (asString xAngle) + "deg," + (asString yAngle) + "deg)")
     /// Defines a 2D skew transformation along the X- and the Y-axis.
-    member _.transformSkew(xAngle: float, yAngle: float) = h.MakeStyle("transform", "skew(" + (asString xAngle) + "deg," + (asString yAngle) + "deg)")
+    member _.transformSkew(xAngle: float, yAngle: float) = makeStyle "transform" ("skew(" + (asString xAngle) + "deg," + (asString yAngle) + "deg)")
     /// Defines a 2D skew transformation along the X-axis
-    member _.transformSkewX(xAngle: int) = h.MakeStyle("transform", "skewX(" + (asString xAngle) + "deg)")
+    member _.transformSkewX(xAngle: int) = makeStyle "transform" ("skewX(" + (asString xAngle) + "deg)")
     /// Defines a 2D skew transformation along the X-axis
-    member _.transformSkewX(xAngle: float) = h.MakeStyle("transform", "skewX(" + (asString xAngle) + "deg)")
+    member _.transformSkewX(xAngle: float) = makeStyle "transform" ("skewX(" + (asString xAngle) + "deg)")
     /// Defines a 2D skew transformation along the Y-axis
-    member _.transformSkewY(xAngle: int) = h.MakeStyle("transform", "skewY(" + (asString xAngle) + "deg)")
+    member _.transformSkewY(xAngle: int) = makeStyle "transform" ("skewY(" + (asString xAngle) + "deg)")
     /// Defines a 2D skew transformation along the Y-axis
-    member _.transformSkewY(xAngle: float) = h.MakeStyle("transform", "skewY(" + (asString xAngle) + "deg)")
+    member _.transformSkewY(xAngle: float) = makeStyle "transform" ("skewY(" + (asString xAngle) + "deg)")
     /// Defines a perspective view for a 3D transformed element
-    member _.transformPerspective(n: int) = h.MakeStyle("transform", "perspective(" + (asString n) + ")")
+    member _.transformPerspective(n: int) = makeStyle "transform" ("perspective(" + (asString n) + ")")
     /// Sets this property to its default value.
-    member _.transformInitial = h.MakeStyle("transform", "initial")
+    member _.transformInitial = makeStyle "transform" "initial"
     /// Inherits this property from its parent element.
-    member _.transformInheritFromParent = h.MakeStyle("transform", "inherit")
+    member _.transformInheritFromParent = makeStyle "transform" "inherit"
 
     /// Text direction goes from right-to-left
-    member _.directionRightToLeft = h.MakeStyle("direction", "rtl")
+    member _.directionRightToLeft = makeStyle "direction" "rtl"
     /// Text direction goes from left-to-right. This is default
-    member _.directionLeftToRight = h.MakeStyle("direction", "ltr")
+    member _.directionLeftToRight = makeStyle "direction" "ltr"
     /// Sets this property to its default value.
-    member _.directionInitial = h.MakeStyle("direction", "initial")
+    member _.directionInitial = makeStyle "direction" "initial"
     /// Inherits this property from its parent element.
-    member _.directionInheritFromParent = h.MakeStyle("direction", "inherit")
+    member _.directionInheritFromParent = makeStyle "direction" "inherit"
 
     /// Display borders on empty cells. This is default
-    member _.emptyCellsShow = h.MakeStyle("empty-cells", "show")
+    member _.emptyCellsShow = makeStyle "empty-cells" "show"
     /// Hide borders on empty cells
-    member _.emptyCellsHide = h.MakeStyle("empty-cells", "hide")
+    member _.emptyCellsHide = makeStyle "empty-cells" "hide"
     /// Sets this property to its default value
-    member _.emptyCellsInitial = h.MakeStyle("empty-cells", "initial")
+    member _.emptyCellsInitial = makeStyle "empty-cells" "initial"
     /// Inherits this property from its parent element
-    member _.emptyCellsInheritFromParent = h.MakeStyle("empty-cells", "inherit")
+    member _.emptyCellsInheritFromParent = makeStyle "empty-cells" "inherit"
 
     /// Default value. The animation should be played as normal
-    member _.animationDirectionNormal = h.MakeStyle("animation-direction", "normal")
+    member _.animationDirectionNormal = makeStyle "animation-direction" "normal"
     /// The animation should play in reverse direction
-    member _.animationDirectionReverse = h.MakeStyle("animation-direction", "reverse")
+    member _.animationDirectionReverse = makeStyle "animation-direction" "reverse"
     /// The animation will be played as normal every odd time (1, 3, 5, etc..) and in reverse direction every even time (2, 4, 6, etc...).
-    member _.animationDirectionAlternate = h.MakeStyle("animation-direction", "alternate")
+    member _.animationDirectionAlternate = makeStyle "animation-direction" "alternate"
     /// The animation will be played in reverse direction every odd time (1, 3, 5, etc..) and in a normal direction every even time (2,4,6,etc...)
-    member _.animationDirectionAlternateReverse = h.MakeStyle("animation-direction", "alternate-reverse")
+    member _.animationDirectionAlternateReverse = makeStyle "animation-direction" "alternate-reverse"
     /// Sets this property to its default value
-    member _.animationDirectionInitial = h.MakeStyle("animation-direction", "initial")
+    member _.animationDirectionInitial = makeStyle "animation-direction" "initial"
     /// Inherits this property from its parent element.
-    member _.animationDirectionInheritFromParent = h.MakeStyle("animation-direction", "inherit")
+    member _.animationDirectionInheritFromParent = makeStyle "animation-direction" "inherit"
 
     /// Default value. Specifies that the animation is running.
-    member _.animationPlayStateRunning = h.MakeStyle("animation-play-state", "running")
+    member _.animationPlayStateRunning = makeStyle "animation-play-state" "running"
     /// Specifies that the animation is paused
-    member _.animationPlayStatePaused = h.MakeStyle("animation-play-state", "paused")
+    member _.animationPlayStatePaused = makeStyle "animation-play-state" "paused"
     /// Sets this property to its default value
-    member _.animationPlayStateInitial = h.MakeStyle("animation-play-state", "initial")
+    member _.animationPlayStateInitial = makeStyle "animation-play-state" "initial"
     /// Inherits this property from its parent element.
-    member _.animationPlayStateInheritFromParent = h.MakeStyle("animation-play-state", "inherit")
+    member _.animationPlayStateInheritFromParent = makeStyle "animation-play-state" "inherit"
 
     /// Specifies that the animation should be played infinite times (forever)
-    member _.animationIterationCountInfinite = h.MakeStyle("animation-iteration-count", "infinite")
+    member _.animationIterationCountInfinite = makeStyle "animation-iteration-count" "infinite"
     /// Sets this property to its default value
-    member _.animationIterationCountInitial = h.MakeStyle("animation-iteration-count", "initial")
+    member _.animationIterationCountInitial = makeStyle "animation-iteration-count" "initial"
     /// Inherits this property from its parent element.
-    member _.animationIterationCountInheritFromParent = h.MakeStyle("animation-iteration-count", "inherit")
+    member _.animationIterationCountInheritFromParent = makeStyle "animation-iteration-count" "inherit"
 
     /// Default value. Animation will not apply any styles to the element before or after it is executing
-    member _.animationFillModeNone = h.MakeStyle("animation-fill-mode", "none")
+    member _.animationFillModeNone = makeStyle "animation-fill-mode" "none"
     /// The element will retain the style values that is set by the last keyframe (depends on animation-direction and animation-iteration-count).
-    member _.animationFillModeForwards = h.MakeStyle("animation-fill-mode", "forwards")
+    member _.animationFillModeForwards = makeStyle "animation-fill-mode" "forwards"
     /// The element will get the style values that is set by the first keyframe (depends on animation-direction), and retain this during the animation-delay period
-    member _.animationFillModeBackwards = h.MakeStyle("animation-fill-mode", "backwards")
+    member _.animationFillModeBackwards = makeStyle "animation-fill-mode" "backwards"
     /// The animation will follow the rules for both forwards and backwards, extending the animation properties in both directions
-    member _.animationFillModeBoth = h.MakeStyle("animation-fill-mode", "both")
+    member _.animationFillModeBoth = makeStyle "animation-fill-mode" "both"
     /// Sets this property to its default value
-    member _.animationFillModeInitial = h.MakeStyle("animation-fill-mode", "initial")
+    member _.animationFillModeInitial = makeStyle "animation-fill-mode" "initial"
     /// Inherits this property from its parent element
-    member _.animationFillModeInheritFromParent = h.MakeStyle("animation-fill-mode", "inherit")
+    member _.animationFillModeInheritFromParent = makeStyle "animation-fill-mode" "inherit"
 
     /// Sets how background images are repeated.
     ///
     /// A background image can be repeated along the horizontal and vertical axes, or not repeated at all.
-    member _.backgroundRepeat(repeat: IBackgroundRepeat) = h.MakeStyle("background-repeat", asString repeat)
+    member _.backgroundRepeat(repeat: IBackgroundRepeat) = makeStyle "background-repeat" (asString repeat)
     /// The background image is repeated both vertically and horizontally. This is default.
-    member _.backgroundRepeatRepeat = h.MakeStyle("background-repeat", "repeat")
+    member _.backgroundRepeatRepeat = makeStyle "background-repeat" "repeat"
     /// The background image is only repeated horizontally.
-    member _.backgroundRepeatRepeatX = h.MakeStyle("background-repeat", "repeat-x")
+    member _.backgroundRepeatRepeatX = makeStyle "background-repeat" "repeat-x"
     /// The background image is only repeated vertically.
-    member _.backgroundRepeatRepeatY = h.MakeStyle("background-repeat", "repeat-y")
+    member _.backgroundRepeatRepeatY = makeStyle "background-repeat" "repeat-y"
     /// The background-image is not repeated.
-    member _.backgroundRepeatNoRepeat = h.MakeStyle("background-repeat", "no-repeat")
+    member _.backgroundRepeatNoRepeat = makeStyle "background-repeat" "no-repeat"
     /// Sets this property to its default value.
-    member _.backgroundRepeatInitial = h.MakeStyle("background-repeat", "initial")
+    member _.backgroundRepeatInitial = makeStyle "background-repeat" "initial"
     /// Inherits this property from its parent element.
-    member _.backgroundRepeatInheritFromParent = h.MakeStyle("background-repeat", "inherit")
+    member _.backgroundRepeatInheritFromParent = makeStyle "background-repeat" "inherit"
 
     /// Default value. Elements render in order, as they appear in the document flow.
-    member _.positionDefaultStatic = h.MakeStyle("position", "static")
+    member _.positionDefaultStatic = makeStyle "position" "static"
     /// The element is positioned relative to its first positioned (not static) ancestor element.
-    member _.positionAbsolute = h.MakeStyle("position", "absolute")
+    member _.positionAbsolute = makeStyle "position" "absolute"
     /// The element is positioned relative to the browser window
-    member _.positionFixed = h.MakeStyle("position", "fixed")
+    member _.positionFixed = makeStyle "position" "fixed"
     /// The element is positioned relative to its normal position, so "left:20px" adds 20 pixels to the element's LEFT position.
-    member _.positionRelative = h.MakeStyle("position", "relative")
+    member _.positionRelative = makeStyle "position" "relative"
     /// The element is positioned based on the user's scroll position
     ///
     /// A sticky element toggles between relative and fixed, depending on the scroll position. It is positioned relative until a given offset position is met in the viewport - then it "sticks" in place (like position:fixed).
     ///
     /// Note: Not supported in IE/Edge 15 or earlier. Supported in Safari from version 6.1 with a -webkit- prefix.
-    member _.positionSticky = h.MakeStyle("position", "sticky")
-    member _.positionInitial = h.MakeStyle("position", "initial")
+    member _.positionSticky = makeStyle "position" "sticky"
+    member _.positionInitial = makeStyle "position" "initial"
     /// Inherits this property from its parent element.
-    member _.positionInheritFromParent = h.MakeStyle("position", "inherit")
+    member _.positionInheritFromParent = makeStyle "position" "inherit"
 
     /// Default value. The width and height properties include the content, but does not include the padding, border, or margin.
-    member _.boxSizingContentBox = h.MakeStyle("box-sizing", "content-box")
+    member _.boxSizingContentBox = makeStyle "box-sizing" "content-box"
     /// The width and height properties include the content, padding, and border, but do not include the margin. Note that padding and border will be inside of the box.
-    member _.boxSizingBorderBox = h.MakeStyle("box-sizing", "border-box")
+    member _.boxSizingBorderBox = makeStyle "box-sizing" "border-box"
     /// Sets this property to its default value.
-    member _.boxSizingInitial = h.MakeStyle("box-sizing", "initial")
+    member _.boxSizingInitial = makeStyle "box-sizing" "initial"
     /// Inherits this property from its parent element.
-    member _.boxSizingInheritFromParent = h.MakeStyle("box-sizing", "inherit")
+    member _.boxSizingInheritFromParent = makeStyle "box-sizing" "inherit"
 
     /// Default value. The element offers no user-controllable method for resizing it.
-    member _.resizeNone = h.MakeStyle("resize", "none")
+    member _.resizeNone = makeStyle "resize" "none"
     /// The element displays a mechanism for allowing the user to resize it, which may be resized both horizontally and vertically.
-    member _.resizeBoth = h.MakeStyle("resize", "both")
+    member _.resizeBoth = makeStyle "resize" "both"
     /// The element displays a mechanism for allowing the user to resize it in the horizontal direction.
-    member _.resizeHorizontal = h.MakeStyle("resize", "horizontal")
+    member _.resizeHorizontal = makeStyle "resize" "horizontal"
     /// The element displays a mechanism for allowing the user to resize it in the vertical direction.
-    member _.resizeVertical = h.MakeStyle("resize", "vertical")
+    member _.resizeVertical = makeStyle "resize" "vertical"
     /// The element displays a mechanism for allowing the user to resize it in the block direction (either horizontally or vertically, depending on the writing-mode and direction value).
-    member _.resizeBlock = h.MakeStyle("resize", "block")
+    member _.resizeBlock = makeStyle "resize" "block"
     /// The element displays a mechanism for allowing the user to resize it in the inline direction (either horizontally or vertically, depending on the writing-mode and direction value).
-    member _.resizeInline' = h.MakeStyle("resize", "inline")
+    member _.resizeInline' = makeStyle "resize" "inline"
     /// Sets this property to its default value.
-    member _.resizeInitial = h.MakeStyle("resize", "initial")
+    member _.resizeInitial = makeStyle "resize" "initial"
     /// Inherits this property from its parent element.
-    member _.resizeInheritFromParent = h.MakeStyle("resize", "inherit")
+    member _.resizeInheritFromParent = makeStyle "resize" "inherit"
 
     /// Aligns the text to the left.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-align
-    member _.textAlignLeft = h.MakeStyle("text-align", "left")
+    member _.textAlignLeft = makeStyle "text-align" "left"
     /// Aligns the text to the right.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-align&preval=right
-    member _.textAlignRight = h.MakeStyle("text-align", "right")
+    member _.textAlignRight = makeStyle "text-align" "right"
     /// Centers the text.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-align&preval=center
-    member _.textAlignCenter = h.MakeStyle("text-align", "center")
+    member _.textAlignCenter = makeStyle "text-align" "center"
     /// Stretches the lines so that each line has equal width (like in newspapers and magazines).
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-align&preval=justify
-    member _.textAlignJustify = h.MakeStyle("text-align", "justify")
+    member _.textAlignJustify = makeStyle "text-align" "justify"
     /// Sets this property to its default value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-align&preval=initial
-    member _.textAlignInitial = h.MakeStyle("text-align", "initial")
+    member _.textAlignInitial = makeStyle "text-align" "initial"
     /// Inherits this property from its parent element.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-align&preval=initial
-    member _.textAlignInheritFromParent = h.MakeStyle("text-align", "inherit")
+    member _.textAlignInheritFromParent = makeStyle "text-align" "inherit"
 
     /// Displays an element as an inline element (like `<span> `). Any height and width properties will have no effect.
-    member _.displayInlineElement = h.MakeStyle("display", "inline")
+    member _.displayInlineElement = makeStyle "display" "inline"
     /// Displays an element as a block element (like `<p> `). It starts on a new line, and takes up the whole width.
-    member _.displayBlock = h.MakeStyle("display", "block")
+    member _.displayBlock = makeStyle "display" "block"
     /// Makes the container disappear, making the child elements children of the element the next level up in the DOM.
-    member _.displayContents = h.MakeStyle("display", "contents")
+    member _.displayContents = makeStyle "display" "contents"
     /// Displays an element as a block-level flex container.
-    member _.displayFlex = h.MakeStyle("display", "flex")
+    member _.displayFlex = makeStyle "display" "flex"
     /// Displays an element as a block container box, and lays out its contents using flow layout.
     ///
     /// It always establishes a new block formatting context for its contents.
-    member _.displayFlowRoot = h.MakeStyle("display", "flow-root")
+    member _.displayFlowRoot = makeStyle "display" "flow-root"
     /// Displays an element as a block-level grid container.
-    member _.displayGrid = h.MakeStyle("display", "grid")
+    member _.displayGrid = makeStyle "display" "grid"
     /// Displays an element as an inline-level block container. The element itself is formatted as an inline element, but you can apply height and width values.
-    member _.displayInlineBlock = h.MakeStyle("display", "inline-block")
+    member _.displayInlineBlock = makeStyle "display" "inline-block"
     /// Displays an element as an inline-level flex container.
-    member _.displayInlineFlex = h.MakeStyle("display", "inline-flex")
+    member _.displayInlineFlex = makeStyle "display" "inline-flex"
     /// Displays an element as an inline-level grid container
-    member _.displayInlineGrid = h.MakeStyle("display", "inline-grid")
+    member _.displayInlineGrid = makeStyle "display" "inline-grid"
     /// The element is displayed as an inline-level table.
-    member _.displayInlineTable = h.MakeStyle("display", "inline-table")
+    member _.displayInlineTable = makeStyle "display" "inline-table"
     /// Let the element behave like a `<li> ` element
-    member _.displayListItem = h.MakeStyle("display", "list-item")
+    member _.displayListItem = makeStyle "display" "list-item"
     /// Displays an element as either block or inline, depending on context.
-    member _.displayRunIn = h.MakeStyle("display", "run-in")
+    member _.displayRunIn = makeStyle "display" "run-in"
     /// Let the element behave like a `<table> ` element.
-    member _.displayTable = h.MakeStyle("display", "table")
+    member _.displayTable = makeStyle "display" "table"
     /// Let the element behave like a <caption> element.
-    member _.displayTableCaption = h.MakeStyle("display", "table-caption")
+    member _.displayTableCaption = makeStyle "display" "table-caption"
     /// Let the element behave like a <colgroup> element.
-    member _.displayTableColumnGroup = h.MakeStyle("display", "table-column-group")
+    member _.displayTableColumnGroup = makeStyle "display" "table-column-group"
     /// Let the element behave like a <thead> element.
-    member _.displayTableHeaderGroup = h.MakeStyle("display", "table-header-group")
+    member _.displayTableHeaderGroup = makeStyle "display" "table-header-group"
     /// Let the element behave like a <tfoot> element.
-    member _.displayTableFooterGroup = h.MakeStyle("display", "table-footer-group")
+    member _.displayTableFooterGroup = makeStyle "display" "table-footer-group"
     /// Let the element behave like a <tbody> element.
-    member _.displayTableRowGroup = h.MakeStyle("display", "table-row-group")
+    member _.displayTableRowGroup = makeStyle "display" "table-row-group"
     /// Let the element behave like a <td> element.
-    member _.displayTableCell = h.MakeStyle("display", "table-cell")
+    member _.displayTableCell = makeStyle "display" "table-cell"
     /// Let the element behave like a <col> element.
-    member _.displayTableColumn = h.MakeStyle("display", "table-column")
+    member _.displayTableColumn = makeStyle "display" "table-column"
     /// Let the element behave like a <tr> element.
-    member _.displayTableRow = h.MakeStyle("display", "table-row")
+    member _.displayTableRow = makeStyle "display" "table-row"
     /// The element is completely removed.
-    member _.displayNone = h.MakeStyle("display", "none")
+    member _.displayNone = makeStyle "display" "none"
     /// Sets this property to its default value.
-    member _.displayInitial = h.MakeStyle("display", "initial")
+    member _.displayInitial = makeStyle "display" "initial"
     /// Inherits this property from its parent element.
-    member _.displayInheritFromParent = h.MakeStyle("display", "inherit")
+    member _.displayInheritFromParent = makeStyle "display" "inherit"
 
     /// The zIndex property sets or returns the stack order of a positioned element.
     ///
@@ -1386,30 +1383,30 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// **Tip**: A positioned element is an element with the position property set to: relative, absolute, or fixed.
     ///
     /// **Tip**: This property is useful if you want to create overlapping elements.
-    member _.zIndex(value: int) = h.MakeStyle("z-index", asString value)
+    member _.zIndex(value: int) = makeStyle "z-index" (asString value)
 
     /// Sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right,
     /// margin-bottom, and margin-left.
-    member _.margin(value: int) = h.MakeStyle("margin", asString value + "px")
+    member _.margin(value: int) = makeStyle "margin" (asString value + "px")
     /// Sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right,
     /// margin-bottom, and margin-left.
-    member _.margin(value: ICssUnit) = h.MakeStyle("margin", asString value)
+    member _.margin(value: ICssUnit) = makeStyle "margin" (asString value)
     /// Sets the margin area on the vertical and horizontal axis.
     member _.margin(vertical: int, horizonal: int) =
-        h.MakeStyle("margin",
+        makeStyle "margin" (
             (asString vertical) + "px " +
             (asString horizonal) + "px"
         )
     /// Sets the margin area on the vertical and horizontal axis.
     member _.margin(vertical: ICssUnit, horizonal: ICssUnit) =
-        h.MakeStyle("margin",
+        makeStyle "margin" (
             (asString vertical) + " " +
             (asString horizonal)
         )
     /// Sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right,
     /// margin-bottom, and margin-left.
     member _.margin(top: int, right: int, bottom: int, left: int) =
-        h.MakeStyle("margin",
+        makeStyle "margin" (
             (asString top) + "px " +
             (asString right) + "px " +
             (asString bottom) + "px " +
@@ -1418,7 +1415,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// Sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right,
     /// margin-bottom, and margin-left.
     member _.margin(top: ICssUnit, right: ICssUnit, bottom: ICssUnit, left: ICssUnit) =
-        h.MakeStyle("margin",
+        makeStyle "margin" (
             (asString top) + " " +
             (asString right) + " " +
             (asString bottom) + " " +
@@ -1426,83 +1423,83 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
         )
     /// Sets the margin area on the left side of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginLeft(value: int) = h.MakeStyle("margin-left", asString value + "px")
+    member _.marginLeft(value: int) = makeStyle "margin-left" (asString value + "px")
     /// Sets the margin area on the left side of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginLeft(value: ICssUnit) = h.MakeStyle("margin-left", asString value)
+    member _.marginLeft(value: ICssUnit) = makeStyle "margin-left" (asString value)
     /// sets the margin area on the right side of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginRight(value: int) = h.MakeStyle("margin-right", asString value + "px")
+    member _.marginRight(value: int) = makeStyle "margin-right" (asString value + "px")
     /// sets the margin area on the right side of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginRight(value: ICssUnit) = h.MakeStyle("margin-right", asString value)
+    member _.marginRight(value: ICssUnit) = makeStyle "margin-right" (asString value)
     /// Sets the margin area on the top of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginTop(value: int) = h.MakeStyle("margin-top", asString value + "px")
+    member _.marginTop(value: int) = makeStyle "margin-top" (asString value + "px")
     /// Sets the margin area on the top of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginTop(value: ICssUnit) = h.MakeStyle("margin-top", asString value)
+    member _.marginTop(value: ICssUnit) = makeStyle "margin-top" (asString value)
     /// Sets the margin area on the bottom of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginBottom(value: int) = h.MakeStyle("margin-bottom", asString value + "px")
+    member _.marginBottom(value: int) = makeStyle "margin-bottom" (asString value + "px")
     /// Sets the margin area on the bottom of an element. A positive value places it farther from its
     /// neighbors, while a negative value places it closer.
-    member _.marginBottom(value: ICssUnit) = h.MakeStyle("margin-bottom", asString value)
+    member _.marginBottom(value: ICssUnit) = makeStyle "margin-bottom" (asString value)
 
     /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
     /// padding-right, padding-bottom, and padding-left.
-    member _.padding(value: int) = h.MakeStyle("padding", asString value + "px")
+    member _.padding(value: int) = makeStyle "padding" (asString value + "px")
     /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
     /// padding-right, padding-bottom, and padding-left.
-    member _.padding(value: ICssUnit) = h.MakeStyle("padding", asString value)
+    member _.padding(value: ICssUnit) = makeStyle "padding" (asString value)
     /// Sets the padding area for vertical and horizontal axis.
     member _.padding(vertical: ICssUnit, horizontal: ICssUnit) =
-        h.MakeStyle("padding",
+        makeStyle "padding" (
             (asString vertical) + " " +
             (asString horizontal)
         )
     /// Sets the padding area on all four sides of an element. It is a shorthand for padding-top,
     /// padding-right, padding-bottom, and padding-left.
     member _.padding(top: ICssUnit, right: ICssUnit, bottom: ICssUnit, left: ICssUnit) =
-        h.MakeStyle("padding",
+        makeStyle "padding" (
             (asString top) + " " +
             (asString right) + " " +
             (asString bottom) + " " +
             (asString left)
         )
     /// Sets the height of the padding area on the bottom of an element.
-    member _.paddingBottom(value: int) = h.MakeStyle("padding-bottom", asString value + "px")
+    member _.paddingBottom(value: int) = makeStyle "padding-bottom" (asString value + "px")
     /// Sets the height of the padding area on the bottom of an element.
-    member _.paddingBottom(value: ICssUnit) = h.MakeStyle("padding-bottom", asString value)
+    member _.paddingBottom(value: ICssUnit) = makeStyle "padding-bottom" (asString value)
     /// Sets the width of the padding area to the left of an element.
-    member _.paddingLeft(value: int) = h.MakeStyle("padding-left", asString value + "px")
+    member _.paddingLeft(value: int) = makeStyle "padding-left" (asString value + "px")
     /// Sets the width of the padding area to the left of an element.
-    member _.paddingLeft(value: ICssUnit) = h.MakeStyle("padding-left", asString value)
+    member _.paddingLeft(value: ICssUnit) = makeStyle "padding-left" (asString value)
     /// Sets the width of the padding area on the right of an element.
-    member _.paddingRight(value: int) = h.MakeStyle("padding-right", asString value + "px")
+    member _.paddingRight(value: int) = makeStyle "padding-right" (asString value + "px")
     /// Sets the width of the padding area on the right of an element.
-    member _.paddingRight(value: ICssUnit) = h.MakeStyle("padding-right", asString value)
+    member _.paddingRight(value: ICssUnit) = makeStyle "padding-right" (asString value)
     /// Sets the height of the padding area on the top of an element.
-    member _.paddingTop(value: int) = h.MakeStyle("padding-top", asString value + "px")
+    member _.paddingTop(value: int) = makeStyle "padding-top" (asString value + "px")
     /// Sets the height of the padding area on the top of an element.
-    member _.paddingTop(value: ICssUnit) = h.MakeStyle("padding-top", asString value)
+    member _.paddingTop(value: ICssUnit) = makeStyle "padding-top" (asString value)
 
     /// Sets the flex shrink factor of a flex item. If the size of all flex items is larger than
     /// the flex container, items shrink to fit according to flex-shrink.
-    member _.flexShrink(value: int) = h.MakeStyle("flex-shrink", asString value)
+    member _.flexShrink(value: int) = makeStyle "flex-shrink" (asString value)
     /// Sets the initial main size of a flex item. It sets the size of the content box unless
     /// otherwise set with box-sizing.
-    member _.flexBasis (value: int) = h.MakeStyle("flex-basis", asString value + "px")
+    member _.flexBasis (value: int) = makeStyle "flex-basis" (asString value + "px")
     /// Sets the initial main size of a flex item. It sets the size of the content box unless
     /// otherwise set with box-sizing.
-    member _.flexBasis (value: ICssUnit) = h.MakeStyle("flex-basis", asString value)
+    member _.flexBasis (value: ICssUnit) = makeStyle "flex-basis" (asString value)
     /// Sets the flex grow factor of a flex item main size. It specifies how much of the remaining
     /// space in the flex container should be assigned to the item (the flex grow factor).
-    member _.flexGrow (value: int) = h.MakeStyle("flex-grow", asString value)
+    member _.flexGrow (value: int) = makeStyle "flex-grow" (asString value)
     /// Shorthand of flex-grow, flex-shrink and flex-basis
-    member _.flex (grow: int, ?shrink: int, ?basis: ICssUnit) = h.MakeStyle("flex", asString grow + " " + asString shrink + " " + asString basis)
+    member _.flex (grow: int, ?shrink: int, ?basis: ICssUnit) = makeStyle "flex" (asString grow + " " + asString shrink + " " + asString basis)
     /// Shorthand of flex-grow, flex-shrink and flex-basis
-    member _.flex (value: string) = h.MakeStyle("flex", value)
+    member _.flex (value: string) = makeStyle "flex" value
 
     /// Sets the width of each individual grid column in pixels.
     ///
@@ -1516,7 +1513,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```
     member _.gridTemplateColumns(value: int seq) =
         let addPixels = fun x -> x + "px"
-        h.MakeStyle("grid-template-columns", value |> Seq.map (asString >> addPixels) |> String.concat " ")
+        makeStyle "grid-template-columns" (value |> Seq.map (asString >> addPixels) |> String.concat " ")
     /// Sets the width of each individual grid column.
     ///
     /// **CSS**
@@ -1528,7 +1525,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// gridTemplateColumns: [length.fr 1; length.fr 1; length.fr 2]
     /// ```
     member _.gridTemplateColumns(value: ICssUnit seq) =
-        h.MakeStyle("grid-template-columns", value |> Seq.map asString |> String.concat " ")
+        makeStyle "grid-template-columns" (value |> Seq.map asString |> String.concat " ")
     /// Sets the width of each individual grid column. It can also name the lines between them
     /// There can be multiple names for the same line
     ///
@@ -1547,7 +1544,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ]
     /// ```
     member _.gridTemplateColumns(value: IGridTemplateItem seq) =
-        h.MakeStyle("grid-template-columns", value |> Seq.map asString |> String.concat " ")
+        makeStyle "grid-template-columns" (value |> Seq.map asString |> String.concat " ")
     /// Sets the width of a number of grid columns to the defined width, as well as naming the lines between them
     ///
     /// **CSS**
@@ -1560,7 +1557,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```
     member _.gridTemplateColumns(count: int, size: ICssUnit, ?areaName: string) =
         let areaName = match areaName with Some n -> " [" + n + "]" | None -> ""
-        h.MakeStyle("grid-template-columns",
+        makeStyle "grid-template-columns" (
             "repeat(" +
             (asString count) + ", " +
             (asString size) + areaName + ")"
@@ -1577,7 +1574,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```
     member _.gridTemplateRows(value: int seq) =
         let addPixels = (fun x -> x + "px")
-        h.MakeStyle("grid-template-rows", value |> Seq.map (asString >> addPixels) |> String.concat " ")
+        makeStyle "grid-template-rows" (value |> Seq.map (asString >> addPixels) |> String.concat " ")
     /// Sets the width of a number of grid rows to the defined width
     ///
     /// **CSS**
@@ -1589,7 +1586,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.gridTemplateRows [length.fr 1; length.percent 10; length.px 250; length.auto]
     /// ```
     member _.gridTemplateRows(value: ICssUnit seq) =
-        h.MakeStyle("grid-template-rows", value |> Seq.map asString |> String.concat " ")
+        makeStyle "grid-template-rows" (value |> Seq.map asString |> String.concat " ")
     /// Sets the width of a number of grid rows to the defined width as well as naming the spaces between
     ///
     /// **CSS**
@@ -1607,7 +1604,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ]
     /// ```
     member _.gridTemplateRows(value: IGridTemplateItem seq) =
-        h.MakeStyle("grid-template-rows", value |> Seq.map asString |> String.concat " ")
+        makeStyle "grid-template-rows" (value |> Seq.map asString |> String.concat " ")
     /// Sets the width of a number of grid rows to the defined width
     ///
     /// **CSS**
@@ -1620,7 +1617,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```
     member _.gridTemplateRows(count: int, size: ICssUnit, ?areaName: string) =
         let areaName = match areaName with Some n -> " [" + n + "]" | None -> ""
-        h.MakeStyle("grid-template-rows",
+        makeStyle "grid-template-rows" (
             "repeat("+
             (asString count) + ", " +
             (asString size) + areaName + ")"
@@ -1646,7 +1643,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
         let wrapLine = (fun x -> "'" + x + "'")
         let lines = List.map (String.concat " " >> wrapLine) value
         let block = String.concat "\n" lines
-        h.MakeStyle("grid-template-areas", block)
+        makeStyle "grid-template-areas" block
     /// 2D representation of grid layout as blocks with names
     ///
     /// **CSS**
@@ -1668,7 +1665,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
         let wrapLine = (fun x -> "'" + x + "'")
         let lines = Array.map (String.concat " " >> wrapLine) value
         let block = String.concat "\n" lines
-        h.MakeStyle("grid-template-areas", block)
+        makeStyle "grid-template-areas" block
     /// One-dimensional alternative to the nested list. For column-based layouts
     ///
     /// **CSS**
@@ -1681,7 +1678,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```
     member _.gridTemplateAreas(value: string seq) =
         let block = String.concat " " value
-        h.MakeStyle("grid-template-areas", "'" + block + "'")
+        makeStyle "grid-template-areas" ("'" + block + "'")
     /// Specifies the size of the grid lines. You can think of it like
     /// setting the width of the gutters between the columns.
     ///
@@ -1694,7 +1691,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.columnGap 10
     /// ```
     member _.columnGap(value: int) =
-        h.MakeStyle("column-gap", asString value + "px")
+        makeStyle "column-gap" (asString value + "px")
     /// Specifies the size of the grid lines. You can think of it like
     /// setting the width of the gutters between the columns.
     ///
@@ -1707,7 +1704,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.columnGap (length.em 1)
     /// ```
     member _.columnGap(value: ICssUnit) =
-        h.MakeStyle("column-gap", asString value)
+        makeStyle "column-gap" (asString value)
     /// Specifies the size of the grid lines. You can think of it like
     /// setting the width of the gutters between the rows.
     ///
@@ -1720,7 +1717,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.rowGap 10
     /// ```
     member _.rowGap(value: int) =
-        h.MakeStyle("row-gap", asString value + "px")
+        makeStyle "row-gap" (asString value + "px")
     /// Specifies the size of the grid lines. You can think of it like
     /// setting the width of the gutters between the rows.
     ///
@@ -1733,7 +1730,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.rowGap (length.em 1)
     /// ```
     member _.rowGap(value: ICssUnit) =
-        h.MakeStyle("row-gap", asString value)
+        makeStyle "row-gap" (asString value)
     /// Specifies the size of the grid lines. You can think of it like
     /// setting the width of the gutters between the rows/columns.
     ///
@@ -1748,12 +1745,12 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.gap (length.em 1, length.em 2)
     /// ```
     member _.gap(rowGap: ICssUnit, columnGap: ICssUnit) =
-        h.MakeStyle("gap",
+        makeStyle "gap" (
             (asString rowGap) + " " +
             (asString columnGap)
         )
     member _.gap(rowColumnGap: ICssUnit) =
-        h.MakeStyle("gap",
+        makeStyle "gap" (
             (asString rowColumnGap) + " " +
             (asString rowColumnGap)
         )
@@ -1776,7 +1773,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.gridColumnStart ("col", 2)
     /// ```
     member _.gridColumnStart(value: string, ?count: int) =
-        h.MakeStyle("grid-column-start", asString value + " " + (asString count))
+        makeStyle "grid-column-start" (asString value + " " + (asString count))
     /// Sets where an item in the grid starts
     /// The value can be one of the following options:
     /// - a named line
@@ -1793,7 +1790,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridColumnStart 2
     /// ```
-    member _.gridColumnStart(value: int) = h.MakeStyle("grid-column-start", asString value)
+    member _.gridColumnStart(value: int) = makeStyle "grid-column-start" (asString value)
     /// Sets where an item in the grid starts
     /// The value can be one of the following options:
     /// - a named line
@@ -1810,7 +1807,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridColumnStart (gridColumn.span "odd-col")
     /// ```
-    member _.gridColumnStart(value: IGridSpan) = h.MakeStyle("grid-column-start", asString value)
+    member _.gridColumnStart(value: IGridSpan) = makeStyle "grid-column-start" (asString value)
     /// Sets where an item in the grid ends
     /// The value can be one of the following options:
     /// - a named line
@@ -1830,7 +1827,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.gridColumnEnd ("odd-col", 2)
     /// ```
     member _.gridColumnEnd(value: string, ?count: int) =
-        h.MakeStyle("grid-column-end", asString value + " " + (asString count))
+        makeStyle "grid-column-end" (asString value + " " + (asString count))
     /// Sets where an item in the grid ends
     /// The value can be one of the following options:
     /// - a named line
@@ -1847,7 +1844,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridColumnEnd 2
     /// ```
-    member _.gridColumnEnd(value: int) = h.MakeStyle("grid-column-end", asString value)
+    member _.gridColumnEnd(value: int) = makeStyle "grid-column-end" (asString value)
     /// Sets where an item in the grid ends
     /// The value can be one of the following options:
     /// - a named line
@@ -1864,7 +1861,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridColumnEnd (gridColumn.span 2)
     /// ```
-    member _.gridColumnEnd(value: IGridSpan) = h.MakeStyle("grid-column-end", asString value)
+    member _.gridColumnEnd(value: IGridSpan) = makeStyle "grid-column-end" (asString value)
     /// Sets where an item in the grid starts
     /// The value can be one of the following options:
     /// - a named line
@@ -1882,7 +1879,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.gridRowStart ("col", 2)
     /// ```
     member _.gridRowStart(value: string, ?count: int) =
-        h.MakeStyle("grid-row-start", asString value + " " + (asString count))
+        makeStyle "grid-row-start" (asString value + " " + (asString count))
     /// Sets where an item in the grid starts
     /// The value can be one of the following options:
     /// - a named line
@@ -1899,7 +1896,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridRowStart 2
     /// ```
-    member _.gridRowStart(value: int) = h.MakeStyle("grid-row-start", asString value)
+    member _.gridRowStart(value: int) = makeStyle "grid-row-start" (asString value)
     /// Sets where an item in the grid starts
     /// The value can be one of the following options:
     /// - a named line
@@ -1916,7 +1913,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridRowStart (gridRow.span "odd-col")
     /// ```
-    member _.gridRowStart(value: IGridSpan) = h.MakeStyle("grid-row-start", asString value)
+    member _.gridRowStart(value: IGridSpan) = makeStyle "grid-row-start" (asString value)
     /// Sets where an item in the grid ends
     /// The value can be one of the following options:
     /// - a named line
@@ -1936,7 +1933,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.gridRowEnd ("odd-col", 2)
     /// ```
     member _.gridRowEnd(value: string, ?count: int) =
-        h.MakeStyle("grid-row-end", asString value + " " + (asString count))
+        makeStyle "grid-row-end" (asString value + " " + (asString count))
     /// Sets where an item in the grid ends
     /// The value can be one of the following options:
     /// - a named line
@@ -1953,7 +1950,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridRowEnd 2
     /// ```
-    member _.gridRowEnd(value: int) = h.MakeStyle("grid-row-end", asString value)
+    member _.gridRowEnd(value: int) = makeStyle "grid-row-end" (asString value)
     /// Sets where an item in the grid ends
     /// The value can be one of the following options:
     /// - a named line
@@ -1970,7 +1967,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// ```f#
     /// style.gridRowEnd (gridRow.span 2)
     /// ```
-    member _.gridRowEnd(value: IGridSpan) = h.MakeStyle("grid-row-end", asString value)
+    member _.gridRowEnd(value: IGridSpan) = makeStyle "grid-row-end" (asString value)
     /// Determines a grid item’s location within the grid by referring to specific grid lines.
     /// start is the line where the item begins, end' is the line where it ends.
     /// They can be one of the following options:
@@ -1991,7 +1988,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.gridColumn ("col-2", "col-4")
     /// ```
     member _.gridColumn(start: string, end': string) =
-        h.MakeStyle("grid-column", start + " / " + end')
+        makeStyle "grid-column" (start + " / " + end')
     /// Determines a grid item’s location within the grid by referring to specific grid lines.
     /// start is the line where the item begins, end' is the line where it ends.
     /// They can be one of the following options:
@@ -2012,7 +2009,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.gridColumn (1, 3)
     /// ```
     member _.gridColumn(start: int, end': int) =
-        h.MakeStyle("grid-column", (asString start) + " / " + (asString end'))
+        makeStyle "grid-column" (asString start + " / " + asString end')
     /// Determines a grid item’s location within the grid by referring to specific grid lines.
     /// start is the line where the item begins, end' is the line where it ends.
     /// They can be one of the following options:
@@ -2033,7 +2030,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.gridColumn (gridColumn.span 2, gridColumn.span 3)
     /// ```
     member _.gridColumn(start: IGridSpan, end': IGridSpan) =
-        h.MakeStyle("grid-column", (asString start) + " / " + (asString end'))
+        makeStyle "grid-column" (asString start + " / " + asString end')
     /// Determines a grid item’s location within the grid by referring to specific grid lines.
     /// start is the line where the item begins, end' is the line where it ends.
     /// They can be one of the following options:
@@ -2054,7 +2051,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.gridRow ("row-2", "row-4")
     /// ```
     member _.gridRow(start: string, end': string) =
-        h.MakeStyle("grid-row", start + " / " + end')
+        makeStyle "grid-row" (start + " / " + end')
     /// Determines a grid item’s location within the grid by referring to specific grid lines.
     /// start is the line where the item begins, end' is the line where it ends.
     /// They can be one of the following options:
@@ -2075,7 +2072,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.gridRow (2, 4)
     /// ```
     member _.gridRow(start: int, end': int) =
-        h.MakeStyle("grid-row", (asString start) + " / " + (asString end'))
+        makeStyle "grid-row" (asString start + " / " + asString end')
     /// Determines a grid item’s location within the grid by referring to specific grid lines.
     /// start is the line where the item begins, end' is the line where it ends.
     /// They can be one of the following options:
@@ -2096,7 +2093,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.gridRow (gridRow.span 2, gridRow.span 3)
     /// ```
     member _.gridRow(start: IGridSpan, end': IGridSpan) =
-        h.MakeStyle("grid-row", (asString start) + " / " + (asString end'))
+        makeStyle "grid-row" (asString start + " / " + asString end')
     /// Sets the named grid area the item is placed in
     ///
     /// **CSS**
@@ -2108,7 +2105,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     /// style.gridArea "header"
     /// ```
     member _.gridArea(value: string) =
-        h.MakeStyle("grid-area", asString value)
+        makeStyle "grid-area" (asString value)
     /// Shorthand for `grid-template-areas`, `grid-template-columns` and `grid-template-rows`.
     ///
     /// Documentation: https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template
@@ -2126,110 +2123,110 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     ///                                "/ auto 1fr auto"
     /// ```
     member _.gridTemplate(value: string) =
-        h.MakeStyle("grid-template", asString value)
+        makeStyle "grid-template" (asString value)
     member _.transition(value: string) =
-        h.MakeStyle("transition", value)
+        makeStyle "transition" value
     /// Sets the length of time a transition animation should take to complete. By default, the
     /// value is 0s, meaning that no animation will occur.
     member _.transitionDuration(timespan: TimeSpan) =
-        h.MakeStyle("transition-duration", asString timespan.TotalMilliseconds + "ms")
+        makeStyle "transition-duration" (asString timespan.TotalMilliseconds + "ms")
     /// Sets the length of time a transition animation should take to complete. By default, the
     /// value is 0s, meaning that no animation will occur.
     member _.transitionDurationSeconds(n: float) =
-        h.MakeStyle("transition-duration", (asString n) + "s")
+        makeStyle "transition-duration" (asString n + "s")
     /// Sets the length of time a transition animation should take to complete. By default, the
     /// value is 0s, meaning that no animation will occur.
     member _.transitionDurationMilliseconds(n: float) =
-        h.MakeStyle("transition-duration", (asString n) + "ms")
+        makeStyle "transition-duration" (asString n + "ms")
     /// Sets the length of time a transition animation should take to complete. By default, the
     /// value is 0s, meaning that no animation will occur.
     member _.transitionDurationSeconds(n: int) =
-        h.MakeStyle("transition-duration", (asString n) + "s")
+        makeStyle "transition-duration" (asString n + "s")
     /// Sets the length of time a transition animation should take to complete. By default, the
     /// value is 0s, meaning that no animation will occur.
     member _.transitionDurationMilliseconds(n: int) =
-        h.MakeStyle("transition-duration", (asString n) + "ms")
+        makeStyle "transition-duration" (asString n + "ms")
     /// Specifies the duration to wait before starting a property's transition effect when its value changes.
     member _.transitionDelay(timespan: TimeSpan) =
-        h.MakeStyle("transition-delay", asString timespan.TotalMilliseconds + "ms")
+        makeStyle "transition-delay" (asString timespan.TotalMilliseconds + "ms")
     /// Specifies the duration to wait before starting a property's transition effect when its value changes.
     member _.transitionDelaySeconds(n: float) =
-        h.MakeStyle("transition-delay", (asString n) + "s")
+        makeStyle "transition-delay" (asString n + "s")
     /// Specifies the duration to wait before starting a property's transition effect when its value changes.
     member _.transitionDelayMilliseconds(n: float) =
-        h.MakeStyle("transition-delay", (asString n) + "ms")
+        makeStyle "transition-delay" (asString n + "ms")
     /// Specifies the duration to wait before starting a property's transition effect when its value changes.
     member _.transitionDelaySeconds(n: int) =
-        h.MakeStyle("transition-delay", (asString n) + "s")
+        makeStyle "transition-delay" (asString n + "s")
     /// Specifies the duration to wait before starting a property's transition effect when its value changes.
     member _.transitionDelayMilliseconds(n: int) =
-        h.MakeStyle("transition-delay", (asString n) + "ms")
+        makeStyle "transition-delay" (asString n + "ms")
     /// Sets the CSS properties to which a transition effect should be applied.
     member _.transitionProperty ([<ParamArray>] properties: ITransitionProperty[]) =
-        h.MakeStyle("transition-property", String.concat "," (properties |> Array.map asString))
+        makeStyle "transition-property" (String.concat "," (properties |> Array.map asString))
     /// Sets the CSS properties to which a transition effect should be applied.
     member _.transitionProperty (properties: ITransitionProperty list) =
-        h.MakeStyle("transition-property", String.concat "," (properties |> List.map asString))
+        makeStyle "transition-property" (String.concat "," (properties |> List.map asString))
     /// Sets the CSS properties to which a transition effect should be applied.
     member _.transitionProperty (property: ITransitionProperty) =
-        h.MakeStyle("transition-property", asString property)
+        makeStyle "transition-property" (asString property)
     /// Sets the CSS properties to which a transition effect should be applied.
     member _.transitionProperty (property: string) =
-        h.MakeStyle("transition-property", property)
+        makeStyle "transition-property" property
 
     /// Sets the size of the font.
     ///
     /// This property is also used to compute the size of em, ex, and other relative <length> units.
-    member _.fontSize(size: int) = h.MakeStyle("font-size", asString size + "px")
+    member _.fontSize(size: int) = makeStyle "font-size" (asString size + "px")
     /// Sets the size of the font.
     ///
     /// This property is also used to compute the size of em, ex, and other relative <length> units.
-    member _.fontSize(size: ICssUnit) = h.MakeStyle("font-size", asString size)
+    member _.fontSize(size: ICssUnit) = makeStyle "font-size" (asString size)
     /// Specifies the height of a text lines.
     ///
     /// This property is also used to compute the size of em, ex, and other relative <length> units.
     ///
     /// Note: Negative values are not allowed.
-    member _.lineHeight(size: int) = h.MakeStyle("line-height", asString size + "px")
+    member _.lineHeight(size: int) = makeStyle "line-height" (asString size + "px")
     /// Specifies the height of a text lines.
     ///
     /// This property is also used to compute the size of em, ex, and other relative <length> units.
     ///
     /// Note: Negative values are not allowed.
-    member _.lineHeight(size: ICssUnit) = h.MakeStyle("line-height", asString size)
+    member _.lineHeight(size: ICssUnit) = makeStyle "line-height" (asString size)
     /// Sets the background color of an element.
-    member _.backgroundColor (color: string) = h.MakeStyle("background-color", color)
+    member _.backgroundColor (color: string) = makeStyle "background-color" color
     /// Sets the color of the insertion caret, the visible marker where the next character typed will be inserted.
     ///
     /// This is sometimes referred to as the text input cursor. The caret appears in elements such as <input> or
     /// those with the contenteditable attribute. The caret is typically a thin vertical line that flashes to
     /// help make it more noticeable. By default, it is black, but its color can be altered with this property.
-    member _.caretColor (color: string) = h.MakeStyle("caret-color", color)
+    member _.caretColor (color: string) = makeStyle "caret-color" color
     /// Sets the foreground color value of an element's text and text decorations, and sets the
     /// `currentcolor` value. `currentcolor` may be used as an indirect value on other properties
     /// and is the default for other color properties, such as border-color.
-    member _.color (color: string) = h.MakeStyle("color", color)
+    member _.color (color: string) = makeStyle "color" color
     /// Specifies the vertical position of a positioned element. It has no effect on non-positioned elements.
-    member _.top(value: int) = h.MakeStyle("top", asString value + "px")
+    member _.top(value: int) = makeStyle "top" (asString value + "px")
     /// Specifies the vertical position of a positioned element. It has no effect on non-positioned elements.
-    member _.top(value: ICssUnit) = h.MakeStyle("top", asString value)
+    member _.top(value: ICssUnit) = makeStyle "top" (asString value)
     /// Specifies the vertical position of a positioned element. It has no effect on non-positioned elements.
-    member _.bottom(value: int) = h.MakeStyle("bottom", asString value + "px")
+    member _.bottom(value: int) = makeStyle "bottom" (asString value + "px")
     /// Specifies the vertical position of a positioned element. It has no effect on non-positioned elements.
-    member _.bottom(value: ICssUnit) = h.MakeStyle("bottom", asString value)
+    member _.bottom(value: ICssUnit) = makeStyle "bottom" (asString value)
     /// Specifies the horizontal position of a positioned element. It has no effect on non-positioned elements.
-    member _.left(value: int) = h.MakeStyle("left", asString value + "px")
+    member _.left(value: int) = makeStyle "left" (asString value + "px")
     /// Specifies the horizontal position of a positioned element. It has no effect on non-positioned elements.
-    member _.left(value: ICssUnit) = h.MakeStyle("left", asString value)
+    member _.left(value: ICssUnit) = makeStyle "left" (asString value)
     /// Specifies the horizontal position of a positioned element. It has no effect on non-positioned elements.
-    member _.right(value: int) = h.MakeStyle("right", asString value + "px")
+    member _.right(value: int) = makeStyle "right" (asString value + "px")
     /// Specifies the horizontal position of a positioned element. It has no effect on non-positioned elements.
-    member _.right(value: ICssUnit) = h.MakeStyle("right", asString value)
+    member _.right(value: ICssUnit) = makeStyle "right" (asString value)
 
     /// Sets an element's bottom border. It sets the values of border-bottom-width,
     /// border-bottom-style and border-bottom-color.
     member _.borderBottom(width: ICssUnit, style: IBorderStyle, color: string) =
-        h.MakeStyle("border-bottom",
+        makeStyle "border-bottom" (
             (asString width) + " " +
             (asString style) + " " +
             color
@@ -2246,7 +2243,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     ///  - An outline may be non-rectangular
     ///
     member _.outlineOffset (offset:int) =
-        h.MakeStyle("outline-width", (asString offset) + "px")
+        makeStyle "outline-width" (asString offset + "px")
 
     /// The outline-offset property adds space between an outline and the edge or border of an element.
     ///
@@ -2259,7 +2256,7 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     ///  - An outline may be non-rectangular
     ///
     member _.outlineOffset (offset: ICssUnit) =
-        h.MakeStyle("outline-width", asString offset)
+        makeStyle "outline-width" (asString offset)
 
     /// An outline is a line that is drawn around elements (outside the borders) to make the element "stand out".
     ///
@@ -2267,74 +2264,74 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
 
     /// **Note**: Always declare the outline-style property before the outline-color property. An element must have an outline before you change the color of it.
     member _.outlineColor (color: string) =
-        h.MakeStyle("outline-color", color)
+        makeStyle "outline-color" color
 
     /// Set an element's left border.
     member _.borderLeft(width: ICssUnit, style: IBorderStyle, color: string) =
-        h.MakeStyle("border-left",
+        makeStyle "border-left" (
             (asString width) + " " +
             (asString style) + " " +
             color
         )
     /// Set an element's right border.
     member _.borderRight(width: ICssUnit, style: IBorderStyle, color: string) =
-        h.MakeStyle("border-right",
+        makeStyle "border-right" (
             (asString width) + " " +
             (asString style) + " " +
             color
         )
     /// Set an element's top border.
     member _.borderTop(width: ICssUnit, style: IBorderStyle, color: string) =
-        h.MakeStyle("border-top",
+        makeStyle "border-top" (
             (asString width) + " " +
             (asString style) + " " +
             color
         )
     /// Sets the line style of an element's bottom border.
-    member _.borderBottomStyle(style: IBorderStyle) = h.MakeStyle("border-bottom-style", asString style)
+    member _.borderBottomStyle(style: IBorderStyle) = makeStyle "border-bottom-style" (asString style)
     /// Sets the width of the bottom border of an element.
-    member _.borderBottomWidth (width: int) = h.MakeStyle("border-bottom-width", asString width + "px")
+    member _.borderBottomWidth (width: int) = makeStyle "border-bottom-width" (asString width + "px")
     /// Sets the width of the bottom border of an element.
-    member _.borderBottomWidth (width: ICssUnit) = h.MakeStyle("border-bottom-width", asString width)
+    member _.borderBottomWidth (width: ICssUnit) = makeStyle "border-bottom-width" (asString width)
     /// Sets the color of an element's bottom border.
     ///
     /// It can also be set with the shorthand CSS properties border-color or border-bottom.
-    member _.borderBottomColor (color: string) = h.MakeStyle("border-bottom-color", color)
+    member _.borderBottomColor (color: string) = makeStyle "border-bottom-color" color
     /// Sets the line style of an element's top border.
-    member _.borderTopStyle(style: IBorderStyle) = h.MakeStyle("border-top-style", asString style)
+    member _.borderTopStyle(style: IBorderStyle) = makeStyle "border-top-style" (asString style)
     /// Sets the width of the top border of an element.
-    member _.borderTopWidth (width: int) = h.MakeStyle("border-top-width", asString width + "px")
+    member _.borderTopWidth (width: int) = makeStyle "border-top-width" (asString width + "px")
     /// Sets the width of the top border of an element.
-    member _.borderTopWidth (width: ICssUnit) = h.MakeStyle("border-top-width", asString width)
+    member _.borderTopWidth (width: ICssUnit) = makeStyle "border-top-width" (asString width)
     /// Sets the color of an element's top border.
     ///
     /// It can also be set with the shorthand CSS properties border-color or border-bottom.
-    member _.borderTopColor (color: string) = h.MakeStyle("border-top-color", color)
+    member _.borderTopColor (color: string) = makeStyle "border-top-color" color
     /// Sets the line style of an element's right border.
-    member _.borderRightStyle(style: IBorderStyle) = h.MakeStyle("border-right-style", asString style)
+    member _.borderRightStyle(style: IBorderStyle) = makeStyle "border-right-style" (asString style)
     /// Sets the width of the right border of an element.
-    member _.borderRightWidth (width: int) = h.MakeStyle("border-right-width", asString width + "px")
+    member _.borderRightWidth (width: int) = makeStyle "border-right-width" (asString width + "px")
     /// Sets the width of the right border of an element.
-    member _.borderRightWidth (width: ICssUnit) = h.MakeStyle("border-right-width", asString width)
+    member _.borderRightWidth (width: ICssUnit) = makeStyle "border-right-width" (asString width)
     /// Sets the color of an element's right border.
     ///
     /// It can also be set with the shorthand CSS properties border-color or border-bottom.
-    member _.borderRightColor (color: string) = h.MakeStyle("border-right-color", color)
+    member _.borderRightColor (color: string) = makeStyle "border-right-color" color
     /// Sets the line style of an element's left border.
-    member _.borderLeftStyle(style: IBorderStyle) = h.MakeStyle("border-left-style", asString style)
+    member _.borderLeftStyle(style: IBorderStyle) = makeStyle "border-left-style" (asString style)
     /// Sets the width of the left border of an element.
-    member _.borderLeftWidth (width: int) = h.MakeStyle("border-left-width", asString width + "px")
+    member _.borderLeftWidth (width: int) = makeStyle "border-left-width" (asString width + "px")
     /// Sets the width of the left border of an element.
-    member _.borderLeftWidth (width: ICssUnit) = h.MakeStyle("border-left-width", asString width)
+    member _.borderLeftWidth (width: ICssUnit) = makeStyle "border-left-width" (asString width)
     /// Sets the color of an element's left border.
     ///
     /// It can also be set with the shorthand CSS properties border-color or border-bottom.
-    member _.borderLeftColor (color: string) = h.MakeStyle("border-left-color", color)
+    member _.borderLeftColor (color: string) = makeStyle "border-left-color" color
     /// Sets an element's border.
     ///
     /// It sets the values of border-width, border-style, and border-color.
     member _.border(width: ICssUnit, style: IBorderStyle, color: string) =
-        h.MakeStyle("border",
+        makeStyle "border" (
             (asString width) + " " +
             (asString style) + " " +
             color
@@ -2343,97 +2340,97 @@ type CssEngine<'Style>(h: CssHelper<'Style>) =
     ///
     /// It sets the values of border-width, border-style, and border-color.
     member _.border(width: string, style: IBorderStyle, color: string) =
-        h.MakeStyle("border",
+        makeStyle "border" (
             width + " " +
             (asString style) + " " +
             color
         )
     /// Sets the color of an element's border.
-    member _.borderColor (color: string) = h.MakeStyle("border-color", color)
+    member _.borderColor (color: string) = makeStyle "border-color" color
     /// Rounds the corners of an element's outer border edge. You can set a single radius to make
     /// circular corners, or two radii to make elliptical corners.
-    member _.borderRadius (radius: int) = h.MakeStyle("border-radius", asString radius + "px")
+    member _.borderRadius (radius: int) = makeStyle "border-radius" (asString radius + "px")
     /// Rounds the corners of an element's outer border edge. You can set a single radius to make
     /// circular corners, or two radii to make elliptical corners.
-    member _.borderRadius (radius: ICssUnit) = h.MakeStyle("border-radius", asString radius)
+    member _.borderRadius (radius: ICssUnit) = makeStyle "border-radius" (asString radius)
     /// Sets the width of an element's border.
-    member _.borderWidth (width: int) = h.MakeStyle("border-width", asString width + "px")
+    member _.borderWidth (width: int) = makeStyle "border-width" (asString width + "px")
     /// Sets the width of an element's border.
     member _.borderWidth (top: ICssUnit, ?right: ICssUnit) =
-        h.MakeStyle("border-width",
+        makeStyle "border-width" (
             asString top + (match right with Some x -> " " + asString x | None -> ""))
     /// Sets the width of an element's border.
     member _.borderWidth (top: ICssUnit, right: ICssUnit, bottom: ICssUnit, ?left: ICssUnit) =
-        h.MakeStyle("border-width",
+        makeStyle "border-width" (
             (asString top) + " " +
             (asString right) + " " +
             (asString bottom) +
             (match left with Some x -> " " + asString x | None -> ""))
     /// Sets one or more animations to apply to an element. Each name is an @keyframes at-rule that
     /// sets the property values for the animation sequence.
-    member _.animationName(keyframeName: string) = h.MakeStyle("animation-name", keyframeName)
+    member _.animationName(keyframeName: string) = makeStyle "animation-name" keyframeName
     /// Sets the length of time that an animation takes to complete one cycle.
-    member _.animationDuration(timespan: TimeSpan) = h.MakeStyle("animation-duration", (asString timespan.TotalMilliseconds) + "ms")
+    member _.animationDuration(timespan: TimeSpan) = makeStyle "animation-duration" (asString timespan.TotalMilliseconds + "ms")
     /// Sets the length of time that an animation takes to complete one cycle.
-    member _.animationDuration(seconds: int) = h.MakeStyle("animation-duration", (asString seconds) + "s")
+    member _.animationDuration(seconds: int) = makeStyle "animation-duration" (asString seconds + "s")
     /// Sets when an animation starts.
     ///
     /// The animation can start later, immediately from its beginning, or immediately and partway through the animation.
-    member _.animationDelay(timespan: TimeSpan) = h.MakeStyle("animation-delay", (asString timespan.TotalMilliseconds) + "ms")
+    member _.animationDelay(timespan: TimeSpan) = makeStyle "animation-delay" (asString timespan.TotalMilliseconds + "ms")
     /// Sets when an animation starts.
     ///
     /// The animation can start later, immediately from its beginning, or immediately and partway through the animation.
-    member _.animationDelay(seconds: int) = h.MakeStyle("animation-delay", (asString seconds) + "s")
+    member _.animationDelay(seconds: int) = makeStyle "animation-delay" (asString seconds + "s")
     /// The number of times the animation runs.
-    member _.animationDurationCount(count: int) = h.MakeStyle("animation-duration-count", asString count)
+    member _.animationDurationCount(count: int) = makeStyle "animation-duration-count" (asString count)
     /// Sets the font family for the font specified in a @font-face rule.
-    member _.fontFamily (family: string) = h.MakeStyle("font-family", family)
+    member _.fontFamily (family: string) = makeStyle "font-family" family
     /// Sets the color of decorations added to text by text-decoration-line.
-    member _.textDecorationColor(color: string) = h.MakeStyle("text-decoration-color", color)
+    member _.textDecorationColor(color: string) = makeStyle "text-decoration-color" color
     /// Sets the length of empty space (indentation) that is put before lines of text in a block.
-    member _.textIndent(value: int) = h.MakeStyle("text-indent", asString value)
+    member _.textIndent(value: int) = makeStyle "text-indent" (asString value)
     /// Sets the length of empty space (indentation) that is put before lines of text in a block.
-    member _.textIndent(value: string) = h.MakeStyle("text-indent", asString value)
+    member _.textIndent(value: string) = makeStyle "text-indent" (asString value)
     /// Sets the opacity of an element.
     ///
     /// Opacity is the degree to which content behind an element is hidden, and is the opposite of transparency.
-    member _.opacity(value: double) = h.MakeStyle("opacity", asString value)
+    member _.opacity(value: double) = makeStyle "opacity" (asString value)
     /// Sets the minimum width of an element.
     ///
     /// It prevents the used value of the width property from becoming smaller than the value specified for min-width.
-    member _.minWidth (value: int) = h.MakeStyle("min-width", asString value + "px")
+    member _.minWidth (value: int) = makeStyle "min-width" (asString value + "px")
     /// Sets the minimum width of an element.
     ///
     /// It prevents the used value of the width property from becoming smaller than the value specified for min-width.
-    member _.minWidth (value: ICssUnit) = h.MakeStyle("min-width", asString value)
+    member _.minWidth (value: ICssUnit) = makeStyle "min-width" (asString value)
     /// Sets the minimum width of an element.
     ///
     /// It prevents the used value of the width property from becoming smaller than the value specified for min-width.
-    member _.minWidth (value: string) = h.MakeStyle("min-width", asString value)
+    member _.minWidth (value: string) = makeStyle "min-width" (asString value)
     /// Sets the maximum width of an element.
     ///
     /// It prevents the used value of the width property from becoming larger than the value specified by max-width.
-    member _.maxWidth (value: int) = h.MakeStyle("max-width", asString value + "px")
+    member _.maxWidth (value: int) = makeStyle "max-width" (asString value + "px")
     /// Sets the maximum width of an element.
     ///
     /// It prevents the used value of the width property from becoming larger than the value specified by max-width.
-    member _.maxWidth (value: ICssUnit) = h.MakeStyle("max-width", asString value)
+    member _.maxWidth (value: ICssUnit) = makeStyle "max-width" (asString value)
     /// Sets the width of an element.
     ///
     /// By default, the property defines the width of the content area.
-    member _.width (value: int) = h.MakeStyle("width", asString value + "px")
+    member _.width (value: int) = makeStyle "width" (asString value + "px")
     /// Sets the width of an element.
     ///
     /// By default, the property defines the width of the content area.
-    member _.width (value: ICssUnit) = h.MakeStyle("width", asString value)
+    member _.width (value: ICssUnit) = makeStyle "width" (asString value)
 
     /// Sets one or more background images on an element.
-    member _.backgroundImage (value: string) = h.MakeStyle("background-image", asString value)
+    member _.backgroundImage (value: string) = makeStyle "background-image" (asString value)
     /// Short-hand for `style.backgroundImage(sprintf "url('%s')" value)` to set the backround image using a url.
-    member _.backgroundImageUrl (value: string) = h.MakeStyle("background-image", "url('" + value + "')")
+    member _.backgroundImageUrl (value: string) = makeStyle "background-image" ("url('" + value + "')")
 
     /// Sets the color of an SVG shape.
-    member _.fill (color: string) = h.MakeStyle("fill", color)
+    member _.fill (color: string) = makeStyle "fill" color
 
 /// Contains a list of HTML5 colors from https://htmlcolorcodes.com/color-names/
 module color =

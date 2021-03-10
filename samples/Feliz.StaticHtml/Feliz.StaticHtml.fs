@@ -9,11 +9,9 @@ type Node =
     | Text of string
 
 let Html =
-    HtmlEngine
-        { new HtmlHelper<Node> with
-            member _.MakeNode(tag, nodes) = El(tag, List.ofSeq nodes)
-            member _.StringToNode(v) = Text v
-            member _.EmptyNode = Fragment [] }
+    HtmlEngine(makeNode = (fun tag nodes -> El(tag, List.ofSeq nodes)),
+               stringToNode = (fun v -> Text v),
+               emptyNode = (fun () -> Fragment []))
 
 let Attr =
     AttrEngine(makeAttr = (fun k v -> Attr(k, Choice1Of2 v)),
