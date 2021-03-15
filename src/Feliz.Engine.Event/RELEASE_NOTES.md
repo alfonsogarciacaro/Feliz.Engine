@@ -1,3 +1,7 @@
+### 1.0.0-beta-004
+
+* Don't use delegates for function arguments
+
 ### 1.0.0-beta-003
 
 * Use function arguments instead of interface

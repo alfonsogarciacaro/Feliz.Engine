@@ -8,14 +8,9 @@ type Node =
     | Fragment of Node list
     | Text of string
 
-let Html =
-    HtmlEngine(makeNode = (fun tag nodes -> El(tag, List.ofSeq nodes)),
-               stringToNode = (fun v -> Text v),
-               emptyNode = (fun () -> Fragment []))
+let Html = HtmlEngine((fun tag nodes -> El(tag, List.ofSeq nodes)), Text, (fun () -> Fragment []))
 
-let Attr =
-    AttrEngine(makeAttr = (fun k v -> Attr(k, Choice1Of2 v)),
-               makeBooleanAttr = (fun k v -> Attr(k, Choice2Of2 v)))
+let Attr = AttrEngine((fun k v -> Attr(k, Choice1Of2 v)), (fun k v -> Attr(k, Choice2Of2 v)))
 
 let print (path: string) (nodes: Node seq) =
     let indented (stream: Node.Fs.WriteStream<string>) indent str =

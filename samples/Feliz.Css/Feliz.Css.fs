@@ -6,7 +6,7 @@ type Node =
     | Rule of connector: string * selector: string * Node list
     | Prop of key: string * value: string
 
-let Css = CssEngine<Node>(fun k v -> Prop(k, v))
+let Css = CssEngine(fun k v -> Prop(k, v))
 
 let rule selector nodes =
     Rule(" ", selector, nodes)
