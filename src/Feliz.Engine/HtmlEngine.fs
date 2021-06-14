@@ -372,6 +372,11 @@ type HtmlEngine<'Node>
     member _.section (children: seq<'Node>) = mk "section" children
 
     member _.select (children: seq<'Node>) = mk "select" children
+
+    member _.slot (value: 'Node) = mk "slot" [value]
+    member _.slot (value: string) = mk "slot" [ofStr value]
+    member _.slot (children: seq<'Node>) = mk "slot" children
+
     member _.small (value: float) = mk "small" [Util.asString value |> ofStr]
     member _.small (value: int) = mk "small" [Util.asString value |> ofStr]
     member _.small (value: 'Node) = mk "small" [value]
