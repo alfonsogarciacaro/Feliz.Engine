@@ -336,3 +336,6 @@ type EventEngine<'Node>
 
     /// Fires when the mouse wheel rolls up or down over an element.
     member _.onWheel (handler: WheelEvent -> unit) = mk "wheel" (Util.cast handler)
+
+    /// Fires when a custom event has been fired down the element hierarchy
+    member _.onCustomEvent<'TEvent> (name: string, handler: CustomEvent<'TEvent> -> unit) = mk name (Util.cast handler)
