@@ -1864,7 +1864,7 @@ type AttrEngine<'Node>
     member _.dominantBaselineTextTop = mk "dominant-baseline" "text-top"
 
     // /// This value specifies the length of the simple duration.
-    // static member inline clockValue (duration: System.TimeSpan) =
+    // static member clockValue (duration: System.TimeSpan) =
     //     PropHelpers.createClockValue(duration)
     //     |> Interop.mkAttr "dur"
     /// This value specifies the simple duration as indefinite.
@@ -2588,7 +2588,7 @@ type AttrEngine<'Node>
     member _.repeatCountIndefinite = mk "repeatCount" "indefinite"
 
     // /// This value specifies the duration in presentation time to repeat the animation.
-    // static member inline clockValue (duration: System.TimeSpan) =
+    // static member clockValue (duration: System.TimeSpan) =
     //     PropHelpers.createClockValue(duration)
     //     |> Interop.mkAttr "repeatDur"
     /// Indicates that the animation will be repeated indefinitely (i.e. until the document ends).

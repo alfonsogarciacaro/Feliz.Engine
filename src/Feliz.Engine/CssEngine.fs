@@ -2827,203 +2827,203 @@ module font =
 
 /// Specifies a number of specialized CSS units
 type length =
-    static member inline zero : ICssUnit = newCssUnit "0"
+    static member zero : ICssUnit = newCssUnit "0"
     /// Pixels are (1px = 1/96th of 1in).
     ///
     /// **Note**: Pixels (px) are relative to the viewing device. For low-dpi devices, 1px is one device pixel (dot) of the display. For printers and high resolution screens 1px implies multiple device pixels.
-    static member inline px(value: int) : ICssUnit = newCssUnit (string value + "px")
+    static member px(value: int) : ICssUnit = newCssUnit (string value + "px")
     /// Pixels are (1px = 1/96th of 1in).
     ///
     /// **Note**: Pixels (px) are relative to the viewing device. For low-dpi devices, 1px is one device pixel (dot) of the display. For printers and high resolution screens 1px implies multiple device pixels.
-    static member inline px(value: double) : ICssUnit = newCssUnit (string value + "px")
+    static member px(value: double) : ICssUnit = newCssUnit (string value + "px")
     /// Centimeters
-    static member inline cm(value: int) : ICssUnit = newCssUnit (string value + "cm")
+    static member cm(value: int) : ICssUnit = newCssUnit (string value + "cm")
     /// Centimeters
-    static member inline cm(value: double) : ICssUnit = newCssUnit (string value + "cm")
+    static member cm(value: double) : ICssUnit = newCssUnit (string value + "cm")
     /// Millimeters
-    static member inline mm(value: int) : ICssUnit = newCssUnit (string value + "mm")
+    static member mm(value: int) : ICssUnit = newCssUnit (string value + "mm")
     /// Millimeters
-    static member inline mm(value: double) : ICssUnit = newCssUnit (string value + "mm")
+    static member mm(value: double) : ICssUnit = newCssUnit (string value + "mm")
     /// Inches (1in = 96px = 2.54cm)
-    static member inline inch(value: int) : ICssUnit = newCssUnit (string value + "in")
+    static member inch(value: int) : ICssUnit = newCssUnit (string value + "in")
     /// Inches (1in = 96px = 2.54cm)
-    static member inline inch(value: double) : ICssUnit = newCssUnit (string value + "in")
+    static member inch(value: double) : ICssUnit = newCssUnit (string value + "in")
     /// Points (1pt = 1/72 of 1in)
-    static member inline pt(value: int) : ICssUnit = newCssUnit (string value + "pt")
+    static member pt(value: int) : ICssUnit = newCssUnit (string value + "pt")
     /// Points (1pt = 1/72 of 1in)
-    static member inline pt(value: double) : ICssUnit = newCssUnit (string value + "pt")
+    static member pt(value: double) : ICssUnit = newCssUnit (string value + "pt")
     /// Picas (1pc = 12 pt)
-    static member inline pc(value: int) : ICssUnit = newCssUnit (string value + "pc")
+    static member pc(value: int) : ICssUnit = newCssUnit (string value + "pc")
     /// Picas (1pc = 12 pt)
-    static member inline pc(value: double) : ICssUnit = newCssUnit (string value + "pc")
+    static member pc(value: double) : ICssUnit = newCssUnit (string value + "pc")
     /// Relative to the font-size of the element (2em means 2 times the size of the current font
-    static member inline em(value: int) : ICssUnit = newCssUnit (string value + "em")
+    static member em(value: int) : ICssUnit = newCssUnit (string value + "em")
     /// Relative to the font-size of the element (2em means 2 times the size of the current font
-    static member inline em(value: double) : ICssUnit = newCssUnit (string value + "em")
+    static member em(value: double) : ICssUnit = newCssUnit (string value + "em")
     /// Relative to the x-height of the current font (rarely used)
-    static member inline ex(value: int) : ICssUnit = newCssUnit (string value + "ex")
+    static member ex(value: int) : ICssUnit = newCssUnit (string value + "ex")
     /// Relative to the x-height of the current font (rarely used)
-    static member inline ex(value: double) : ICssUnit = newCssUnit (string value + "ex")
+    static member ex(value: double) : ICssUnit = newCssUnit (string value + "ex")
     /// Relative to width of the "0" (zero)
-    static member inline ch(value: int) : ICssUnit = newCssUnit (string value + "ch")
+    static member ch(value: int) : ICssUnit = newCssUnit (string value + "ch")
     /// Relative to font-size of the root element
-    static member inline rem(value: double) : ICssUnit = newCssUnit (string value + "rem")
+    static member rem(value: double) : ICssUnit = newCssUnit (string value + "rem")
     /// Relative to font-size of the root element
-    static member inline rem(value: int) : ICssUnit = newCssUnit (string value + "rem")
+    static member rem(value: int) : ICssUnit = newCssUnit (string value + "rem")
     /// Relative to 1% of the height of the viewport*
     ///
     /// **Viewport** = the browser window size. If the viewport is 50cm wide, 1vw = 0.5cm.
-    static member inline vh(value: int) : ICssUnit = newCssUnit (string value + "vh")
+    static member vh(value: int) : ICssUnit = newCssUnit (string value + "vh")
     /// Relative to 1% of the height of the viewport*
     ///
     /// **Viewport** = the browser window size. If the viewport is 50cm wide, 1vw = 0.5cm.
-    static member inline vh(value: double) : ICssUnit = newCssUnit (string value + "vh")
+    static member vh(value: double) : ICssUnit = newCssUnit (string value + "vh")
     /// Relative to 1% of the width of the viewport*
     ///
     /// **Viewport** = the browser window size. If the viewport is 50cm wide, 1vw = 0.5cm.
-    static member inline vw(value: int) : ICssUnit = newCssUnit (string value + "vw")
+    static member vw(value: int) : ICssUnit = newCssUnit (string value + "vw")
     /// Relative to 1% of the width of the viewport*
     ///
     /// **Viewport** = the browser window size. If the viewport is 50cm wide, 1vw = 0.5cm.
-    static member inline vw(value: double) : ICssUnit = newCssUnit (string value + "vw")
+    static member vw(value: double) : ICssUnit = newCssUnit (string value + "vw")
     /// Relative to 1% of viewport's smaller dimension
-    static member inline vmin(value: double) : ICssUnit = newCssUnit (string value + "vmin")
+    static member vmin(value: double) : ICssUnit = newCssUnit (string value + "vmin")
     /// Relative to 1% of viewport's smaller dimension
-    static member inline vmin(value: int) : ICssUnit = newCssUnit (string value + "vmin")
+    static member vmin(value: int) : ICssUnit = newCssUnit (string value + "vmin")
     /// Relative to 1% of viewport's larger dimension
-    static member inline vmax(value: double) : ICssUnit = newCssUnit (string value + "vmax")
+    static member vmax(value: double) : ICssUnit = newCssUnit (string value + "vmax")
     /// Relative to 1% of viewport's* larger dimension
-    static member inline vmax(value: int) : ICssUnit = newCssUnit (string value + "vmax")
+    static member vmax(value: int) : ICssUnit = newCssUnit (string value + "vmax")
     /// Relative to the parent element
-    static member inline perc(value: int) : ICssUnit = newCssUnit (string value + "%")
+    static member perc(value: int) : ICssUnit = newCssUnit (string value + "%")
     /// Relative to the parent element
-    static member inline perc(value: double) : ICssUnit = newCssUnit (string value + "%")
+    static member perc(value: double) : ICssUnit = newCssUnit (string value + "%")
     /// Relative to the parent element
-    static member inline percent(value: int) : ICssUnit = newCssUnit (string value + "%")
+    static member percent(value: int) : ICssUnit = newCssUnit (string value + "%")
     /// Relative to the parent element
-    static member inline percent(value: double) : ICssUnit = newCssUnit (string value + "%")
+    static member percent(value: double) : ICssUnit = newCssUnit (string value + "%")
     /// The browser calculates the length.
-    static member inline auto : ICssUnit = newCssUnit "auto"
+    static member auto : ICssUnit = newCssUnit "auto"
     /// calculated length, frequency, angle, time, percentage, number or integer
-    static member inline calc(value: string) : ICssUnit = newCssUnit ("calc(" + value + ")")
+    static member calc(value: string) : ICssUnit = newCssUnit ("calc(" + value + ")")
     /// Relative to width of the grid layout in correlation with the other fr's in the grid
-    static member inline fr(value: int) : ICssUnit = newCssUnit (string value + "fr")
+    static member fr(value: int) : ICssUnit = newCssUnit (string value + "fr")
 
 type borderStyle =
     /// Specifies a dashed border.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=dashed
-    static member inline dashed : IBorderStyle = newBorderStyle "dashed"
+    static member dashed : IBorderStyle = newBorderStyle "dashed"
     /// Specifies a dotted border.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=dotted
-    static member inline dotted : IBorderStyle = newBorderStyle "dotted"
+    static member dotted : IBorderStyle = newBorderStyle "dotted"
     /// Specifies a double border.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=double
-    static member inline double : IBorderStyle = newBorderStyle "double"
+    static member double : IBorderStyle = newBorderStyle "double"
     /// Specifies a 3D grooved border. The effect depends on the border-color value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=groove
-    static member inline groove : IBorderStyle = newBorderStyle "groove"
+    static member groove : IBorderStyle = newBorderStyle "groove"
     /// The same as "none", except in border conflict resolution for table elements.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=hidden
-    static member inline hidden : IBorderStyle = newBorderStyle "hidden"
+    static member hidden : IBorderStyle = newBorderStyle "hidden"
     /// Inherits this property from its parent element.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=inherit
     ///
     /// Read about inherit https://www.w3schools.com/cssref/css_inherit.asp
-    static member inline inheritFromParent : IBorderStyle = newBorderStyle "inherit"
+    static member inheritFromParent : IBorderStyle = newBorderStyle "inherit"
     /// Sets this property to its default value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=initial
     ///
     /// Read about initial value https://www.w3schools.com/cssref/css_initial.asp
-    static member inline initial : IBorderStyle = newBorderStyle "initial"
+    static member initial : IBorderStyle = newBorderStyle "initial"
     /// Specifies a 3D inset border. The effect depends on the border-color value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=inset
-    static member inline inset : IBorderStyle = newBorderStyle "inset"
+    static member inset : IBorderStyle = newBorderStyle "inset"
     /// Default value. Specifies no border.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=none
-    static member inline none : IBorderStyle = newBorderStyle "none"
+    static member none : IBorderStyle = newBorderStyle "none"
     /// Specifies a 3D outset border. The effect depends on the border-color value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=outset
-    static member inline outset : IBorderStyle = newBorderStyle "outset"
+    static member outset : IBorderStyle = newBorderStyle "outset"
     /// Specifies a 3D ridged border. The effect depends on the border-color value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=ridge
-    static member inline ridge : IBorderStyle = newBorderStyle "ridge"
+    static member ridge : IBorderStyle = newBorderStyle "ridge"
     /// Specifies a solid border.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=solid
-    static member inline solid : IBorderStyle = newBorderStyle "solid"
+    static member solid : IBorderStyle = newBorderStyle "solid"
 
 type gridColumn =
-    static member inline span(value: string) : IGridSpan = newGridSpan("span " + value)
-    static member inline span(value: string, count: int) : IGridSpan = newGridSpan("span " + value + " " + (string count))
-    static member inline span(value: int) : IGridSpan = newGridSpan("span " + (string value))
+    static member span(value: string) : IGridSpan = newGridSpan("span " + value)
+    static member span(value: string, count: int) : IGridSpan = newGridSpan("span " + value + " " + (string count))
+    static member span(value: int) : IGridSpan = newGridSpan("span " + (string value))
 
 type gridRow =
-    static member inline span(value: string) : IGridSpan = newGridSpan("span " + value)
-    static member inline span(value: string, count: int) : IGridSpan = newGridSpan("span " + value + " " + (string count))
-    static member inline span(value: int) : IGridSpan = newGridSpan("span " + (string value))
+    static member span(value: string) : IGridSpan = newGridSpan("span " + value)
+    static member span(value: string, count: int) : IGridSpan = newGridSpan("span " + value + " " + (string count))
+    static member span(value: int) : IGridSpan = newGridSpan("span " + (string value))
 
 type grid =
-    static member inline namedLine(value: string) : IGridTemplateItem = newGridTemplateItem ("[" + value + "]")
-    static member inline namedLines(value: string[]) : IGridTemplateItem = newGridTemplateItem ("[" + (String.concat " " value) + "]")
-    static member inline namedLines(value: string list) : IGridTemplateItem = newGridTemplateItem ("[" + (String.concat " " value) + "]")
-    static member inline templateWidth(value: ICssUnit) : IGridTemplateItem = newGridTemplateItem(asString value)
-    static member inline templateWidth(value: int) : IGridTemplateItem = newGridTemplateItem ((string value) + "px")
-    static member inline templateWidth(value: float) : IGridTemplateItem = newGridTemplateItem ((string value) + "px")
+    static member namedLine(value: string) : IGridTemplateItem = newGridTemplateItem ("[" + value + "]")
+    static member namedLines(value: string[]) : IGridTemplateItem = newGridTemplateItem ("[" + (String.concat " " value) + "]")
+    static member namedLines(value: string list) : IGridTemplateItem = newGridTemplateItem ("[" + (String.concat " " value) + "]")
+    static member templateWidth(value: ICssUnit) : IGridTemplateItem = newGridTemplateItem(asString value)
+    static member templateWidth(value: int) : IGridTemplateItem = newGridTemplateItem ((string value) + "px")
+    static member templateWidth(value: float) : IGridTemplateItem = newGridTemplateItem ((string value) + "px")
 
 type textDecorationLine =
-    static member inline none : ITextDecorationLine = newTextDecorationLine "none"
-    static member inline underline : ITextDecorationLine = newTextDecorationLine "underline"
-    static member inline overline : ITextDecorationLine = newTextDecorationLine "overline"
-    static member inline lineThrough : ITextDecorationLine = newTextDecorationLine "line-through"
-    static member inline initial : ITextDecorationLine = newTextDecorationLine "initial"
-    static member inline inheritFromParent : ITextDecorationLine = newTextDecorationLine "inherit"
+    static member none : ITextDecorationLine = newTextDecorationLine "none"
+    static member underline : ITextDecorationLine = newTextDecorationLine "underline"
+    static member overline : ITextDecorationLine = newTextDecorationLine "overline"
+    static member lineThrough : ITextDecorationLine = newTextDecorationLine "line-through"
+    static member initial : ITextDecorationLine = newTextDecorationLine "initial"
+    static member inheritFromParent : ITextDecorationLine = newTextDecorationLine "inherit"
 
 type textDecorationStyle =
     /// Default value. The line will display as a single line.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=solid
-    static member inline solid : ITextDecoration = newTextDecoration "solid"
+    static member solid : ITextDecoration = newTextDecoration "solid"
     /// The line will display as a double line.
     ///
     /// https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=double
-    static member inline double : ITextDecoration = newTextDecoration "double"
+    static member double : ITextDecoration = newTextDecoration "double"
     /// The line will display as a dotted line.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=dotted
-    static member inline dotted : ITextDecoration = newTextDecoration "dotted"
+    static member dotted : ITextDecoration = newTextDecoration "dotted"
     /// The line will display as a dashed line.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=dashed
-    static member inline dashed : ITextDecoration = newTextDecoration "dashed"
+    static member dashed : ITextDecoration = newTextDecoration "dashed"
     /// The line will display as a wavy line.
     ///
     /// https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=wavy
-    static member inline wavy : ITextDecoration = newTextDecoration "wavy"
+    static member wavy : ITextDecoration = newTextDecoration "wavy"
     /// Sets this property to its default value.
     ///
     /// See example https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-decoration-style&preval=initial
-    static member inline initial : ITextDecoration = newTextDecoration "initial"
+    static member initial : ITextDecoration = newTextDecoration "initial"
     /// Inherits this property from its parent element.
-    static member inline inheritFromParent : ITextDecoration = newTextDecoration "inherit"
+    static member inheritFromParent : ITextDecoration = newTextDecoration "inherit"
 
 /// The transform CSS property lets you rotate, scale, skew, or translate an element.
 /// It modifies the coordinate space of the CSS [visual formatting model](https://developer.mozilla.org/en-US/docs/Web/CSS/Visual_formatting_model)
 type transform =
     /// Defines that there should be no transformation.
-    static member inline none = newTransformProperty "none"
+    static member none = newTransformProperty "none"
     /// Defines a 2D transformation, using a matrix of six values.
-    static member inline matrix(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int) =
+    static member matrix(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int) =
         newTransformProperty (
             "matrix(" +
             (asString x1) + "," +
@@ -3035,298 +3035,298 @@ type transform =
         )
 
     /// Defines a 2D translation.
-    static member inline translate(x: int, y: int) =
+    static member translate(x: int, y: int) =
         newTransformProperty (
             "translate(" + (asString x) + "px," + (asString y) + "px)"
         )
     /// Defines a 2D translation.
-    static member inline translate(x: ICssUnit, y: ICssUnit) =
+    static member translate(x: ICssUnit, y: ICssUnit) =
         newTransformProperty (
             "translate(" + (asString x) + "," + (asString y) + ")"
         )
 
     /// Defines a 3D translation.
-    static member inline translate3D(x: int, y: int, z: int) =
+    static member translate3D(x: int, y: int, z: int) =
         newTransformProperty (
             "translate3d(" + (asString x) + "px," + (asString y) + "px," + (asString z) + "px)"
         )
     /// Defines a 3D translation.
-    static member inline translate3D(x: ICssUnit, y: ICssUnit, z: ICssUnit) =
+    static member translate3D(x: ICssUnit, y: ICssUnit, z: ICssUnit) =
         newTransformProperty (
             "translate3d(" + (asString x) + "," + (asString y) + "," + (asString z) + ")"
         )
 
     /// Defines a translation, using only the value for the X-axis.
-    static member inline translateX(x: int) =
+    static member translateX(x: int) =
         newTransformProperty ("translateX(" + (asString x) + "px)")
     /// Defines a translation, using only the value for the X-axis.
-    static member inline translateX(x: ICssUnit) =
+    static member translateX(x: ICssUnit) =
         newTransformProperty ("translateX(" + (asString x) + ")")
     /// Defines a translation, using only the value for the Y-axis
-    static member inline translateY(y: int) =
+    static member translateY(y: int) =
         newTransformProperty ("translateY(" + (asString y) + "px)")
     /// Defines a translation, using only the value for the Y-axis
-    static member inline translateY(y: ICssUnit) =
+    static member translateY(y: ICssUnit) =
         newTransformProperty ("translateY(" + (asString y) + ")")
     /// Defines a 3D translation, using only the value for the Z-axis
-    static member inline translateZ(z: int) =
+    static member translateZ(z: int) =
         newTransformProperty ("translateZ(" + (asString z) + "px)")
     /// Defines a 3D translation, using only the value for the Z-axis
-    static member inline translateZ(z: ICssUnit) =
+    static member translateZ(z: ICssUnit) =
         newTransformProperty ("translateZ(" + (asString z) + ")")
 
     /// Defines a 2D scale transformation.
-    static member inline scale(x: int, y: int) =
+    static member scale(x: int, y: int) =
         newTransformProperty (
             "scale(" + (asString x) + "," + (asString y) + ")"
         )
     /// Defines a 2D scale transformation.
-    static member inline scale(x: float, y: float) =
+    static member scale(x: float, y: float) =
         newTransformProperty (
             "scale(" + (asString x) + "," + (asString y) + ")"
         )
 
     /// Defines a scale transformation.
-    static member inline scale(n: int) =
+    static member scale(n: int) =
         newTransformProperty (
             "scale(" + (asString n) + ")"
         )
 
     /// Defines a scale transformation.
-    static member inline scale(n: float) =
+    static member scale(n: float) =
         newTransformProperty (
             "scale(" + (asString n) + ")"
         )
 
     /// Defines a 3D scale transformation
-    static member inline scale3D(x: int, y: int, z: int) =
+    static member scale3D(x: int, y: int, z: int) =
         newTransformProperty (
             "scale3d(" + (asString x) + "," + (asString y) + "," + (asString z) + ")"
         )
     /// Defines a 3D scale transformation
-    static member inline scale3D(x: float, y: float, z: float) =
+    static member scale3D(x: float, y: float, z: float) =
         newTransformProperty (
             "scale3d(" + (asString x) + "," + (asString y) + "," + (asString z) + ")"
         )
 
     /// Defines a scale transformation by giving a value for the X-axis.
-    static member inline scaleX(x: int) =
+    static member scaleX(x: int) =
         newTransformProperty ("scaleX(" + (asString x) + ")")
 
     /// Defines a scale transformation by giving a value for the X-axis.
-    static member inline scaleX(x: float) =
+    static member scaleX(x: float) =
         newTransformProperty ("scaleX(" + (asString x) + ")")
     /// Defines a scale transformation by giving a value for the Y-axis.
-    static member inline scaleY(y: int) =
+    static member scaleY(y: int) =
         newTransformProperty ("scaleY(" + (asString y) + ")")
     /// Defines a scale transformation by giving a value for the Y-axis.
-    static member inline scaleY(y: float) =
+    static member scaleY(y: float) =
         newTransformProperty ("scaleY(" + (asString y) + ")")
     /// Defines a 3D translation, using only the value for the Z-axis
-    static member inline scaleZ(z: int) =
+    static member scaleZ(z: int) =
         newTransformProperty ("scaleZ(" + (asString z) + ")")
     /// Defines a 3D translation, using only the value for the Z-axis
-    static member inline scaleZ(z: float) =
+    static member scaleZ(z: float) =
         newTransformProperty ("scaleZ(" + (asString z) + ")")
     /// Defines a 2D rotation, the angle is specified in the parameter.
-    static member inline rotate(deg: int) =
+    static member rotate(deg: int) =
         newTransformProperty ("rotate(" + (asString deg) + "deg)")
     /// Defines a 2D rotation, the angle is specified in the parameter.
-    static member inline rotate(deg: float) =
+    static member rotate(deg: float) =
         newTransformProperty ("rotate(" + (asString deg) + "deg)")
     /// Defines a 3D rotation along the X-axis.
-    static member inline rotateX(deg: float) =
+    static member rotateX(deg: float) =
         newTransformProperty ("rotateX(" + (asString deg) + "deg)")
     /// Defines a 3D rotation along the X-axis.
-    static member inline rotateX(deg: int) =
+    static member rotateX(deg: int) =
         newTransformProperty ("rotateX(" + (asString deg) + "deg)")
     /// Defines a 3D rotation along the Y-axis
-    static member inline rotateY(deg: float) =
+    static member rotateY(deg: float) =
         newTransformProperty ("rotateY(" + (asString deg) + "deg)")
     /// Defines a 3D rotation along the Y-axis
-    static member inline rotateY(deg: int) =
+    static member rotateY(deg: int) =
         newTransformProperty ("rotateY(" + (asString deg) + "deg)")
     /// Defines a 3D rotation along the Z-axis
-    static member inline rotateZ(deg: float) =
+    static member rotateZ(deg: float) =
         newTransformProperty ("rotateZ(" + (asString deg) + "deg)")
     /// Defines a 3D rotation along the Z-axis
-    static member inline rotateZ(deg: int) =
+    static member rotateZ(deg: int) =
         newTransformProperty ("rotateZ(" + (asString deg) + "deg)")
     /// Defines a 2D skew transformation along the X- and the Y-axis.
-    static member inline skew(xAngle: int, yAngle: int) =
+    static member skew(xAngle: int, yAngle: int) =
         newTransformProperty ("skew(" + (asString xAngle) + "deg," + (asString yAngle) + "deg)")
     /// Defines a 2D skew transformation along the X- and the Y-axis.
-    static member inline skew(xAngle: float, yAngle: float) =
+    static member skew(xAngle: float, yAngle: float) =
         newTransformProperty ("skew(" + (asString xAngle) + "deg," + (asString yAngle) + "deg)")
     /// Defines a 2D skew transformation along the X-axis
-    static member inline skewX(xAngle: int) =
+    static member skewX(xAngle: int) =
         newTransformProperty ("skewX(" + (asString xAngle) + "deg)")
     /// Defines a 2D skew transformation along the X-axis
-    static member inline skewX(xAngle: float) =
+    static member skewX(xAngle: float) =
         newTransformProperty ("skewX(" + (asString xAngle) + "deg)")
     /// Defines a 2D skew transformation along the Y-axis
-    static member inline skewY(xAngle: int) =
+    static member skewY(xAngle: int) =
         newTransformProperty ("skewY(" + (asString xAngle) + "deg)")
     /// Defines a 2D skew transformation along the Y-axis
-    static member inline skewY(xAngle: float) =
+    static member skewY(xAngle: float) =
         newTransformProperty ("skewY(" + (asString xAngle) + "deg)")
     /// Defines a perspective view for a 3D transformed element
-    static member inline perspective(n: int) =
+    static member perspective(n: int) =
         newTransformProperty ("perspective(" + (asString n) + ")")
 
 type transitionProperty =
-    static member inline all = newTransitionProperty "all"
-    static member inline backdropFilter = newTransitionProperty "backdrop-filter"
-    static member inline background = newTransitionProperty "background"
-    static member inline backgroundColor = newTransitionProperty "background-color"
-    static member inline backgroundPosition = newTransitionProperty "background-position"
-    static member inline backgroundSize = newTransitionProperty "background-size"
-    static member inline border = newTransitionProperty "border"
-    static member inline borderBottom = newTransitionProperty "border-bottom"
-    static member inline borderBottomColor = newTransitionProperty "border-bottom-color"
-    static member inline borderBottomLeftRadius = newTransitionProperty "border-bottom-left-radius"
-    static member inline borderBottomRightRadius = newTransitionProperty "border-bottom-right-radius"
-    static member inline borderBottomWidth = newTransitionProperty "border-bottom-width"
-    static member inline borderColor = newTransitionProperty "border-color"
-    static member inline borderEndEndRadius = newTransitionProperty "border-end-end-radius"
-    static member inline borderEndStartRadius = newTransitionProperty "border-end-start-radius"
-    static member inline borderLeft = newTransitionProperty "border-left"
-    static member inline borderLeftColor = newTransitionProperty "border-left-color"
-    static member inline borderLeftWidth = newTransitionProperty "border-left-width"
-    static member inline borderRadius = newTransitionProperty "border-radius"
-    static member inline borderRight = newTransitionProperty "border-right"
-    static member inline borderRightColor = newTransitionProperty "border-right-color"
-    static member inline borderRightWidth = newTransitionProperty "border-right-width"
-    static member inline borderStartEndRadius = newTransitionProperty "border-start-end-radius"
-    static member inline borderStartStartRadius = newTransitionProperty "border-start-start-radius"
-    static member inline borderTop = newTransitionProperty "border-top"
-    static member inline borderTopColor = newTransitionProperty "border-top-color"
-    static member inline borderTopLeftRadius = newTransitionProperty "border-top-left-radius"
-    static member inline borderTopRightRadius = newTransitionProperty "border-top-right-radius"
-    static member inline borderTopWidth = newTransitionProperty "border-top-width"
-    static member inline borderWidth = newTransitionProperty "border-width"
-    static member inline bottom = newTransitionProperty "bottom"
-    static member inline boxShadow = newTransitionProperty "box-shadow"
-    static member inline caretColor = newTransitionProperty "caret-color"
-    static member inline clip = newTransitionProperty "clip"
-    static member inline clipPath = newTransitionProperty "clip-path"
-    static member inline color = newTransitionProperty "color"
-    static member inline columnCount = newTransitionProperty "column-count"
-    static member inline columnGap = newTransitionProperty "column-gap"
-    static member inline columnRule = newTransitionProperty "column-rule"
-    static member inline columnRuleColor = newTransitionProperty "column-rule-color"
-    static member inline columnRuleWidth = newTransitionProperty "column-rule-width"
-    static member inline columnWidth = newTransitionProperty "column-width"
-    static member inline columns = newTransitionProperty "columns"
-    static member inline filter = newTransitionProperty "filter"
-    static member inline flex = newTransitionProperty "flex"
-    static member inline flexBasis = newTransitionProperty "flex-basis"
-    static member inline flexGrow = newTransitionProperty "flex-grow"
-    static member inline flexShrink = newTransitionProperty "flex-shrink"
-    static member inline font = newTransitionProperty "font"
-    static member inline fontSize = newTransitionProperty "font-size"
-    static member inline fontSizeAdjust = newTransitionProperty "font-size-adjust"
-    static member inline fontStretch = newTransitionProperty "font-stretch"
-    static member inline fontVariationSettings = newTransitionProperty "font-variation-settings"
-    static member inline fontWeight = newTransitionProperty "font-weight"
-    static member inline gap = newTransitionProperty "gap"
-    static member inline gridColumnGap = newTransitionProperty "grid-column-gap"
-    static member inline gridGap = newTransitionProperty "grid-gap"
-    static member inline gridRowGap = newTransitionProperty "grid-row-gap"
-    static member inline gridTemplateColumns = newTransitionProperty "grid-template-columns"
-    static member inline gridTemplateRows = newTransitionProperty "grid-template-rows"
-    static member inline height = newTransitionProperty "height"
-    static member inline inset = newTransitionProperty "inset"
-    static member inline insetBlock = newTransitionProperty "inset-block"
-    static member inline insetBlockEnd = newTransitionProperty "inset-block-end"
-    static member inline insetBlockStart = newTransitionProperty "inset-block-start"
-    static member inline insetInline = newTransitionProperty "inset-inline"
-    static member inline insetInlineEnd = newTransitionProperty "inset-inline-end"
-    static member inline insetInlineStart = newTransitionProperty "inset-inline-start"
-    static member inline left = newTransitionProperty "left"
-    static member inline letterSpacing = newTransitionProperty "letter-spacing"
-    static member inline lineClamp = newTransitionProperty "line-clamp"
-    static member inline lineHeight = newTransitionProperty "line-height"
-    static member inline margin = newTransitionProperty "margin"
-    static member inline marginBottom = newTransitionProperty "margin-bottom"
-    static member inline marginLeft = newTransitionProperty "margin-left"
-    static member inline marginRight = newTransitionProperty "margin-right"
-    static member inline marginTop = newTransitionProperty "margin-top"
-    static member inline mask = newTransitionProperty "mask"
-    static member inline maskBorder = newTransitionProperty "mask-border"
-    static member inline maskPosition = newTransitionProperty "mask-position"
-    static member inline maskSize = newTransitionProperty "mask-size"
-    static member inline maxHeight = newTransitionProperty "max-height"
-    static member inline maxLines = newTransitionProperty "max-lines"
-    static member inline maxWidth = newTransitionProperty "max-width"
-    static member inline minHeight = newTransitionProperty "min-height"
-    static member inline minWidth = newTransitionProperty "min-width"
-    static member inline objectPosition = newTransitionProperty "object-position"
-    static member inline offset = newTransitionProperty "offset"
-    static member inline offsetAnchor = newTransitionProperty "offset-anchor"
-    static member inline offsetDistance = newTransitionProperty "offset-distance"
-    static member inline offsetPath = newTransitionProperty "offset-path"
-    static member inline offsetPosition = newTransitionProperty "offset-position"
-    static member inline offsetRotate = newTransitionProperty "offset-rotate"
-    static member inline opacity = newTransitionProperty "opacity"
-    static member inline order = newTransitionProperty "order"
-    static member inline outline = newTransitionProperty "outline"
-    static member inline outlineColor = newTransitionProperty "outline-color"
-    static member inline outlineOffset = newTransitionProperty "outline-offset"
-    static member inline outlineWidth = newTransitionProperty "outline-width"
-    static member inline padding = newTransitionProperty "padding"
-    static member inline paddingBottom = newTransitionProperty "padding-bottom"
-    static member inline paddingLeft = newTransitionProperty "padding-left"
-    static member inline paddingRight = newTransitionProperty "padding-right"
-    static member inline paddingTop = newTransitionProperty "padding-top"
-    static member inline perspective = newTransitionProperty "perspective"
-    static member inline perspectiveOrigin = newTransitionProperty "perspective-origin"
-    static member inline right = newTransitionProperty "right"
-    static member inline rotate = newTransitionProperty "rotate"
-    static member inline rowGap = newTransitionProperty "row-gap"
-    static member inline scale = newTransitionProperty "scale"
-    static member inline scrollMargin = newTransitionProperty "scroll-margin"
-    static member inline scrollMarginBlock = newTransitionProperty "scroll-margin-block"
-    static member inline scrollMarginBlockEnd = newTransitionProperty "scroll-margin-block-end"
-    static member inline scrollMarginBlockStart = newTransitionProperty "scroll-margin-block-start"
-    static member inline scrollMarginBottom = newTransitionProperty "scroll-margin-bottom"
-    static member inline scrollMarginInline = newTransitionProperty "scroll-margin-inline"
-    static member inline scrollMarginInlineEnd = newTransitionProperty "scroll-margin-inline-end"
-    static member inline scrollMarginInlineStart = newTransitionProperty "scroll-margin-inline-start"
-    static member inline scrollMarginLeft = newTransitionProperty "scroll-margin-left"
-    static member inline scrollMarginRight = newTransitionProperty "scroll-margin-right"
-    static member inline scrollMarginTop = newTransitionProperty "scroll-margin-top"
-    static member inline scrollPadding = newTransitionProperty "scroll-padding"
-    static member inline scrollPaddingBlock = newTransitionProperty "scroll-padding-block"
-    static member inline scrollPaddingBlockEnd = newTransitionProperty "scroll-padding-block-end"
-    static member inline scrollPaddingBlockStart = newTransitionProperty "scroll-padding-block-start"
-    static member inline scrollPaddingBottom = newTransitionProperty "scroll-padding-bottom"
-    static member inline scrollPaddingInline = newTransitionProperty "scroll-padding-inline"
-    static member inline scrollPaddingInlineEnd = newTransitionProperty "scroll-padding-inline-end"
-    static member inline scrollPaddingInlineStart = newTransitionProperty "scroll-padding-inline-start"
-    static member inline scrollPaddingLeft = newTransitionProperty "scroll-padding-left"
-    static member inline scrollPaddingRight = newTransitionProperty "scroll-padding-right"
-    static member inline scrollPaddingTop = newTransitionProperty "scroll-padding-top"
-    static member inline scrollSnapCoordinate = newTransitionProperty "scroll-snap-coordinate"
-    static member inline scrollSnapDestination = newTransitionProperty "scroll-snap-destination"
-    static member inline scrollbarColor = newTransitionProperty "scrollbar-color"
-    static member inline shapeImageThreshold = newTransitionProperty "shape-image-threshold"
-    static member inline shapeMargin = newTransitionProperty "shape-margin"
-    static member inline shapeOutside = newTransitionProperty "shape-outside"
-    static member inline tabSize = newTransitionProperty "tab-size"
-    static member inline textDecoration = newTransitionProperty "text-decoration"
-    static member inline textDecorationColor = newTransitionProperty "text-decoration-color"
-    static member inline textEmphasis = newTransitionProperty "text-emphasis"
-    static member inline textEmphasisColor = newTransitionProperty "text-emphasis-color"
-    static member inline textIndent = newTransitionProperty "text-indent"
-    static member inline textShadow = newTransitionProperty "text-shadow"
-    static member inline top = newTransitionProperty "top"
-    static member inline transform = newTransitionProperty "transform"
-    static member inline transformOrigin = newTransitionProperty "transform-origin"
-    static member inline translate = newTransitionProperty "translate"
-    static member inline verticalAlign = newTransitionProperty "vertical-align"
-    static member inline visibility = newTransitionProperty "visibility"
-    static member inline width = newTransitionProperty "width"
-    static member inline wordSpacing = newTransitionProperty "word-spacing"
-    static member inline zIndex = newTransitionProperty "z-index"
-    static member inline zoom = newTransitionProperty "zoom"
+    static member all = newTransitionProperty "all"
+    static member backdropFilter = newTransitionProperty "backdrop-filter"
+    static member background = newTransitionProperty "background"
+    static member backgroundColor = newTransitionProperty "background-color"
+    static member backgroundPosition = newTransitionProperty "background-position"
+    static member backgroundSize = newTransitionProperty "background-size"
+    static member border = newTransitionProperty "border"
+    static member borderBottom = newTransitionProperty "border-bottom"
+    static member borderBottomColor = newTransitionProperty "border-bottom-color"
+    static member borderBottomLeftRadius = newTransitionProperty "border-bottom-left-radius"
+    static member borderBottomRightRadius = newTransitionProperty "border-bottom-right-radius"
+    static member borderBottomWidth = newTransitionProperty "border-bottom-width"
+    static member borderColor = newTransitionProperty "border-color"
+    static member borderEndEndRadius = newTransitionProperty "border-end-end-radius"
+    static member borderEndStartRadius = newTransitionProperty "border-end-start-radius"
+    static member borderLeft = newTransitionProperty "border-left"
+    static member borderLeftColor = newTransitionProperty "border-left-color"
+    static member borderLeftWidth = newTransitionProperty "border-left-width"
+    static member borderRadius = newTransitionProperty "border-radius"
+    static member borderRight = newTransitionProperty "border-right"
+    static member borderRightColor = newTransitionProperty "border-right-color"
+    static member borderRightWidth = newTransitionProperty "border-right-width"
+    static member borderStartEndRadius = newTransitionProperty "border-start-end-radius"
+    static member borderStartStartRadius = newTransitionProperty "border-start-start-radius"
+    static member borderTop = newTransitionProperty "border-top"
+    static member borderTopColor = newTransitionProperty "border-top-color"
+    static member borderTopLeftRadius = newTransitionProperty "border-top-left-radius"
+    static member borderTopRightRadius = newTransitionProperty "border-top-right-radius"
+    static member borderTopWidth = newTransitionProperty "border-top-width"
+    static member borderWidth = newTransitionProperty "border-width"
+    static member bottom = newTransitionProperty "bottom"
+    static member boxShadow = newTransitionProperty "box-shadow"
+    static member caretColor = newTransitionProperty "caret-color"
+    static member clip = newTransitionProperty "clip"
+    static member clipPath = newTransitionProperty "clip-path"
+    static member color = newTransitionProperty "color"
+    static member columnCount = newTransitionProperty "column-count"
+    static member columnGap = newTransitionProperty "column-gap"
+    static member columnRule = newTransitionProperty "column-rule"
+    static member columnRuleColor = newTransitionProperty "column-rule-color"
+    static member columnRuleWidth = newTransitionProperty "column-rule-width"
+    static member columnWidth = newTransitionProperty "column-width"
+    static member columns = newTransitionProperty "columns"
+    static member filter = newTransitionProperty "filter"
+    static member flex = newTransitionProperty "flex"
+    static member flexBasis = newTransitionProperty "flex-basis"
+    static member flexGrow = newTransitionProperty "flex-grow"
+    static member flexShrink = newTransitionProperty "flex-shrink"
+    static member font = newTransitionProperty "font"
+    static member fontSize = newTransitionProperty "font-size"
+    static member fontSizeAdjust = newTransitionProperty "font-size-adjust"
+    static member fontStretch = newTransitionProperty "font-stretch"
+    static member fontVariationSettings = newTransitionProperty "font-variation-settings"
+    static member fontWeight = newTransitionProperty "font-weight"
+    static member gap = newTransitionProperty "gap"
+    static member gridColumnGap = newTransitionProperty "grid-column-gap"
+    static member gridGap = newTransitionProperty "grid-gap"
+    static member gridRowGap = newTransitionProperty "grid-row-gap"
+    static member gridTemplateColumns = newTransitionProperty "grid-template-columns"
+    static member gridTemplateRows = newTransitionProperty "grid-template-rows"
+    static member height = newTransitionProperty "height"
+    static member inset = newTransitionProperty "inset"
+    static member insetBlock = newTransitionProperty "inset-block"
+    static member insetBlockEnd = newTransitionProperty "inset-block-end"
+    static member insetBlockStart = newTransitionProperty "inset-block-start"
+    static member insetInline = newTransitionProperty "inset-inline"
+    static member insetInlineEnd = newTransitionProperty "inset-inline-end"
+    static member insetInlineStart = newTransitionProperty "inset-inline-start"
+    static member left = newTransitionProperty "left"
+    static member letterSpacing = newTransitionProperty "letter-spacing"
+    static member lineClamp = newTransitionProperty "line-clamp"
+    static member lineHeight = newTransitionProperty "line-height"
+    static member margin = newTransitionProperty "margin"
+    static member marginBottom = newTransitionProperty "margin-bottom"
+    static member marginLeft = newTransitionProperty "margin-left"
+    static member marginRight = newTransitionProperty "margin-right"
+    static member marginTop = newTransitionProperty "margin-top"
+    static member mask = newTransitionProperty "mask"
+    static member maskBorder = newTransitionProperty "mask-border"
+    static member maskPosition = newTransitionProperty "mask-position"
+    static member maskSize = newTransitionProperty "mask-size"
+    static member maxHeight = newTransitionProperty "max-height"
+    static member maxLines = newTransitionProperty "max-lines"
+    static member maxWidth = newTransitionProperty "max-width"
+    static member minHeight = newTransitionProperty "min-height"
+    static member minWidth = newTransitionProperty "min-width"
+    static member objectPosition = newTransitionProperty "object-position"
+    static member offset = newTransitionProperty "offset"
+    static member offsetAnchor = newTransitionProperty "offset-anchor"
+    static member offsetDistance = newTransitionProperty "offset-distance"
+    static member offsetPath = newTransitionProperty "offset-path"
+    static member offsetPosition = newTransitionProperty "offset-position"
+    static member offsetRotate = newTransitionProperty "offset-rotate"
+    static member opacity = newTransitionProperty "opacity"
+    static member order = newTransitionProperty "order"
+    static member outline = newTransitionProperty "outline"
+    static member outlineColor = newTransitionProperty "outline-color"
+    static member outlineOffset = newTransitionProperty "outline-offset"
+    static member outlineWidth = newTransitionProperty "outline-width"
+    static member padding = newTransitionProperty "padding"
+    static member paddingBottom = newTransitionProperty "padding-bottom"
+    static member paddingLeft = newTransitionProperty "padding-left"
+    static member paddingRight = newTransitionProperty "padding-right"
+    static member paddingTop = newTransitionProperty "padding-top"
+    static member perspective = newTransitionProperty "perspective"
+    static member perspectiveOrigin = newTransitionProperty "perspective-origin"
+    static member right = newTransitionProperty "right"
+    static member rotate = newTransitionProperty "rotate"
+    static member rowGap = newTransitionProperty "row-gap"
+    static member scale = newTransitionProperty "scale"
+    static member scrollMargin = newTransitionProperty "scroll-margin"
+    static member scrollMarginBlock = newTransitionProperty "scroll-margin-block"
+    static member scrollMarginBlockEnd = newTransitionProperty "scroll-margin-block-end"
+    static member scrollMarginBlockStart = newTransitionProperty "scroll-margin-block-start"
+    static member scrollMarginBottom = newTransitionProperty "scroll-margin-bottom"
+    static member scrollMarginInline = newTransitionProperty "scroll-margin-inline"
+    static member scrollMarginInlineEnd = newTransitionProperty "scroll-margin-inline-end"
+    static member scrollMarginInlineStart = newTransitionProperty "scroll-margin-inline-start"
+    static member scrollMarginLeft = newTransitionProperty "scroll-margin-left"
+    static member scrollMarginRight = newTransitionProperty "scroll-margin-right"
+    static member scrollMarginTop = newTransitionProperty "scroll-margin-top"
+    static member scrollPadding = newTransitionProperty "scroll-padding"
+    static member scrollPaddingBlock = newTransitionProperty "scroll-padding-block"
+    static member scrollPaddingBlockEnd = newTransitionProperty "scroll-padding-block-end"
+    static member scrollPaddingBlockStart = newTransitionProperty "scroll-padding-block-start"
+    static member scrollPaddingBottom = newTransitionProperty "scroll-padding-bottom"
+    static member scrollPaddingInline = newTransitionProperty "scroll-padding-inline"
+    static member scrollPaddingInlineEnd = newTransitionProperty "scroll-padding-inline-end"
+    static member scrollPaddingInlineStart = newTransitionProperty "scroll-padding-inline-start"
+    static member scrollPaddingLeft = newTransitionProperty "scroll-padding-left"
+    static member scrollPaddingRight = newTransitionProperty "scroll-padding-right"
+    static member scrollPaddingTop = newTransitionProperty "scroll-padding-top"
+    static member scrollSnapCoordinate = newTransitionProperty "scroll-snap-coordinate"
+    static member scrollSnapDestination = newTransitionProperty "scroll-snap-destination"
+    static member scrollbarColor = newTransitionProperty "scrollbar-color"
+    static member shapeImageThreshold = newTransitionProperty "shape-image-threshold"
+    static member shapeMargin = newTransitionProperty "shape-margin"
+    static member shapeOutside = newTransitionProperty "shape-outside"
+    static member tabSize = newTransitionProperty "tab-size"
+    static member textDecoration = newTransitionProperty "text-decoration"
+    static member textDecorationColor = newTransitionProperty "text-decoration-color"
+    static member textEmphasis = newTransitionProperty "text-emphasis"
+    static member textEmphasisColor = newTransitionProperty "text-emphasis-color"
+    static member textIndent = newTransitionProperty "text-indent"
+    static member textShadow = newTransitionProperty "text-shadow"
+    static member top = newTransitionProperty "top"
+    static member transform = newTransitionProperty "transform"
+    static member transformOrigin = newTransitionProperty "transform-origin"
+    static member translate = newTransitionProperty "translate"
+    static member verticalAlign = newTransitionProperty "vertical-align"
+    static member visibility = newTransitionProperty "visibility"
+    static member width = newTransitionProperty "width"
+    static member wordSpacing = newTransitionProperty "word-spacing"
+    static member zIndex = newTransitionProperty "z-index"
+    static member zoom = newTransitionProperty "zoom"
