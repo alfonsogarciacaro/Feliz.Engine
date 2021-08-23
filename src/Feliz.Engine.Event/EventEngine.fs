@@ -3,7 +3,7 @@
 open System
 open Browser.Types
 
-module internal Util =
+module internal EvUtil =
 #if FABLE_COMPILER
     let inline cast<'Ev when 'Ev :> Event> (f: 'Ev -> unit): Event -> unit = unbox f
 #else
@@ -20,19 +20,19 @@ type EventEngine<'Node>
     member _.onAbort (handler: Event -> unit) = mk "abort" handler
 
     /// Fires when animation is aborted.
-    member _.onAnimationCancel (handler: AnimationEvent -> unit) = mk "animationCancel" (Util.cast handler)
+    member _.onAnimationCancel (handler: AnimationEvent -> unit) = mk "animationCancel" (EvUtil.cast handler)
 
     /// Fires when animation ends.
-    member _.onAnimationEnd (handler: AnimationEvent -> unit) = mk "animationEnd" (Util.cast handler)
+    member _.onAnimationEnd (handler: AnimationEvent -> unit) = mk "animationEnd" (EvUtil.cast handler)
 
     /// Fires when animation iterates.
-    member _.onAnimationIteration (handler: AnimationEvent -> unit) = mk "animationIteration" (Util.cast handler)
+    member _.onAnimationIteration (handler: AnimationEvent -> unit) = mk "animationIteration" (EvUtil.cast handler)
 
     /// Fires when animation starts.
-    member _.onAnimationStart (handler: AnimationEvent -> unit) = mk "animationStart" (Util.cast handler)
+    member _.onAnimationStart (handler: AnimationEvent -> unit) = mk "animationStart" (EvUtil.cast handler)
 
     /// Fires the moment that the element loses focus.
-    member _.onBlur (handler: FocusEvent -> unit) = mk "blur" (Util.cast handler)
+    member _.onBlur (handler: FocusEvent -> unit) = mk "blur" (EvUtil.cast handler)
 
     /// Fires when a user dismisses the current open dialog
     member _.onCancel (handler: Event -> unit) = mk "cancel" handler
@@ -86,54 +86,54 @@ type EventEngine<'Node>
         mk "change" handler
 
     /// Fires on a mouse click on the element.
-    member _.onClick (handler: MouseEvent -> unit) = mk "click" (Util.cast handler)
+    member _.onClick (handler: MouseEvent -> unit) = mk "click" (EvUtil.cast handler)
 
     /// Fires when composition ends.
-    member _.onCompositionEnd (handler: CompositionEvent -> unit) = mk "compositionEnd" (Util.cast handler)
+    member _.onCompositionEnd (handler: CompositionEvent -> unit) = mk "compositionEnd" (EvUtil.cast handler)
 
     /// Fires when composition starts.
-    member _.onCompositionStart (handler: CompositionEvent -> unit) = mk "compositionStart" (Util.cast handler)
+    member _.onCompositionStart (handler: CompositionEvent -> unit) = mk "compositionStart" (EvUtil.cast handler)
 
     /// Fires when composition changes.
-    member _.onCompositionUpdate (handler: CompositionEvent -> unit) = mk "compositionUpdate" (Util.cast handler)
+    member _.onCompositionUpdate (handler: CompositionEvent -> unit) = mk "compositionUpdate" (EvUtil.cast handler)
 
     /// Fires when a context menu is triggered.
-    member _.onContextMenu (handler: MouseEvent -> unit) = mk "contextMenu" (Util.cast handler)
+    member _.onContextMenu (handler: MouseEvent -> unit) = mk "contextMenu" (EvUtil.cast handler)
 
     /// Fires when a TextTrack has changed the currently displaying cues.
     member _.onCueChange (handler: Event -> unit) = mk "cueChange" handler
 
         /// Fires when the user copies the content of an element.
-    member _.onCopy (handler: ClipboardEvent -> unit) = mk "copy" (Util.cast handler)
+    member _.onCopy (handler: ClipboardEvent -> unit) = mk "copy" (EvUtil.cast handler)
 
     /// Fires when the user cuts the content of an element.
-    member _.onCut (handler: ClipboardEvent -> unit) = mk "cut" (Util.cast handler)
+    member _.onCut (handler: ClipboardEvent -> unit) = mk "cut" (EvUtil.cast handler)
 
     /// Fires when a mouse is double clicked on the element.
-    member _.onDblClick (handler: MouseEvent -> unit) = mk "dblClick" (Util.cast handler)
+    member _.onDblClick (handler: MouseEvent -> unit) = mk "dblClick" (EvUtil.cast handler)
 
     /// Fires when an element is dragged.
-    member _.onDrag (handler: DragEvent -> unit) = mk "drag" (Util.cast handler)
+    member _.onDrag (handler: DragEvent -> unit) = mk "drag" (EvUtil.cast handler)
 
     /// Fires when the a drag operation has ended.
-    member _.onDragEnd (handler: DragEvent -> unit) = mk "dragEnd" (Util.cast handler)
+    member _.onDragEnd (handler: DragEvent -> unit) = mk "dragEnd" (EvUtil.cast handler)
 
     /// Fires when an element has been dragged to a valid drop target.
-    member _.onDragEnter (handler: DragEvent -> unit) = mk "dragEnter" (Util.cast handler)
+    member _.onDragEnter (handler: DragEvent -> unit) = mk "dragEnter" (EvUtil.cast handler)
 
-    member _.onDragExit (handler: DragEvent -> unit) = mk "dragExit" (Util.cast handler)
+    member _.onDragExit (handler: DragEvent -> unit) = mk "dragExit" (EvUtil.cast handler)
 
     /// Fires when an element leaves a valid drop target.
-    member _.onDragLeave (handler: DragEvent -> unit) = mk "dragLeave" (Util.cast handler)
+    member _.onDragLeave (handler: DragEvent -> unit) = mk "dragLeave" (EvUtil.cast handler)
 
     /// Fires when an element is being dragged over a valid drop target.
-    member _.onDragOver (handler: DragEvent -> unit) = mk "dragOver" (Util.cast handler)
+    member _.onDragOver (handler: DragEvent -> unit) = mk "dragOver" (EvUtil.cast handler)
 
     /// Fires when the a drag operation has begun.
-    member _.onDragStart (handler: DragEvent -> unit) = mk "dragStart" (Util.cast handler)
+    member _.onDragStart (handler: DragEvent -> unit) = mk "dragStart" (EvUtil.cast handler)
 
     /// Fires when dragged element is being dropped.
-    member _.onDrop (handler: DragEvent -> unit) = mk "drop" (Util.cast handler)
+    member _.onDrop (handler: DragEvent -> unit) = mk "drop" (EvUtil.cast handler)
 
     /// Fires when the length of the media changes.
     member _.onDurationChange (handler: Event -> unit) = mk "durationChange" handler
@@ -150,13 +150,13 @@ type EventEngine<'Node>
     member _.onError (handler: Event -> unit) = mk "error" handler
 
     /// Fires when an error occurs.
-    member _.onError (handler: UIEvent -> unit) = mk "error" (Util.cast handler)
+    member _.onError (handler: UIEvent -> unit) = mk "error" (EvUtil.cast handler)
 
     /// Fires the moment when the element gets focus.
-    member _.onFocus (handler: FocusEvent -> unit) = mk "focus" (Util.cast handler)
+    member _.onFocus (handler: FocusEvent -> unit) = mk "focus" (EvUtil.cast handler)
 
     /// Fires when an element captures a pointer.
-    member _.onGotPointerCapture (handler: PointerEvent -> unit) = mk "gotPointerCapture" (Util.cast handler)
+    member _.onGotPointerCapture (handler: PointerEvent -> unit) = mk "gotPointerCapture" (EvUtil.cast handler)
 
     /// Fires when an element gets user input.
     member _.onInput (handler: Event -> unit) = mk "input" handler
@@ -165,7 +165,7 @@ type EventEngine<'Node>
     member _.onInvalid (handler: Event -> unit) = mk "invalid" handler
 
     /// Fires when a user presses a key.
-    member _.onKeyDown (handler: KeyboardEvent -> unit) = mk "keyDown" (Util.cast handler)
+    member _.onKeyDown (handler: KeyboardEvent -> unit) = mk "keyDown" (EvUtil.cast handler)
 
     /// Fires when a user presses a key.
     // member _.onKeyDown (key: IKeyboardKey, handler: KeyboardEvent -> unit) =
@@ -173,7 +173,7 @@ type EventEngine<'Node>
     //     |> h.MakeEvent("keyDown",)
 
     /// Fires when a user presses a key.
-    member _.onKeyPress (handler: KeyboardEvent -> unit) = mk "keyPress" (Util.cast handler)
+    member _.onKeyPress (handler: KeyboardEvent -> unit) = mk "keyPress" (EvUtil.cast handler)
 
     // /// Fires when a user presses a key.
     // member _.onKeyPress (key: IKeyboardKey, handler: KeyboardEvent -> unit) =
@@ -181,7 +181,7 @@ type EventEngine<'Node>
     //     |> h.MakeEvent("keyPress",)
 
     /// Fires when a user releases a key.
-    member _.onKeyUp (handler: KeyboardEvent -> unit) = mk "keyUp" (Util.cast handler)
+    member _.onKeyUp (handler: KeyboardEvent -> unit) = mk "keyUp" (EvUtil.cast handler)
 
     // /// Fires when a user releases a key.
     // member _.onKeyUp (key: IKeyboardKey, handler: KeyboardEvent -> unit) =
@@ -204,31 +204,31 @@ type EventEngine<'Node>
     member _.onLoadStart (handler: Event -> unit) = mk "loadStart" handler
 
     /// Fires when a captured pointer is released.
-    member _.onLostPointerCapture (handler: PointerEvent -> unit) = mk "lostPointerCapture" (Util.cast handler)
+    member _.onLostPointerCapture (handler: PointerEvent -> unit) = mk "lostPointerCapture" (EvUtil.cast handler)
 
     /// Fires when a mouse button is pressed down on an element.
-    member _.onMouseDown (handler: MouseEvent -> unit) = mk "mouseDown" (Util.cast handler)
+    member _.onMouseDown (handler: MouseEvent -> unit) = mk "mouseDown" (EvUtil.cast handler)
 
     /// Fires when a pointer enters an element.
-    member _.onMouseEnter (handler: MouseEvent -> unit) = mk "mouseEnter" (Util.cast handler)
+    member _.onMouseEnter (handler: MouseEvent -> unit) = mk "mouseEnter" (EvUtil.cast handler)
 
     /// Fires when a pointer leaves an element.
-    member _.onMouseLeave (handler: MouseEvent -> unit) = mk "mouseLeave" (Util.cast handler)
+    member _.onMouseLeave (handler: MouseEvent -> unit) = mk "mouseLeave" (EvUtil.cast handler)
 
     /// Fires when the mouse pointer is moving while it is over an element.
-    member _.onMouseMove (handler: MouseEvent -> unit) = mk "mouseMove" (Util.cast handler)
+    member _.onMouseMove (handler: MouseEvent -> unit) = mk "mouseMove" (EvUtil.cast handler)
 
     /// Fires when the mouse pointer moves out of an element.
-    member _.onMouseOut (handler: MouseEvent -> unit) = mk "mouseOut" (Util.cast handler)
+    member _.onMouseOut (handler: MouseEvent -> unit) = mk "mouseOut" (EvUtil.cast handler)
 
     /// Fires when the mouse pointer moves over an element.
-    member _.onMouseOver (handler: MouseEvent -> unit) = mk "mouseOver" (Util.cast handler)
+    member _.onMouseOver (handler: MouseEvent -> unit) = mk "mouseOver" (EvUtil.cast handler)
 
     /// Fires when a mouse button is released while it is over an element.
-    member _.onMouseUp (handler: MouseEvent -> unit) = mk "mouseUp" (Util.cast handler)
+    member _.onMouseUp (handler: MouseEvent -> unit) = mk "mouseUp" (EvUtil.cast handler)
 
     /// Fires when the user pastes some content in an element.
-    member _.onPaste (handler: ClipboardEvent -> unit) = mk "paste" (Util.cast handler)
+    member _.onPaste (handler: ClipboardEvent -> unit) = mk "paste" (EvUtil.cast handler)
 
     /// Fires when the media is paused either by the user or programmatically.
     member _.onPause (handler: Event -> unit) = mk "pause" handler
@@ -240,28 +240,28 @@ type EventEngine<'Node>
     member _.onPlaying (handler: Event -> unit) = mk "playing" handler
 
     /// Fires when there are no more pointer events.
-    member _.onPointerCancel (handler: PointerEvent -> unit) = mk "pointerCancel" (Util.cast handler)
+    member _.onPointerCancel (handler: PointerEvent -> unit) = mk "pointerCancel" (EvUtil.cast handler)
 
     /// Fires when a pointer becomes active.
-    member _.onPointerDown (handler: PointerEvent -> unit) = mk "pointerDown" (Util.cast handler)
+    member _.onPointerDown (handler: PointerEvent -> unit) = mk "pointerDown" (EvUtil.cast handler)
 
     /// Fires when a pointer is moved into an elements boundaries or one of its descendants.
-    member _.onPointerEnter (handler: PointerEvent -> unit) = mk "pointerEnter" (Util.cast handler)
+    member _.onPointerEnter (handler: PointerEvent -> unit) = mk "pointerEnter" (EvUtil.cast handler)
 
     /// Fires when a pointer is moved out of an elements boundaries.
-    member _.onPointerLeave (handler: PointerEvent -> unit) = mk "pointerLeave" (Util.cast handler)
+    member _.onPointerLeave (handler: PointerEvent -> unit) = mk "pointerLeave" (EvUtil.cast handler)
 
     /// Fires when a pointer moves.
-    member _.onPointerMove (handler: PointerEvent -> unit) = mk "pointerMove" (Util.cast handler)
+    member _.onPointerMove (handler: PointerEvent -> unit) = mk "pointerMove" (EvUtil.cast handler)
 
     /// Fires when a pointer is no longer in an elements boundaries, such as moving it, or after a `pointerUp` or `pointerCancel` event.
-    member _.onPointerOut (handler: PointerEvent -> unit) = mk "pointerOut" (Util.cast handler)
+    member _.onPointerOut (handler: PointerEvent -> unit) = mk "pointerOut" (EvUtil.cast handler)
 
     /// Fires when a pointer is moved into an elements boundaries.
-    member _.onPointerOver (handler: PointerEvent -> unit) = mk "pointerOver" (Util.cast handler)
+    member _.onPointerOver (handler: PointerEvent -> unit) = mk "pointerOver" (EvUtil.cast handler)
 
     /// Fires when a pointer is no longer active.
-    member _.onPointerUp (handler: PointerEvent -> unit) = mk "pointerUp" (Util.cast handler)
+    member _.onPointerUp (handler: PointerEvent -> unit) = mk "pointerUp" (EvUtil.cast handler)
 
     /// Fires when the browser is in the process of getting the media data.
     member _.onProgress (handler: Event -> unit) = mk "progress" handler
@@ -273,7 +273,7 @@ type EventEngine<'Node>
     member _.onReset (handler: Event -> unit) = mk "reset" handler
 
     /// Fires when the window has been resized.
-    member _.onResize (handler: UIEvent -> unit) = mk "resize" (Util.cast handler)
+    member _.onResize (handler: UIEvent -> unit) = mk "resize" (EvUtil.cast handler)
 
     /// Fires when an element's scrollbar is being scrolled.
     member _.onScroll (handler: Event -> unit) = mk "scroll" handler
@@ -288,7 +288,7 @@ type EventEngine<'Node>
     member _.onSelect (handler: Event -> unit) = mk "select" handler
 
     /// Fires after some text has been selected in the user interface.
-    member _.onSelect (handler: UIEvent -> unit) = mk "select" (Util.cast handler)
+    member _.onSelect (handler: UIEvent -> unit) = mk "select" (EvUtil.cast handler)
 
     /// Fires when the browser is unable to fetch the media data for whatever reason.
     member _.onStalled (handler: Event -> unit) = mk "stalled" handler
@@ -318,15 +318,15 @@ type EventEngine<'Node>
     /// Fires when the playing position has changed (like when the user fast forwards to a different point in the media).
     member _.onTimeUpdate (handler: Event -> unit) = mk "timeUpdate" handler
 
-    member _.onTouchCancel (handler: TouchEvent -> unit) = mk "touchCancel" (Util.cast handler)
+    member _.onTouchCancel (handler: TouchEvent -> unit) = mk "touchCancel" (EvUtil.cast handler)
 
-    member _.onTouchEnd (handler: TouchEvent -> unit) = mk "touchEnd" (Util.cast handler)
+    member _.onTouchEnd (handler: TouchEvent -> unit) = mk "touchEnd" (EvUtil.cast handler)
 
-    member _.onTouchMove (handler: TouchEvent -> unit) = mk "touchMove" (Util.cast handler)
+    member _.onTouchMove (handler: TouchEvent -> unit) = mk "touchMove" (EvUtil.cast handler)
 
-    member _.onTouchStart (handler: TouchEvent -> unit) = mk "touchStart" (Util.cast handler)
+    member _.onTouchStart (handler: TouchEvent -> unit) = mk "touchStart" (EvUtil.cast handler)
 
-    member _.onTransitionEnd (handler: TransitionEvent -> unit) = mk "transitionEnd" (Util.cast handler)
+    member _.onTransitionEnd (handler: TransitionEvent -> unit) = mk "transitionEnd" (EvUtil.cast handler)
 
     /// Fires when the volume is changed which (includes setting the volume to "mute").
     member _.onVolumeChange (handler: Event -> unit) = mk "volumeChange" handler
@@ -335,4 +335,4 @@ type EventEngine<'Node>
     member _.onWaiting (handler: Event -> unit) = mk "waiting" handler
 
     /// Fires when the mouse wheel rolls up or down over an element.
-    member _.onWheel (handler: WheelEvent -> unit) = mk "wheel" (Util.cast handler)
+    member _.onWheel (handler: WheelEvent -> unit) = mk "wheel" (EvUtil.cast handler)
