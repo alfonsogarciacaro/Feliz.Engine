@@ -1884,6 +1884,10 @@ type AttrEngine<'Node>
     /// from the opposite edge of the image.
     member _.edgeModeWrap = mk "edgeMode" "wrap"
 
+    /// The fill attribute has two different meanings. For shapes and text it's a presentation attribute that defines the color
+    /// (or any SVG paint servers like gradients or patterns) used to paint the element; for animation it defines the final state of the animation.
+    member _.fill (color: string) = mk "fill" color
+
     /// Keep the state of the last animation frame.
     member _.fillFreeze = mk "fill" "freeze"
     /// Keep the state of the first animation frame.
