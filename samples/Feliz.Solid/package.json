@@ -1,0 +1,13 @@
+{
+    "private": "true",
+    "scripts": {
+        "postinstall": "dotnet tool restore",
+        "start": "dotnet fable watch -o dist --run vite"
+    },
+    "devDependencies": {
+        "vite": "^2.9.9"
+    },
+    "dependencies": {
+        "solid-js": "^1.4.1"
+    }
+}
