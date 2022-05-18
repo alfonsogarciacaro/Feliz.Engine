@@ -399,30 +399,30 @@ type CssEngine<'Style>
 
     /// Default. The element inherits its parent container's align-items property, or "stretch" if it has no parent container.
     member _.alignSelfAuto = mk "align-self" "auto"
-    /// The element is positioned to fit the container
+    /// The element is positioned to fit the container (align-self overrides align-items)
     member _.alignSelfStretch = mk "align-self" "stretch"
-    /// The element is positioned at the center of the container
+    /// The element is positioned at the center of the container (align-self overrides align-items)
     member _.alignSelfCenter = mk "align-self" "center"
-    /// The element is positioned at the beginning of the container
+    /// The element is positioned at the beginning of the container (align-self overrides align-items)
     member _.alignSelfFlexStart = mk "align-self" "flex-start"
-    /// The element is positioned at the end of the container
+    /// The element is positioned at the end of the container (align-self overrides align-items)
     member _.alignSelfFlexEnd = mk "align-self" "flex-end"
-    /// The element is positioned at the baseline of the container
+    /// The element is positioned at the baseline of the container (align-self overrides align-items)
     member _.alignSelfBaseline = mk "align-self" "baseline"
     /// Sets this property to its default value
     member _.alignSelfInitial = mk "align-self" "initial"
     /// Inherits this property from its parent element
     member _.alignSelfInheritFromParent = mk "align-self" "inherit"
 
-    /// Default. Items are stretched to fit the container
+    /// Default. Items are stretched to fit the container along the cross axis
     member _.alignItemsStretch = mk "align-items" "stretch"
-    /// Items are positioned at the center of the container
+    /// Items are positioned at the center of the container along the cross axis
     member _.alignItemsCenter = mk "align-items" "center"
-    /// Items are positioned at the beginning of the container
+    /// Items are positioned at the beginning of the container along the cross axis
     member _.alignItemsFlexStart = mk "align-items" "flex-start"
-    /// Items are positioned at the end of the container
+    /// Items are positioned at the end of the container along the cross axis
     member _.alignItemsFlexEnd = mk "align-items" "flex-end"
-    /// Items are positioned at the baseline of the container
+    /// Items are positioned at the baseline of the container along the cross axis
     member _.alignItemsBaseline = mk "align-items" "baseline"
     /// Sets this property to its default value
     member _.alignItemsInitial = mk "align-items" "initial"
@@ -444,15 +444,15 @@ type CssEngine<'Style>
     member _.alignContentInitial = mk "align-content" "initial"
     member _.alignContentInheritFromParent = mk "align-content" "inherit"
 
-    /// Default value. Items are positioned at the beginning of the container.
+    /// Default value. Items are positioned at the beginning of the container along the main axis.
     member _.justifyContentFlexStart = mk "justify-content" "flex-start"
-    /// Items are positioned at the end of the container.
+    /// Items are positioned at the end of the container along the main axis.
     member _.justifyContentFlexEnd = mk "justify-content" "flex-end"
-    /// Items are positioned at the center of the container
+    /// Items are positioned at the center of the containe along the main axis.
     member _.justifyContentCenter = mk "justify-content" "center"
-    /// Items are positioned with space between the lines
+    /// Items are positioned with space between the line along the main axis.
     member _.justifyContentSpaceBetween = mk "justify-content" "space-between"
-    /// Items are positioned with space before, between, and after the lines.
+    /// Items are positioned with space before, between, and after the lines along the main axis.
     member _.justifyContentSpaceAround = mk "justify-content" "space-around"
     /// Sets this property to its default value.
     member _.justifyContentInitial = mk "justify-content" "initial"
