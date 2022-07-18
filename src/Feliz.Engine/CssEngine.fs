@@ -439,6 +439,8 @@ type CssEngine<'Style>
     member _.alignContentFlexEnd = mk "align-content" "flex-end"
     /// Lines are evenly distributed in the flex container.
     member _.alignContentSpaceBetween = mk "align-content" "space-between"
+    /// Items have equal space around them, distribute items evenly
+    member _.alignContentSpaceEvenly = mk "align-content" "space-evenly"
     /// Lines are evenly distributed in the flex container, with half-size spaces on either end.
     member _.alignContentSpaceAround = mk "align-content" "space-around"
     member _.alignContentInitial = mk "align-content" "initial"
@@ -454,6 +456,8 @@ type CssEngine<'Style>
     member _.justifyContentSpaceBetween = mk "justify-content" "space-between"
     /// Items are positioned with space before, between, and after the lines along the main axis.
     member _.justifyContentSpaceAround = mk "justify-content" "space-around"
+    /// Items have equal space around them, distribute items evenly
+    member _.justifyContentSpaceEvenly = mk "justify-content" "space-evenly"
     /// Sets this property to its default value.
     member _.justifyContentInitial = mk "justify-content" "initial"
     /// Inherits this property from its parent element.
