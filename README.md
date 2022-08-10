@@ -1,6 +1,6 @@
 # Feliz.Engine
 
-Feliz.Engine provides an abstract API based on the great work by Zaid Ajaj and contributors with [Feliz](https://zaid-ajaj.github.io/Feliz/) that can be implemented for different applications using F# to declare HTML interfaces, either with Fable or .NET. See the `samples` directory for some use cases. Read also this post to know more about `Elmish.Snabbdom`, one of its applications: https://fable.io/blog/Announcing-Elmish-Snabbdom.html
+Feliz.Engine provides an abstract API based on the great work by Zaid Ajaj and contributors with [Feliz](https://zaid-ajaj.github.io/Feliz/) that can be implemented for different applications using F# to declare HTML interfaces, either with Fable or .NET. See the `samples` directory for some use cases. Read also this post to know more about `Elmish.Snabbdom`, one of its applications: https://fable.io/blog/2021/2021-03-02-Announcing-Elmish-Snabbdom.html
 
 The main differences with Feliz are:
 
